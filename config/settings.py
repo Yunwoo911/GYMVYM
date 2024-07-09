@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
-from dotenv import load_dotenv
-#pip install python-dotenv로 설치했는데 왜 안될까요?
+# from dotenv import load_dotenv
+# pip install python-dotenv로 설치했는데 왜 안될까요?
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,4 +148,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'account.CustomUser'

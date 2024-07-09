@@ -1,11 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
+import uuid
+# from django.contrib.auth.models import AbstractUser
+# from django.contrib.auth.models import User
 
-# 상속?
+# models.Model 대신 AbstractUser?
 class CustomUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)     # 1대1 관계
+    user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
     # user_id = models.AutoField(primary_key=True)
-    nfc_uid = models.CharField(max_length=100, unique=True, null=True)
+    nfc_uid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, unique=True)
@@ -17,7 +19,6 @@ class CustomUser(models.Model):
     user_image = models.ImageField(upload_to='profile_images', null=True)
     birth = models.DateField()
     gender = models.CharField(max_length=10)
-    # is_superuser = models.BooleanField(default=False)
 
 class Owner(models.Model):
     owner_id = models.AutoField(primary_key=True)
@@ -39,7 +40,7 @@ class Trainer(models.Model):
 
 class GymMember(models.Model):
     member_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
     join_date = models.DateField()
     membership_type = models.CharField(max_length=100)
@@ -60,9 +61,8 @@ class PT(models.Model):
     duration = models.IntegerField()
 
 class Equipment(models.Model): # 헬스장 기구
-#    member = models.ForeignKey(GymMember, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True) #사용자
     equipment_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) #사용자
     equipment_name = models.CharField(max_length=100) #이름
 
 class EquipmentReservation(models.Model): # 기구 예약
@@ -72,13 +72,15 @@ class EquipmentReservation(models.Model): # 기구 예약
     end_time = models.DateTimeField(null=True) # 종료 시간
 
 class EquipmentInUse(models.Model): # 사용중인 기구
+    use_equip_id = models.AutoField(primary_key=True)
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
 
 class VisitLog(models.Model): # 출입관리
     visitlog_id = models.AutoField(primary_key=True)
+    member = models.ForeignKey(GymMember, on_delete=models.CASCADE)
     nfc_uid = models.CharField(max_length=30, null=True)
     enter_time = models.DateTimeField()
     exit_time = models.DateTimeField(null=True)
@@ -88,21 +90,27 @@ class DataAnalysis(models.Model):
     analysis_id = models.AutoField(primary_key=True)
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
     equipment_use_time = models.DateTimeField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     member = models.ForeignKey(GymMember, on_delete=models.CASCADE)
     fields = models.CharField(max_length=100, null=True)
 
+# 채팅방
 class ChatRoom(models.Model):
     chatroom_id = models.AutoField(primary_key=True)
-    user1 = models.ForeignKey(User, related_name='chatrooms_as_user1', on_delete=models.CASCADE)
-    user2 = models.ForeignKey(User, related_name='chatrooms_as_user2', on_delete=models.CASCADE)
+    user1 = models.ForeignKey(CustomUser, related_name='chatrooms_as_user1', on_delete=models.CASCADE)
+    user2 = models.ForeignKey(CustomUser, related_name='chatrooms_as_user2', on_delete=models.CASCADE)
     chatroom_name = models.CharField(max_length=255, null=True, blank=True)
-    created_at = models.DateTimeField(auto_name_add=True)
+    created_at = models.DateTimeField(auto_name_add=True) # 채팅방 생성 시간
+    updated_at = models.DateTimeField(auto_now=True) # 채팅방 최근 활동 시간
 
+    # last_message = models.ForeignKey('Message', related_name='last_message_chatroom', on_delete=models.SET_NULL, null=True, blank=True) 
+    # 채팅방의 마지막 메시지를 쉽게 확인
+
+# 메시지
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
-    send_id = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
-    receive_id = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)    
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_read = models.BooleanField(default=False)
+    chatroom = models.ForeignKey(ChatRoom, related_name='messages', on_delete=models.CASCADE)
+    sender = models.ForeignKey(CustomUser, related_name='sent_messages', on_delete=models.CASCADE) #메시지를 보내는 사람    
+    content = models.TextField() # 메시지 내용
+    created_at = models.DateTimeField(auto_now_add=True) # 메시지 생성 시간
+    is_read = models.BooleanField(default=False) # 읽음 여부 확인
