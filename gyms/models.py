@@ -1,13 +1,26 @@
 from django.db import models
-from account.models import CustomUser, Owner
+from account.models import CustomUser
 
 
-# Create your models here.
+class Owner(models.Model):
+    owner_id = models.AutoField(primary_key=True)
+    owner_name = models.CharField(max_length=100)
+
+
 class Gym(models.Model):
     gym_id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     gym_name = models.CharField(max_length=100)
     gym_address = models.CharField(max_length=255)
+
+
+class Trainer(models.Model):
+    trainer_id = models.AutoField(primary_key=True)
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    trainer_name = models.CharField(max_length=100)
+    certificate = models.CharField(max_length=100, null=True)
+    trainer_image = models.ImageField(upload_to='trainer_images', null=True)
 
 
 class GymMember(models.Model):
@@ -22,15 +35,6 @@ class GymMember(models.Model):
     recent_expiry = models.DateField()
     renewal_status = models.BooleanField(default=False)
     renewal_count = models.IntegerField(default=0)
-
-
-class Trainer(models.Model):
-    trainer_id = models.AutoField(primary_key=True)
-    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    trainer_name = models.CharField(max_length=100)
-    certificate = models.CharField(max_length=100, null=True)
-    trainer_image = models.ImageField(upload_to='trainer_images', null=True)
 
 
 class PT(models.Model):
