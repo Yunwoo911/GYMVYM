@@ -39,7 +39,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ]
 
     user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
-    # user_id = models.AutoField(primary_key=True)
     nfc_uid = models.UUIDField(unique=True, null=True, blank=True, editable=False)
     username = models.CharField(max_length=100, unique=True, blank=False)
     password = models.CharField(max_length=100)
