@@ -6,7 +6,7 @@ from django.utils import timezone
 class Equipment(models.Model): # 헬스장 기구
     equipment_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) #사용자
-    equipment_name = models.CharField(max_length=100) #이름
+    equipment_name = models.CharField(max_length=50) #이름
 
 class EquipmentReservation(models.Model): # 기구 예약
     res_id = models.AutoField(primary_key=True)
@@ -21,6 +21,7 @@ class EquipmentInUse(models.Model): # 사용중인 기구
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
 
+    
     #  현재 사용 중인지 여부 확인
     def is_currently_in_use(self):
         now = timezone.now()
