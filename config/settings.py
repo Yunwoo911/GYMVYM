@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
-# from dotenv import load_dotenv
-# pip install python-dotenv로 설치했는데 왜 안될까요?
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account',
-    
+    'chat',
+    'dataanalysis',
+    'equipment',
+    'gyms',
+    'visitlogs',
 ]
 
 MIDDLEWARE = [
