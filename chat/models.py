@@ -21,6 +21,3 @@ class Message(models.Model):
     content = models.TextField() # 메시지 내용
     created_at = models.DateTimeField(auto_now_add=True) # 메시지 생성 시간
     is_read = models.BooleanField(default=False) # 읽음 여부 확인
-# 7/9 code review test1
-# 7/9 code review test2
-# 7/9 code review test3
