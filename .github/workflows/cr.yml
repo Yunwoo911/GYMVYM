@@ -18,3 +18,4 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LANGUAGE: Korean
           MODEL: gpt-4
+          PROMPT: 한국어로 코드 리뷰를 부탁해
