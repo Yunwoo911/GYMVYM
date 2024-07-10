@@ -1,0 +1,15 @@
+.container img{
+    margin : auto;
+    width: 500px;
+}
+.account{
+    display: flex;
+    margin-right : 10px;
+}
+.account a{
+    margin : 0 5px;
+    width : 30px;
+}
+.account img{
+    width: 30px;
+}

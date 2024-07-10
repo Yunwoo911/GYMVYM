@@ -16,12 +16,12 @@ class CustomUserManager(UserManager):
 
         return user
     
-    def create_user(self, username=None, email=None, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('usertype', 2) # 일반유저 usertype : member로 기본설정
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(username, email, password, **extra_fields)
 
-    def create_superuser(self, username=None, email=None, password=None, **extra_fields):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('usertype', 0) # 관리자 usertype : owner로 기본설정
         extra_fields.setdefault('is_superuser', True)
         return self._create_user(username, email, password, **extra_fields)
@@ -39,7 +39,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ]
 
     user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
-    # user_id = models.AutoField(primary_key=True)
     nfc_uid = models.UUIDField(unique=True, null=True, blank=True, editable=False)
     username = models.CharField(max_length=100, unique=True, blank=False)
     password = models.CharField(max_length=100)
@@ -50,7 +49,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=100, null=False, default='', unique=True)
     user_image = models.ImageField(upload_to='static/', null=True, default='static/default.png')
     birth = models.DateField(null=False)
-    usertype = models.IntegerField(default=2)
+    usertype = models.IntegerField(choices=USERTYPE_CHOICES,default=2)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
 
     date_joined = models.DateTimeField(default=timezone.now)

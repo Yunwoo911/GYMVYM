@@ -6,6 +6,9 @@ class Owner(models.Model):
     owner_id = models.AutoField(primary_key=True)
     owner_name = models.CharField(max_length=100)
 
+    def __str__(self) -> str:
+        return self.owner_name
+
 
 class Gym(models.Model):
     gym_id = models.AutoField(primary_key=True)
@@ -35,6 +38,11 @@ class GymMember(models.Model):
     recent_expiry = models.DateField()
     renewal_status = models.BooleanField(default=False)
     renewal_count = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.user.username
+
+    
 
 
 class PT(models.Model):
