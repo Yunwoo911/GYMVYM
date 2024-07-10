@@ -1,9 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mx-auto">
-    <h2 class="text-2xl font-bold mb-4">Welcome to My App</h2>
-    <p class="mb-4">This is a sample application with a mobile app-like design.</p>
-    <button class="bg-blue-500 text-white py-2 px-4 rounded">Get Started</button>
+<!-- 메인 이미지 섹션 -->
+<div class="bg-white shadow p-4 mb-4">
+    <img src="{% static 'images/main-image.jpg' %}" alt="Main Image" class="w-full h-auto">
+    <div class="p-4">
+        <h2 class="text-2xl font-bold">진짜 유니크한 그래픽 티셔츠</h2>
+        <p>이스케이프프롬 의 최대 71% 할인</p>
+    </div>
+</div>
+
+<!-- 카테고리 버튼 섹션 -->
+<div class="flex justify-around bg-white shadow p-4 mb-4">
+    <button class="p-2">SPA 대전</button>
+    <button class="p-2">추천</button>
+    <button class="p-2">뷰티</button>
+    <button class="p-2">랭킹</button>
+    <button class="p-2">세일</button>
+    <button class="p-2">스타일</button>
+    <button class="p-2">이벤트</button>
+</div>
+
+<!-- 아이템 그리드 섹션 -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white shadow p-4">Item 1</div>
+    <div class="bg-white shadow p-4">Item 2</div>
+    <div class="bg-white shadow p-4">Item 3</div>
+    <div class="bg-white shadow p-4">Item 4</div>
 </div>
 {% endblock %}

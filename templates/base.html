@@ -7,16 +7,28 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.build.css' %}">
 </head>
-<body class="bg-gray-100">
-    <header class="bg-blue-500 text-white p-4">
-        <h1 class="text-lg">My App</h1>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <!-- 헤더 -->
+    <header class="bg-white shadow p-4 flex justify-between items-center">
+        <h1 class="text-lg font-bold">MUSINSA</h1>
+        <div class="space-x-4">
+            <button class="p-2"><i class="fas fa-bell"></i></button>
+            <button class="p-2"><i class="fas fa-search"></i></button>
+            <button class="p-2"><i class="fas fa-shopping-bag"></i></button>
+        </div>
     </header>
-    <main class="p-4">
+    <!-- 메인 콘텐츠 -->
+    <main class="flex-grow p-4">
         {% block content %}
         {% endblock %}
     </main>
-    <footer class="bg-blue-500 text-white p-4 mt-auto">
-        <p>Footer content</p>
+    <!-- 푸터 -->
+    <footer class="bg-white shadow p-4 flex justify-between">
+        <button class="flex-1 text-center">카테고리</button>
+        <button class="flex-1 text-center">스냅</button>
+        <button class="flex-1 text-center">홈</button>
+        <button class="flex-1 text-center">좋아요</button>
+        <button class="flex-1 text-center">마이</button>
     </footer>
     <script>
         if ('serviceWorker' in navigator) {
