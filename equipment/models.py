@@ -1,8 +1,4 @@
 from django.db import models
-<<<<<<< HEAD
-
-# Create your models here.
-=======
 from account.models import CustomUser
 from django.utils import timezone
 
@@ -30,4 +26,3 @@ class EquipmentInUse(models.Model): # 사용중인 기구
         # 기구 사용이 이미 시작되었는지 여부를 확인
         # 기구 사용이 아직 끝나지 않았는지 여부를 확인
         return self.start_time <= now and (self.end_time is None or self.end_time >= now)
->>>>>>> test

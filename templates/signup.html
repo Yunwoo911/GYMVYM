@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GYMVYM</title>
+    {% load widget_tweaks %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Signup</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group profile-container">
+                <img id="image_preview" src="{% static 'default.png' %}">
+                <label class="upload-button" for="id_image">
+                    <i class="fa fa-camera"></i>
+                    <input type="file" name="image" id="id_image" accept="image/*" onchange="previewImage(event)">
+                    {% for error in form.user_image.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                    {% endfor %}
+                </label>
+            </div>
+            <div>
+                <label for="id_user_name">User Name:</label>
+                {{ form.username }}
+                {% for error in form.user_name.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_password">Password:</label>
+                {{ form.password1 }}
+                {% for error in form.password.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_password2">Confirm Password:</label>
+                {{ form.password2 }}
+                {% for error in form.password2.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_phone_number">휴대폰번호:</label>
+                {{ form.phone_number }}
+                {% for error in form.phone_number.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+                {% for error in form.email.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_nickname">Nickname:</label>
+                {{ form.nickname }}
+                {% for error in form.nickname.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_address">주소:</label>
+                {{ form.address }}
+                {% for error in form.address.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_detail_address">상세주소:</label>
+                {{ form.detail_address }}
+                {% for error in form.detail_address.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_birth">Birth Date:</label>
+                {{ form.birth }}
+                {% for error in form.birth.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <div>
+                <label for="id_gender">Gender:</label>
+                {{ form.gender }}
+                {% for error in form.gender.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+    
+            <button type="submit">Signup</button>
+        </form>
+    </div>
+    
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('image_preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>
+
+<style>
+    .profile-container {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: auto;
+    }
+    .profile-container img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+    .upload-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: #8FCBDD;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .upload-button input[type="file"] {
+        display: none;
+    }
+</style>

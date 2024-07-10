@@ -1,8 +1,4 @@
 from django.db import models
-<<<<<<< HEAD
-
-# Create your models here.
-=======
 from gyms.models import GymMember
 
 class VisitLog(models.Model): # 출입관리
@@ -12,4 +8,3 @@ class VisitLog(models.Model): # 출입관리
     enter_time = models.DateTimeField()
     exit_time = models.DateTimeField(null=True)
     fields = models.CharField(max_length=100, null=True)
->>>>>>> test

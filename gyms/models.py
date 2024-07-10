@@ -1,8 +1,4 @@
 from django.db import models
-<<<<<<< HEAD
-
-# Create your models here.
-=======
 from account.models import CustomUser
 
 class Owner(models.Model):
@@ -44,4 +40,3 @@ class PT(models.Model):
     registration_date = models.DateField()
     pt_end_date = models.DateField()
     duration = models.IntegerField()
->>>>>>> test
