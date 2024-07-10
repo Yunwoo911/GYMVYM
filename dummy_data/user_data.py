@@ -1,22 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from .models import GymMember
 import uuid
 from django.utils import timezone
+from account.models import CustomUser  # myapp을 실제 앱 이름으로 바꾸세요
 from django.utils.text import slugify
 from faker import Faker
-from account.models import CustomUser  # myapp을 실제 앱 이름으로 바꾸세요
-from django.contrib.auth.hashers import make_password
-
-
-# Create your views here.
-class TrainerPageView(TemplateView):
-    template_name = 'trainer_page.html'
-
-    gym_members = GymMember.objects.all()
-
-
-
 
 fake = Faker()
 
@@ -39,7 +25,7 @@ def create_custom_user(i):
         user=uuid.uuid4(),
         nfc_uid=uuid.uuid4(),
         username=username,
-        password=make_password('password'),  # 여기에서 비밀번호를 해시하여 저장합니다.
+        password='password',  # 실제로는 해시된 비밀번호를 사용해야 합니다.
         phone_number=phone_number,
         email=email,
         address=address,
@@ -57,5 +43,3 @@ def create_custom_user(i):
 # 30개의 사용자 데이터 생성
 for i in range(1, 31):
     create_custom_user(i)
-
-    
