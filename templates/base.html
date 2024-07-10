@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.build.css' %}">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-blue-500 text-white p-4">
+        <h1 class="text-lg">My App</h1>
+    </header>
+    <main class="p-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="bg-blue-500 text-white p-4 mt-auto">
+        <p>Footer content</p>
+    </footer>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('{% static "js/serviceworker.js" %}')
+                .then((registration) => {
+                    console.log('Service worker registered with scope:', registration.scope);
+                }).catch((error) => {
+                    console.log('Service worker registration failed:', error);
+                });
+        }
+    </script>
+</body>
+</html>
