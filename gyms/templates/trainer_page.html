@@ -9,21 +9,15 @@
 </head>
 
 <body>
-    트레이너 페이지
-
-    {% for member in gym_members %}
-    <div>
-        <p>회원 이름: {{ member.user.username }}</p>
-        <p>가입 날짜: {{ member.join_date }}</p>
-        <p>멤버십 타입: {{ member.membership_type }}</p>
-        <p>만료 날짜: {{ member.expiry_date }}</p>
-        <p>최근 가입 날짜: {{ member.recent_joined_date }}</p>
-        <p>최근 멤버십: {{ member.recent_membership }}</p>
-        <p>최근 만료 날짜: {{ member.recent_expiry }}</p>
-        <p>갱신 상태: {{ member.renewal_status }}</p>
-        <p>갱신 횟수: {{ member.renewal_count }}</p><br><br>
-    </div>
-    {% endfor %}
+    <h2>회원 목록</h2>
+    <ul>
+        {% for member in gym_members %}
+        <li><a href="{% url 'trainer_detail_page' member.member_id %}">
+                {{ member.user.username }} - {{member.membership_type }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 
 </html>
