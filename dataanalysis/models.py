@@ -3,7 +3,6 @@ from account.models import CustomUser
 from equipment.models import Equipment
 from gyms.models import GymMember
 
-# Create your models here.
 class DataAnalysis(models.Model):
     analysis_id = models.AutoField(primary_key=True)
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
