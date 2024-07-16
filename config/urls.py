@@ -25,6 +25,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('account/', include('account.urls')),
     path('gyms/', include('gyms.urls')),  # 새로 만든 앱의 urls.py 추가
+    path('scheduler/', include('scheduler.urls')), 
 ]
 
 if settings.DEBUG:

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'equipment',
     'gyms',
     'visitlogs',
+    'scheduler',
 ]
 
 MIDDLEWARE = [
