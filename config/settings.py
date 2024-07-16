@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'equipment',
     'gyms',
     'visitlogs',
+    'scheduler',
 ]
 
 REST_FRAMEWORK = {

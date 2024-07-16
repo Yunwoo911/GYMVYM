@@ -1,6 +1,7 @@
 from django.db import models
 from gyms.models import GymMember
 
+# Create your models here.
 class VisitLog(models.Model): # 출입관리
     visitlog_id = models.AutoField(primary_key=True)
     member = models.ForeignKey(GymMember, on_delete=models.CASCADE)
