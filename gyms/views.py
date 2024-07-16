@@ -5,6 +5,7 @@ from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
 import json
+from gyms.search.search_gym_member import Search
 
 # Create your views here.
 class TrainerPageView(TemplateView):
@@ -56,7 +57,21 @@ class TrainerPortfolioView(TemplateView):
         user = 15
         context['trainer'] = CustomUser.objects.filter(user = user)
         # context['trainer'] = Trainer.objects.filter(user = user)
-        return context    
+        return context
+
+
+def search(request):
+    results = []
+    client = Search()
+
+    # 검색어를 받아오기
+    if 'query' in request.GET:
+        query = request.GET['query']
+        # 검색결과를 가져와야 하지 않나?        
+        usernames = client.making_query(query)
+        results = GymMember.objects.filter(user__username=usernames)
+    
+    return render(request, 'member_profile_search.html', {'results': results})
 
 
 def export_gym_member_usernames_to_json(file_path):
