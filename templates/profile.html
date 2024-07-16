@@ -1,0 +1,25 @@
+<!-- templates/profile.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="profile-container">
+        <h1>{{ user.username }}'s Profile</h1>
+        {% if user.user_image %}
+            <img src="{{ user.user_image.url }}" alt="Profile Image" width="150" height="150" style="border-radius: 50%;"/>
+        {% else %}
+            <p>No profile image.</p>
+        {% endif %}
+        <p>Email: {{ user.email }}</p>
+        <p>Nickname: {{ user.nickname }}</p>
+        {% if user.is_authenticated %}
+        <!-- 로그아웃 버튼 -->
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <p>You are not logged in.</p>
+        {% endif %}
+        <!-- 여기에 다른 사용자 정보 추가 -->
+    </div>
+{% endblock %}

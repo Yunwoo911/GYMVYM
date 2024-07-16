@@ -15,7 +15,7 @@ class CustomUserManager(UserManager):
         user.save(using=self._db)
 
         return user
-    
+
     def create_user(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault('usertype', 2) # 일반유저 usertype : member로 기본설정
         extra_fields.setdefault('is_superuser', False)
@@ -38,19 +38,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     (2, 'Member'),
     ]
 
-    user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
+    user = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
     nfc_uid = models.UUIDField(unique=True, null=True, blank=True, editable=False)
     username = models.CharField(max_length=100, unique=True, blank=False)
-    password = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, unique=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=False, null=False)
     address = models.CharField(max_length=255)
     detail_address = models.CharField(max_length=255, null=False)
     nickname = models.CharField(max_length=100, null=False, default='', unique=True)
-    user_image = models.ImageField(upload_to='static/', null=True, default='static/default.png')
-    birth = models.DateField(null=False)
+    user_image = models.ImageField(upload_to='user_image', null=True, default='default.png')
+    birth = models.DateField(null=False, blank=False)
     usertype = models.IntegerField(choices=USERTYPE_CHOICES,default=2)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
+    is_staff = models.BooleanField(null=True, blank=True)
 
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
