@@ -1,155 +1,291 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GYMVYM</title>
-    {% load widget_tweaks %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% extends 'base.html' %}
+
+{% block title %}Home - My Website{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <title>GYMVYM Signup</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <div class="container">
-        <h2>Signup</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group profile-container">
-                <img id="image_preview" src="{% static 'default.png' %}">
-                <label class="upload-button" for="id_image">
-                    <i class="fa fa-camera"></i>
-                    <input type="file" name="image" id="id_image" accept="image/*" onchange="previewImage(event)">
-                    {% for error in form.user_image.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                    {% endfor %}
-                </label>
-            </div>
-            <div>
-                <label for="id_user_name">User Name:</label>
-                {{ form.username }}
-                {% for error in form.user_name.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
+    <!-- Include custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <!-- Include the specific CSS from uiverse.io -->
+
+    <style>
+        .profile-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: auto;
+        }
+
+        .profile-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .upload-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #8FCBDD;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .upload-button input[type="file"] {
+            display: none;
+        }
+
+        /* Additional styles from uiverse.io */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .form-group {
+            width: 50%;
+            margin: auto;
+        }
+        /* Input container */
+    .input-container {
+        position: relative;
+        margin: 20px;
+    }
+
+    /* Input field */
+    .input-field {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        outline: none;
+        background-color: transparent;
+    }
+
+    /* Input label */
+    .input-label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 16px;
+        color: rgba(204, 204, 204, 0);
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    /* Input highlight */
+    .input-highlight {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 0;
+        background-color: #007bff;
+        transition: all 0.3s ease;
+    }
+
+    /* Input field:focus styles */
+    .input-field:focus+.input-label {
+        top: -20px;
+        font-size: 12px;
+        color: #007bff;
+    }
+
+    .input-field:focus+.input-label+.input-highlight {
+        width: 100%;
+    }
+    </style>
+
     
-            <div>
-                <label for="id_password">Password:</label>
-                {{ form.password1 }}
-                {% for error in form.password.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Signup</h2>
+
+                {% if errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field, messages in errors.items %}
+                                <li>{{ field }}: {{ messages|join:", " }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group text-center">
+                        <div class="profile-container mb-3">
+                            <img id="image_preview" src="{% static 'default.png' %}" class="img-fluid rounded-circle" alt="Profile Image Preview" width="150" height="150">
+                            <label class="upload-button" for="id_user_image">
+                                <i class="fa fa-camera"></i>
+                                <input type="file" name="user_image" id="id_user_image" class="form-control" onchange="previewImage(event)">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">이름:</label>
+                        <input type="text" name="username" id="username" class="form-control" autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">비밀번호:</label>
+                        <input type="password" name="password" id="password" class="form-control"
+                            autocomplete="new-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password2">비밀번호 확인:</label>
+                        <input type="password" name="password2" id="password2" class="form-control"
+                            autocomplete="new-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">이메일:</label>
+                        <div class="input-group">
+                            <input type="email" name="email" id="email" class="form-control">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="checkEmailDuplicate()">중복확인</button>
+                            </div>
+                        </div>
+                        <small id="email_feedback" class="form-text text-muted"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone_number">휴대폰번호:</label>
+                        <input type="text" name="phone_number" id="phone_number" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birth">생년 월 일:</label>
+                        <input type="date" name="birth" id="birth" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">주소:</label>
+                        <div class="input-group">
+                            <input type="text" name="address" id="address" class="form-control">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="execDaumPostcode()">주소찾기</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="detail_address">상세주소:</label>
+                        <input type="text" name="detail_address" id="detail_address" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nickname">닉네임:</label>
+                        <input type="text" name="nickname" id="nickname" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">성별:</label>
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="0">남성</option>
+                            <option value="1">여성</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">회원가입</button>
+                </form>
             </div>
-    
-            <div>
-                <label for="id_password2">Confirm Password:</label>
-                {{ form.password2 }}
-                {% for error in form.password2.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_phone_number">휴대폰번호:</label>
-                {{ form.phone_number }}
-                {% for error in form.phone_number.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_email">Email:</label>
-                {{ form.email }}
-                {% for error in form.email.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_nickname">Nickname:</label>
-                {{ form.nickname }}
-                {% for error in form.nickname.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_address">주소:</label>
-                {{ form.address }}
-                {% for error in form.address.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_detail_address">상세주소:</label>
-                {{ form.detail_address }}
-                {% for error in form.detail_address.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_birth">Birth Date:</label>
-                {{ form.birth }}
-                {% for error in form.birth.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <div>
-                <label for="id_gender">Gender:</label>
-                {{ form.gender }}
-                {% for error in form.gender.errors %}
-                    <span style="color:red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-    
-            <button type="submit">Signup</button>
-        </form>
+        </div>
     </div>
-    
+
     <script>
         function previewImage(event) {
             var reader = new FileReader();
-            reader.onload = function() {
+            reader.onload = function () {
                 var output = document.getElementById('image_preview');
                 output.src = reader.result;
                 output.style.display = 'block';
+            };
+            if (event.target.files.length > 0) {
+                reader.readAsDataURL(event.target.files[0]);
             }
-            reader.readAsDataURL(event.target.files[0]);
+        }
+    
+        function checkEmailDuplicate() {
+            var emailField = document.getElementById('email');
+            var feedback = document.getElementById('email_feedback');
+            var email = emailField.value;
+
+            if (email) {
+                fetch(`/account/check-email/?email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.is_duplicate) {
+                            feedback.textContent = '이미 사용 중인 이메일입니다.';
+                            feedback.style.color = 'red';
+                        } else {
+                            feedback.textContent = '사용 가능한 이메일입니다.';
+                            feedback.style.color = 'green';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        feedback.textContent = '이메일 확인 중 오류가 발생했습니다.';
+                        feedback.style.color = 'red';
+                    });
+            } else {
+                feedback.textContent = '이메일을 입력해 주세요.';
+                feedback.style.color = 'red';
+            }
+        }
+
+        function execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = data.address; // 최종 주소 변수
+    
+                    // 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById("address").value = addr;
+                    // 커서를 상세주소 필드로 이동한다.
+                    document.getElementById("detail_address").focus();
+                }
+            }).open();
         }
     </script>
-</body>
-</html>
-
-<style>
-    .profile-container {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        margin: auto;
-    }
-    .profile-container img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-    }
-    .upload-button {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        background-color: #8FCBDD;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-    }
-    .upload-button input[type="file"] {
-        display: none;
-    }
-</style>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+{% endblock %}

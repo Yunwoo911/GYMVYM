@@ -1,15 +1,19 @@
-.container img{
-    margin : auto;
-    width: 500px;
-}
-.account{
+body {
+    margin: auto;
+    padding: 0;
     display: flex;
-    margin-right : 10px;
+    justify-content: center;
+    align-items: center;
+    width : 600px;
+    height: 100%;
+    max-width: 600px;
 }
-.account a{
-    margin : 0 5px;
-    width : 30px;
+.black-btn {
+    color: black;
+    text-decoration: none;
+    margin: 0 10px;
 }
-.account img{
-    width: 30px;
+.home_b{
+    background-color: #58C3FF;
+    height: 100px;
 }

@@ -1,112 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    {% load static %}   
+{% extends 'base.html' %}
+
+{% block title %}Home - My Website{% endblock %}
+{% load static %}
+
+{% block head %}
+<title>Document</title> 
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
 
-<body>
-    <div class="container">
-        <div class="heading">Sign In</div>
-        <form class="form" action="">
-          <input
-            placeholder="E-mail"
-            id="email"
-            name="email"
-            type="email"
-            class="input"
-            required=""
-          />
-          <input
-            placeholder="Password"
-            id="password"
-            name="password"
-            type="password"
-            class="input"
-            required=""
-          />
-          <span class="forgot-password"><a href="#">비밀번호를 잊어버리셨나요?</a></span>
-          <input value="Sign In" type="submit" class="login-button" />
-        </form>
-        <div class="social-account-container">
-          <span class="title">다른 방법으로 가입하기</span>
-          <div class="social-accounts">
-            <button class="social-button google">
-              <svg
-                viewBox="0 0 488 512"
-                height="1em"
-                xmlns="http://www.w3.org/2000/svg"
-                class="svg"
-              >
-                <path
-                  d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-                ></path>
-              </svg>
-            </button>
-            <button class="social-button apple">
-              <svg
-                viewBox="0 0 384 512"
-                height="1em"
-                xmlns="http://www.w3.org/2000/svg"
-                class="svg"
-              >
-                <path
-                  d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
-                ></path>
-              </svg>
-            </button>
-            <button class="social-button twitter">
-              <svg
-                viewBox="0 0 512 512"
-                height="1em"
-                xmlns="http://www.w3.org/2000/svg"
-                class="svg"
-              >
-                <path
-                  d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-                ></path>
-              </svg>
-            </button>
+    <style>
+        .container{
+            width: 600px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post" class="form">
+        {% csrf_token %}
+        <div class="flex-column">
+          <label for="email">Email </label></div>
+          <div class="inputForm">
+            <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"><g id="Layer_3" data-name="Layer 3"><path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"></path></g></svg>
+            <input type="text" class="input" id="email" name="email" placeholder="Enter your Email" autocomplete="email" required>
           </div>
+        
+        <div class="flex-column">
+          <label for="password">Password </label></div>
+          <div class="inputForm">
+            <svg height="20" viewBox="-64 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0"></path><path d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0"></path></svg>        
+            <input type="password" class="input" id="password" name="password" placeholder="Enter your Password" autocomplete="current-password" required>
+            <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path></svg>
+          </div>
+        
+        <div class="flex-row">
+          <div>
+          <input type="checkbox" id="remember_me" name="remember_me">
+          <label for="remember_me">Remember me </label>
+          </div>
+          <span class="span">비밀번호를 잃어버리셨나요?</span>
         </div>
-        <span class="agreement">아직 계정이 없으신가요?<a href="{% url 'signup' %}">&nbsp;&nbsp;회원가입</a></span>
-      </div>
-</body>
-</html>
-
-<style>
-    html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .container {
-        width: 100%;
-        max-width: 400px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        background-color: #fff;
-        border-radius: 10px;
-    }
-    .form {
-        width: 100%;
-    }
-    .agreement{
-        font-size: 15px;
-    }
-    .agreement a{
-        font-size: 15px;
-    }
+        <button type="submit" class="button-submit">Sign In</button>
+        <p class="p">계정이 없으신가요?&nbsp;&nbsp;<a href="{% url 'signup' %}">회원가입</a>
     
-</style>
+        </p><p class="p line">또는</p>
+    
+        <div class="flex-row">
+          <button class="btn google">
+            <svg version="1.1" width="20" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                <path style="fill:#FBBB00;" d="M113.47,309.408L95.648,375.94l-65.139,1.378C11.042,341.211,0,299.9,0,256
+                    c0-42.451,10.324-82.483,28.624-117.732h0.014l57.992,10.632l25.404,57.644c-5.317,15.501-8.215,32.141-8.215,49.456
+                    C103.821,274.792,107.225,292.797,113.47,309.408z"></path>
+                <path style="fill:#518EF8;" d="M507.527,208.176C510.467,223.662,512,239.655,512,256c0,18.328-1.927,36.206-5.598,53.451
+                    c-12.462,58.683-45.025,109.925-90.134,146.187l-0.014-0.014l-73.044-3.727l-10.338-64.535
+                    c29.932-17.554,53.324-45.025,65.646-77.911h-136.89V208.176h138.887L507.527,208.176L507.527,208.176z"></path>
+                <path style="fill:#28B446;" d="M416.253,455.624l0.014,0.014C372.396,490.901,316.666,512,256,512
+                    c-97.491,0-182.252-54.491-225.491-134.681l82.961-67.91c21.619,57.698,77.278,98.771,142.53,98.771
+                    c28.047,0,54.323-7.582,76.87-20.818L416.253,455.624z"></path>
+                <path style="fill:#F14336;" d="M419.404,58.936l-82.933,67.896c-23.335-14.586-50.919-23.012-80.471-23.012
+                    c-66.729,0-123.429,42.957-143.965,102.724l-83.397-68.276h-0.014C71.23,56.123,157.06,0,256,0
+                    C318.115,0,375.068,22.126,419.404,58.936z"></path>
+            </svg>
+            Google 
+          </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
 
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 
