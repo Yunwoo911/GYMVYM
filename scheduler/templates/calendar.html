@@ -14,10 +14,12 @@
   <link rel="stylesheet" href="{% static 'css/calender.css' %}">
 </head>
 <body style="padding:30px;">
+  <!-- calendar 태그 -->
   <div id='calendar-container'>
     <div id='calendar'></div>
   </div>
 
+<!-- 일정 추가 모달 -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -25,6 +27,7 @@
           <h5 class="modal-title" id="exampleModalLabel">일정 추가하기</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <!-- 일정 추가 폼 -->
         <div class="modal-body">
           일정이름 : <input type="text" id="title" /><br />
           시작시간 : <input type="datetime-local" id="start" /><br />
@@ -46,28 +49,32 @@
     </div>
   </div>
 
+<!-- JavaScript 코드 -->
   <script>
   (function(){
     $(function(){
+      // calendar element 취득
       var calendarEl = $('#calendar')[0];
+      // full-calendar 생성하기
       var calendar = new FullCalendar.Calendar(calendarEl, {
         googleCalendarApiKey: '', //구글 캘린더 api
-        height: '700px',
-        expandRows: true,
-        slotMinTime: '08:00',
-        slotMaxTime: '20:00',
+        height: '700px', // calendar 높이 설정
+        expandRows: true, // 화면에 맞게 높이 재설정
+        slotMinTime: '08:00', // Day 캘린더에서 시작 시간
+        slotMaxTime: '20:00', // Day 캘린더에서 종료 시간
+        // // 커스텀 버튼 정의(일정 추가)
         customButtons:{
           myCustomButton:{
             text:"일정 추가하기",
             click : function(){
-              $("#exampleModal").modal("show");              
+              $("#exampleModal").modal("show"); //모달 표시             
             }
           },
           mySaveButton:{
             text:"저장하기",
             click: async function () {
               if (confirm("저장하시겠습니까?")) {
-                var allEvent = calendar.getEvents();
+                var allEvent = calendar.getEvents(); // 모든 이벤트 가져오기
                 var eventArray = allEvent.map(event => ({
                   title: event.title,
                   start: event.start.toISOString(),
@@ -76,8 +83,8 @@
                 }));
                 const saveEvent = await axios({
                   method: "POST",
-                  url: "{% url 'save_event' %}",
-                  data: JSON.stringify(eventArray),
+                  url: "{% url 'save_event' %}", // 저장 엔드포인트 URL
+                  data: JSON.stringify(eventArray), // 데이터 전송
                   headers: {
                     'Content-Type': 'application/json'
                   }
@@ -86,28 +93,30 @@
             },
           }
         },
+        // 헤더 툴바 설정
         headerToolbar: {
           left: 'prev,next today,myCustomButton,mySaveButton',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
-        initialView: 'dayGridMonth',
-        navLinks: true,
-        editable: true,
-        selectable: true,
-        nowIndicator: true,
-        dayMaxEvents: true,
-        locale: 'ko',
-        eventAdd: function(obj) {
+        initialView: 'dayGridMonth', // 초기 뷰 설정(기본 설정: 달)
+        //initialDate: '2021-07-15', // 초기 날짜 설정 (설정X -> 오늘 날짜)
+        navLinks: true, // 날짜 선택 시 Day 캘린더나 Week 캘린더로 링크
+        editable: true, // 편집 가능 여부
+        selectable: true, // 달력 일자 드래그 설정가능
+        nowIndicator: true, // 현재 시간 표시
+        dayMaxEvents: true, // 이벤트가 오버되면 높이 제한
+        locale: 'ko', // 한국어
+        eventAdd: function(obj) { // 이벤트 추가 시 발생 이벤트
           console.log(obj);
         },  
-        eventChange: function(obj) {
+        eventChange: function(obj) { // 이벤트 변경 시 발생 이벤트
           console.log(obj);
         },
-        eventRemove: function(obj){
+        eventRemove: function(obj){ // 이벤트 삭제 시 발생 이벤트
           console.log(obj);
         },
-        {% comment %} // 캘린더에서 드래그로 이벤트를 생성
+        {% comment %} // 캘린더에서 드래그로 이벤트를 생성(지금은 기능X)
         select: function(arg) {
           var title = prompt('Event Title:');
           if (title) {
@@ -121,12 +130,14 @@
           calendar.unselect()
         }, 
         {% endcomment %}
+
+        // 이벤트 데이터 소스
         eventSources:[
           {
             events: async function (info, successCallback, failureCallback) {
               const eventResult = await axios({
                 method: "POST",
-                url: "{% url 'event_data' %}",
+                url: "{% url 'event_data' %}", // 이벤트 데이터 엔드포인트 URL
               });
               const eventData = eventResult.data;
               const eventArray = eventData.map(event => ({
@@ -135,7 +146,7 @@
                 end: event.end,
                 backgroundColor: event.backgroundColor,
               }));
-              successCallback(eventArray);
+              successCallback(eventArray); // 이벤트 데이터 성공 콜백
             },
           },
           {
@@ -145,6 +156,7 @@
         ]
       });
 
+      // 저장 버튼 클릭 시 이벤트 핸들러
       $("#saveChanges").on("click", function () {
         var eventData = {
           title: $("#title").val(),
@@ -152,23 +164,26 @@
           end: $("#end").val(),
           color: $("#color").val(),
         };
+        //빈 값 입력시 오류
         if (
           eventData.title == "" ||
           eventData.start == "" ||
           eventData.end == ""
         ) {
           alert("입력하지 않은 값이 있습니다.");
+          // 끝나는 날짜가 시작하는 날짜보다 값이 크면 안됨
         } else if ($("#start").val() > $("#end").val()) {
           alert("시간을 잘못입력 하셨습니다.");
         } else {
-          calendar.addEvent(eventData);
-          $("#exampleModal").modal("hide");
-          $("#title").val("");
+          calendar.addEvent(eventData); // 이벤트 추가
+          $("#exampleModal").modal("hide"); // 모달 닫기
+          $("#title").val(""); // 필드 초기화
           $("#start").val("");
           $("#end").val("");
           $("#color").val("");
         }
       });
+      //캘린더 랜더링
       calendar.render();
     });
   })();
