@@ -109,6 +109,7 @@
         eventRemove: function(obj){
           console.log(obj);
         },
+        {% comment %} // 캘린더에서 드래그로 이벤트를 생성
         select: function(arg) {
           var title = prompt('Event Title:');
           if (title) {
@@ -120,7 +121,8 @@
             })
           }
           calendar.unselect()
-        },
+        }, 
+        {% endcomment %}
         eventSources:[
           {
             events: async function (info, successCallback, failureCallback) {
