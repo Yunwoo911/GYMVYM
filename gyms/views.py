@@ -8,8 +8,12 @@ import json
 from gyms.search.search_gym_member import Search
 
 # Create your views here.
-class TrainerPageView(TemplateView):
-    template_name = 'trainer_page.html'
+class PtMembershipManagementPageView(TemplateView):
+    template_name = 'pt_membership_page.html'
+
+
+class ProfilePageView(TemplateView):
+    template_name = 'profile_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
