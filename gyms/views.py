@@ -4,6 +4,7 @@ from .models import GymMember, PersonalInfo, Trainer
 from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
+import json
 
 # Create your views here.
 class TrainerPageView(TemplateView):
@@ -55,7 +56,24 @@ class TrainerPortfolioView(TemplateView):
         user = 15
         context['trainer'] = CustomUser.objects.filter(user = user)
         # context['trainer'] = Trainer.objects.filter(user = user)
-        return context
+        return context    
+
+
+def export_gym_member_usernames_to_json(file_path):
+    gym_members = GymMember.objects.all()
+    data = [
+        {
+            "username": member.user.username,
+            "join_date": member.join_date.strftime('%Y-%m-%d')
+        }
+        for member in gym_members
+    ]
+
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+# export_gym_member_usernames_to_json('gym_member_usernames.json')
         
 
 

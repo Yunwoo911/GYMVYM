@@ -1,3 +1,6 @@
+# gyms app
+gyms/search/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

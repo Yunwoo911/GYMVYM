@@ -13,7 +13,8 @@
     <ul>
         {% for member in gym_members %}
         <li><a href="{% url 'trainer_detail_page' member.member_id %}">
-                {{ member.user.username }} - {{member.membership_type }}
+                {{ member.user.username }} - {{member.membership_type }}<br>
+                가입일 : {{ member.join_date }}
             </a>
         </li>
         {% endfor %}
