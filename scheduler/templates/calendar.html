@@ -31,13 +31,11 @@
           종료시간 : <input type="datetime-local" id="end" /><br />
           배경색상 :
           <select id="color">
-            <option value="red">빨강색</option>
-            <option value="orange">주황색</option>
-            <option value="yellow">노랑색</option>
-            <option value="green">초록색</option>
-            <option value="blue">파랑색</option>
-            <option value="indigo">남색</option>
-            <option value="purple">보라색</option>
+            <option value="#F3B0C4">빨강색</option>
+            <option value="#FFFFB5">노랑색</option>
+            <option value="#97E2CB">초록색</option>
+            <option value="#ABDEE6">파랑색</option>
+            <option value="#CBAFF5">보라색</option>
           </select>
         </div>
         <div class="modal-footer">
@@ -53,7 +51,7 @@
     $(function(){
       var calendarEl = $('#calendar')[0];
       var calendar = new FullCalendar.Calendar(calendarEl, {
-        googleCalendarApiKey: '',
+        googleCalendarApiKey: '', //구글 캘린더 api
         height: '700px',
         expandRows: true,
         slotMinTime: '08:00',
