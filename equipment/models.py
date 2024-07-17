@@ -32,7 +32,7 @@ class EquipmentReservation(models.Model): # 기구 예약
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE) # 기구
     res_start_time = models.DateTimeField(null=True) # 시작 시간
     res_end_time = models.DateTimeField(null=True) # 종료 시간
-    time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE) # 예약 시간 슬롯
+    time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, null=True) # 예약 시간 슬롯
     # status = models.CharField(max_length=20, default='confirmed') # 예약 상태 (예: pending, confirmed, cancelled)
 
 class EquipmentInUse(models.Model): # 사용중인 기구
