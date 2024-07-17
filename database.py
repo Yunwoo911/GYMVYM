@@ -56,11 +56,27 @@ class CRUD(Databases):
             result = ("데이터베이스 읽기 오류:", e)
         
         return result
+    
+
+    # (Read) NFC UID로 검색
+    def read_by_nfc_uid(self, nfc_uid):
+        sql = "SELECT username, nfc_uid, phone_number, email  \
+            FROM public.account_customuser WHERE nfc_uid='{nfc_uid}'"  \
+            .format(nfc_uid=nfc_uid)
+        try:
+            # SQL 쿼리 실행
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
+        except Exception as e:
+            # 오류 발생 시 결과에 오류 메시지 저장
+            result = ("데이터베이스 읽기 오류:", e)
+        
+        return result
 
     # Update 변경
     def updateDB(self, nfc_uid, username):
         sql = "UPDATE public.account_customuser SET nfc_uid='{nfc_uid}' WHERE username ='{username}'" \
-        .format(nfc_uid=nfc_uid, username=username)
+            .format(nfc_uid=nfc_uid, username=username)
         try:
             # SQL 쿼리 실행 및 커밋
             self.cursor.execute(sql)
@@ -68,6 +84,7 @@ class CRUD(Databases):
         except Exception as e:
             # 오류 발생 시 메시지 출력
             print("데이터베이스 업데이트 오류:", e)
+
 
     # 삭제/제거
     def deleteDB(self, condition):
