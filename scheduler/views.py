@@ -8,7 +8,7 @@ def calendar_view(request):
 
 # 이벤트 데이터를 JSON 형태로 반환
 def event_data(request):
-    events = Event.objects.all() #filter(user=request.user)
+    events = Event.objects.filter(user=request.user) #filter(user=request.user)
     events_json = [
         {
             'title': event.title,
@@ -25,7 +25,7 @@ def save_event(request):
         data = json.loads(request.body)
         for event in data:
             Event.objects.create(
-                #user=request.user,
+                user=request.user,
                 title=event['title'],
                 start=event['start'],
                 end=event['end'],
