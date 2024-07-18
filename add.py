@@ -11,8 +11,13 @@ db = CRUD()  # CRUD 객체 생성
 # 읽어온 정보를 print로 출력하고, 해당 정보를 반환합니다.
 def search(name):
     result = db.readDB(name)
-    print("정보 : ", result)
-    return result
+    if result:
+        print("정보 : ", result)
+        return result
+    else:
+        print("사용자를 찾을 수 없습니다.")
+        return None
+
 
 
 # NFC 카드를 읽는 기능
@@ -57,6 +62,7 @@ def add_to_database(users):
             # 데이터베이스에서 username 조회
             if users:
                 # 여러 명의 사용자가 검색되면 선택
+                users = search(users)
                 if len(users) > 1:
                     selected_user = select_user(users)
                 else:
@@ -89,8 +95,8 @@ def interface():
         if not name_to_search: # 빈칸으로 입력했을 때
             print("이름을 입력해 주세요.")
             continue
-        #users = search(name_to_search)
-        elif not name_to_search: # 이름이 틀렸을 때
+        users = search(name_to_search)
+        if users is None: # 사용자를 찾을 수 없는 경우
             print("사용자를 찾을 수 없습니다. 다시 시도해 주세요.")
             continue
         print("NFC 카드를 인식해 주세요.")
@@ -98,8 +104,9 @@ def interface():
         if new_nfc_uid is None:
             print("Timeout: NFC 카드를 인식할 수 없습니다.")
             continue
-        if add_to_database(name_to_search):
+        if add_to_database(users):
             break
+
 
 if __name__ == "__main__":
     interface()
