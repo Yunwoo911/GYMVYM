@@ -10,77 +10,211 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <nav class="navbar d-flex justify-content-center align-items-center" style="background-color: #58C3FF;">
-        <div class="nav-item m-auto">
-            <img src="{% static 'LOGO.png' %}" alt="Logo" style="margin-left:20px" />
-        </div>
-        <div class="account" style="margin-right: 5px;">
-            {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}">
-                {% if user.user_image %}
-                <img src="{{ user.user_image.url }}" alt="Profile Image" width="35" height="35"
-                    style="border-radius: 50%;" />
+    <div class="container">
+        <nav class="navbar d-flex justify-content-center align-items-center" style="background-color: #58C3FF;">
+            <div class="nav-item m-auto">
+                <img src="{% static 'LOGO.png' %}" alt="Logo" style="margin-left:20px"/>
+            </div>
+            <div class="account" style="margin-right: 5px;">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}">
+                        {% if user.user_image %}
+                            <img src="{{ user.user_image.url }}" alt="Profile Image" width="35" height="35" style="border-radius: 50%;"/>
+                        {% else %}
+                            <img src="{% static 'default.png' %}" alt="Profile Image" width="35" height="35" style="border-radius: 50%;"/>
+                        {% endif %}
+                    </a>
                 {% else %}
-                <img src="{% static 'default.png' %}" alt="Profile Image" width="35" height="35"
-                    style="border-radius: 50%;" />
+                    <a href="{% url 'login' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                    </a>
                 {% endif %}
-            </a>
-            {% else %}
-            <a href="{% url 'login' %}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-person-fill"
-                    viewBox="0 0 16 16">
-                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                </svg>
-            </a>
-            {% endif %}
-        </div>
-    </nav>
-    <div class="home_b">
-        <div class="info">
-            <div class="info_1">
-                <div class="info_1_1">
-                    <p><b>헬스장</b></p>
-                    <img src="{% static 'GYMFONT.png' %}" width="60" height="60">
-                    <p>현재 사용인원 : </p>
+            </div>
+        </nav>
+        <div class="home_b">
+            <div class="info">
+                <div class="info_1">
+                    <div class="info_1_1">
+                        <p><b>헬스장</b></p>
+                        <img src="{% static 'GYMFONT.png' %}" width="60" height="60">
+                        <p>현재 사용인원 : </p>
+                    </div>
+                </div>
+                <div class="info_2">
+                    <div class="info_2_1">
+                        <p><b>유저상태</b></p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="white" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                        <p>회원</p>
+                    </div>
                 </div>
             </div>
-            <div class="info_2">
-                <div class="info_2_1">
-                    <p><b>유저상태</b></p>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="white"
-                        class="bi bi-person-fill" viewBox="0 0 16 16">
-                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                    </svg>
-                    <p>회원</p>
-                </div>
-            </div>
-        </div>
-        <div class="menu">
-            <div class="menu_box">
-                <ul class="list-none">
-                    <li>
-                        <img src="{% static 'calendar.png' %}" width="45" height="45">
-                        <p><b>피티일정</b></p>
-                    </li>
-                    <li>
-                        <img src="{% static 'person.png' %}" width="45" height="45">
-                        <p><b>실시간<br>인원</b></p>
-                    </li>
-                    <li>
-                        <img src="{% static 'exit.png' %}" width="45" height="45">
-                        <p><b>퇴장</b></p>
-                    </li>
-                    <li>
-                        <img src="{% static 'service.png' %}" width="45" height="45">
-                        <p><b>고객센터</b></p>
-                    </li>
-                </ul>
-                <ul class="list-none">
-                    <li>
-                        <a href="{% url 'pt_membership_management_page' %}">
+            <div class="menu">
+                <div class="menu_box">
+                    <ul class="list-none">
+                        <li>
+                            <a href="{% url 'calendar' %}">
+                            <img src="{% static 'calendar.png' %}" width="45" height="45">
+                            <p><b>피티일정</b></p>
+                            </a>
+                        </li>
+                        <li>
+                            <img src="{% static 'person.png' %}" width="45" height="45">
+                            <p><b>실시간<br>인원</b></p>
+                        </li>
+                        <li>
+                            <img src="{% static 'exit.png' %}" width="45" height="45">
+                            <p><b>퇴장</b></p>
+                        </li>
+                        <li>
+                            <img src="{% static 'service.png' %}" width="45" height="45">
+                            <p><b>고객센터</b></p>
+                        </li>
+                    </ul>
+                    <ul class="list-none">
+                        <li>
                             <img src="{% static 'trainer.png' %}" width="45" height="45">
                             <p><b>트레이너</b></p>
+                        </li>
+                        <li>
+                            <img src="{% static 'person.png' %}" width="45" height="45">
+                            <p><b>헬스장<br>채팅</b></p>
+                        </li>
+                        <li>
+                            <img src="{% static 'door.png' %}" width="45" height="45">
+                            <p><b>입장</b></p>
+                        </li>
+                        <li>
+                            <img src="{% static 'chat.png' %}" width="45" height="45">
+                            <p><b>메세지</b></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="status">
+                <div class="stauts_1">
+                    <div class="status_title">
+                        <h3>회원정보</h3>
+                        <a href="#">
+                            <p>상세보기</p>
+                        </a>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .navbar { 
+            width : 600px;
+        }
+        .info{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width : 600px;
+            height: 240px;
+            background-color: #58C3FF;
+        }
+        .info p{
+            margin : 10px 0;
+        }
+        .info_1 {
+            width: 160px;
+            height: 160px;
+            border: solid 3px #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center; /* 수직 중앙 정렬 */
+            justify-content: center; /* 수평 중앙 정렬 */
+            margin-right: 50px;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); /* box-shadow 추가 */
+        }
+        .info_2{
+            width: 160px;
+            height: 160px;
+            border: solid 3px #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center; /* 수직 중앙 정렬 */
+            justify-content: center; /* 수평 중앙 정렬 */
+            margin-left: 50px;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); /* box-shadow 추가 */
+        }
+        .info_1 img{
+            margin: auto;
+        }
+        .info_1_1{
+            text-align: center;
+        }
+        .info_2_1{
+            text-align: center;
+        }
+        .menu{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 240px;
+            width : 600px;
+        }
+        .menu_box{
+            height : 200px;
+            margin : 0 auto;
+            padding : 0;
+        }
+        .list-none{
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin : auto;
+            padding : 0;
+        }
+        .list-none ul{
+            padding : 0;
+        }
+        .list-none li{
+            margin : 0 40px;
+            padding : 6px;
+        }
+        .list-none img {
+            display: block;
+            margin: 0 auto;
+        }
+        .list-none p{
+            text-align: center;
+        }
+        .stauts{
+            padding : 0;
+            margin : auto;
+        }
+        .stauts_1{
+            border: solid 2px #58C3FF;
+            border-radius: 10px;
+            width : 600px;
+            height : 200px;
+            margin-top : 40px;
+        }
+        .status_title{
+            display: flex;
+            align-content: center;
+            height : 45px;
+            padding : 12px;
+        }
+        .status_title p{
+            margin : 2px;
+        }
+        .status_title a{
+            text-align : right;
+
+        }
+    </style>
+    {% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
                         </a>
                     </li>
                     <li>

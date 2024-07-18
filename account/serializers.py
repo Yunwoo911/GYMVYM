@@ -63,3 +63,5 @@ class LoginSerializer(serializers.Serializer) :
             token = Token.objects.get(user=user)
             return token
         raise serializers.ValidationError({"error": "Unable to log in with provided credentials."})
+    
+
