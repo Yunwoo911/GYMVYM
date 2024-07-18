@@ -37,10 +37,8 @@ def add_to_database():
     try:
         id, _ = read_with_timeout(timeout=5)
         if id is not None:
-            # 사용자의 username 입력 받기
-            username = input("등록하실 분의 이름을 적어주세요: ")
             # 데이터베이스에서 username 조회
-            users = search(username)
+            users = search(str(id))
             if not users:
                 print("없는 회원입니다.")
             else:
@@ -76,11 +74,12 @@ def interface():
             print("사용자를 찾을 수 없습니다. 다시 시도해 주세요.")
             continue
         
-        new_nfc_uid = input("새로운 NFC UID를 입력하세요: ")
-        
-        if not new_nfc_uid: # 빈칸으로 입력했을 때
-            print("NFC UID를 입력해 주세요.")
+        print("NFC 카드를 인식해 주세요.")
+        new_nfc_uid, _ = read_with_timeout(timeout=5)
+        if new_nfc_uid is None:
+            print("Timeout: NFC 카드를 인식할 수 없습니다.")
             continue
+        
         if add_to_database():
             break
 
