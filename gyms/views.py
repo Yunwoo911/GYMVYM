@@ -5,7 +5,7 @@ from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
 import json
-from gyms.search.search_gym_member import Search
+# from gyms.search.search_gym_member import Search
 
 # Create your views here.
 class PtMembershipManagementPageView(TemplateView):
