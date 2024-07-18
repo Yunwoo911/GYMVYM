@@ -12,7 +12,6 @@ def search(name):
         print("정보 : ", result)
         return result
     else:
-        print("사용자를 찾을 수 없습니다.")
         return None
 
 def read_with_timeout(timeout=1):
@@ -57,6 +56,9 @@ def add_to_database(selected_user):
 def interface():
     while True:
         name_to_search = input("검색할 사용자의 이름을 입력하세요: ")
+        if name_to_search.lower() == 'q':  # 'q'를 입력하면 종료
+            print("프로그램을 종료합니다.")
+            break
         if not name_to_search: # 빈칸으로 입력했을 때
             print("이름을 입력해 주세요.")
             continue
