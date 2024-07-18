@@ -1,9 +1,12 @@
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import time
+from database import CRUD
 
 reader = SimpleMFRC522()
+db = CRUD() # CRUD 객체 생성
 
+# NFC 카드를 읽는 기능
 def read_with_timeout(timeout=1):
     start_time = time.time()
     while True:
@@ -12,20 +15,23 @@ def read_with_timeout(timeout=1):
             return id, text
         if time.time() - start_time > timeout:
             return None, None
-        time.sleep(0.1)  # 짧은 딜레이
+        time.sleep(0.1)
 
-def add_to_list():
+# NFC 카드를 읽고, 읽은 ID와 사용자 입력 username을 데이터베이스에 저장
+def add_to_database():
     try:
-        id, text = read_with_timeout(timeout=5)  # timeout을 5초로 설정
+        id, _ = read_with_timeout(timeout=5)
         if id is not None:
-            with open("list.txt", 'a') as file:
-                file.write('\n')
-                file.write(str(id))  # id를 문자열로 변환하여 저장
-            print("{0}".format(id))
+            # 사용자의 username 입력 받기
+            username = input("등록하실 분의 이름을 적어주세요 : ")
+            
+            # 데이터베이스에 NFC ID와 사용자 입력 username 저장
+            db.updateDB(nfc_uid=str(id), username=username)
+            print("NFC ID {} 이(가) 데이터베이스에 저장되었습니다.".format(str(id)))
         else:
             print("Timeout: NFC 카드를 인식할 수 없습니다.")
     finally:
         GPIO.cleanup()
 
 if __name__ == "__main__":
-    add_to_list()
+    add_to_database()
