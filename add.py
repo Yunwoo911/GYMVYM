@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import time
-from database import CRUD
+from add_DB import CRUD
 
 reader = SimpleMFRC522()
 db = CRUD()  # CRUD 객체 생성
@@ -38,7 +38,7 @@ def add_to_database():
                     print("이미 존재하는 NFC ID입니다.")
                 else:
                     # 데이터베이스에 NFC ID와 사용자 입력 username 저장
-                    db.updateDB(nfc_uid=str(id), username=username)
+                    db.updateNFC(nfc_uid=str(id), username=username)
                     print("NFC ID {} 이(가) 데이터베이스에 저장되었습니다.".format(str(id)))
         else:
             print("Timeout: NFC 카드를 인식할 수 없습니다.")

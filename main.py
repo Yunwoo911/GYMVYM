@@ -1,4 +1,4 @@
-from database import CRUD
+from add_DB import CRUD
 
 # CRUD 객체 생성
 db = CRUD()
