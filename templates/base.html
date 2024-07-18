@@ -12,6 +12,28 @@
 <body>
     {% block content %}
     {% endblock %}
+
+    <div class="tabbar">
+        <a href="#category">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+            <span>카테고리</span>
+        </a>
+        <a href="{% url 'home' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="40" height="40">
+                <path d="M12 2.25L1 12h3v9h16v-9h3L12 2.25zm0 2.83L19 12v7H5v-7l7-6.92z"/>
+            </svg>          
+            <span>홈</span>
+        </a>
+        <a href="{% url 'profile' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="white">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+            <span>마이</span>
+        </a>
+    </div>
+
 </body>
 </html>
 
@@ -20,4 +42,32 @@
         margin: auto;
         width: 600px;
     }
+    .tabbar {
+        position: fixed;
+        bottom: 0;
+        width: 600px;
+        background-color: #58C3FF;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .tabbar a {
+        text-align: center;
+        color: white;
+        text-decoration: none;
+        flex: 1;
+    }
+
+    .tabbar a img {
+        display: block;
+        margin: 0 auto 5px;
+    }
+
+    .tabbar a span {
+        display: block;
+        font-size: 12px;
+    }
+
 </style>

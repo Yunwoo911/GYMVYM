@@ -1,5 +1,6 @@
 <!-- templates/profile.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     <div class="profile-container">
@@ -7,10 +8,15 @@
         {% if user.user_image %}
             <img src="{{ user.user_image.url }}" alt="Profile Image" width="150" height="150" style="border-radius: 50%;"/>
         {% else %}
-            <p>No profile image.</p>
+            <img src="{% static 'default.png' %}" alt="Profile Image" width="150" height="150" style="border-radius: 50%;"/>
         {% endif %}
         <p>Email: {{ user.email }}</p>
         <p>Nickname: {{ user.nickname }}</p>
+        <div class="form-group">
+            <label for="nfc_uid">NFC :</label>
+            <input type="text" name="nfc_uid" id="nfc_uid" class="form-control" autocomplete="nfc_uid">
+        </div>
+        
         {% if user.is_authenticated %}
         <!-- 로그아웃 버튼 -->
             <form action="{% url 'logout' %}" method="post">

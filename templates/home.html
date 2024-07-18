@@ -55,8 +55,10 @@
                 <div class="menu_box">
                     <ul class="list-none">
                         <li>
+                            <a href="{% url 'calendar' %}">
                             <img src="{% static 'calendar.png' %}" width="45" height="45">
-                            <p><b>피티일정</b></p>
+                                <p><b>피티일정</b></p>
+                            </a>
                         </li>
                         <li>
                             <img src="{% static 'person.png' %}" width="45" height="45">
@@ -89,7 +91,17 @@
                             <p><b>메세지</b></p>
                         </li>
                     </ul>
-                    
+                </div>
+            </div>
+            <div class="status">
+                <div class="stauts_1">
+                    <div class="status_title">
+                        <h3>회원정보</h3>
+                        <a href="#">
+                            <p>상세보기</p>
+                        </a>
+                    </div>
+    
                 </div>
             </div>
         </div>
@@ -173,6 +185,30 @@
         }
         .list-none p{
             text-align: center;
+        }
+        .stauts{
+            padding : 0;
+            margin : auto;
+        }
+        .stauts_1{
+            border: solid 2px #58C3FF;
+            border-radius: 10px;
+            width : 600px;
+            height : 200px;
+            margin-top : 40px;
+        }
+        .status_title{
+            display: flex;
+            align-content: center;
+            height : 45px;
+            padding : 12px;
+        }
+        .status_title p{
+            margin : 2px;
+        }
+        .status_title a{
+            text-align : right;
+
         }
     </style>
     {% endblock %}

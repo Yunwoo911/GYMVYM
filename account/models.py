@@ -38,13 +38,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     (2, 'Member'),
     ]
 
-<<<<<<< HEAD
-    user = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
-    nfc_uid = models.UUIDField(unique=True, null=True, blank=True, editable=False)
-=======
     user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
     nfc_uid = models.CharField(unique=True, null=True, blank=True, editable=False)
->>>>>>> 150ca544132fd04dc759c0a6dfe74a0dd61ca096
     username = models.CharField(max_length=100, unique=True, blank=False)
     phone_number = models.CharField(max_length=15, unique=True)
     email = models.EmailField(unique=True, blank=False, null=False)
@@ -52,11 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     detail_address = models.CharField(max_length=255, null=False)
     nickname = models.CharField(max_length=100, null=False, default='', unique=True)
     user_image = models.ImageField(upload_to='user_image', null=True, default='default.png')
-<<<<<<< HEAD
-    birth = models.DateField(null=False, blank=False)
-=======
     birth = models.DateField(null=False)
->>>>>>> 150ca544132fd04dc759c0a6dfe74a0dd61ca096
     usertype = models.IntegerField(choices=USERTYPE_CHOICES,default=2)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     is_staff = models.BooleanField(null=True, blank=True)
