@@ -98,7 +98,7 @@ def interface():
         if new_nfc_uid is None:
             print("Timeout: NFC 카드를 인식할 수 없습니다.")
             continue
-        if add_to_database():
+        if add_to_database(name_to_search):
             break
 
 if __name__ == "__main__":
