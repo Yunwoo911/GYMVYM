@@ -8,4 +8,4 @@ class VisitLog(models.Model): # 출입관리
     nfc_uid = models.CharField(max_length=30, null=True)
     enter_time = models.DateTimeField()
     exit_time = models.DateTimeField(null=True)
-    fields = models.CharField(max_length=100, null=True)
+    QR_fields = models.CharField(max_length=100, null=True)

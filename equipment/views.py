@@ -7,6 +7,8 @@ from account.models import CustomUser
 from .models import EquipmentInUse, EquipmentReservation
 from datetime import datetime, timedelta
 
+# 퇴실률에 따른 예약시간 배정?
+
 # 피크타임 예약
 ## 예약 페이지
 def show_equipments(request):

@@ -56,13 +56,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
 
-    gym_entry_count = models.PositiveIntegerField(default=0) # 7/16 헬스장 입장 횟수 추가
-    gym_manual_exit_count = models.PositiveIntegerField(default=0) # 7/16 헬스장 수동 퇴실 횟수 추가
+    gym_entry_count = models.PositiveIntegerField(default=0,null=True) # 7/16 헬스장 입장 횟수 추가
+    gym_manual_exit_count = models.PositiveIntegerField(default=0,null=True) # 7/16 헬스장 수동 퇴실 횟수 추가
     manual_exit_rate = models.DecimalField(
         default=100.0,
-        max_digits=5, 
+        max_digits=5,
         decimal_places=2, 
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+        null=True
     ) # 7/16 수동 퇴실율 추가
 
     objects = CustomUserManager()

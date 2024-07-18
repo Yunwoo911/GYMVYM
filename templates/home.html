@@ -62,10 +62,13 @@
                             <img src="{% static 'person.png' %}" width="45" height="45">
                             <p><b>실시간<br>인원</b></p>
                         </li>
-                        <li>
-                            <img src="{% static 'exit.png' %}" width="45" height="45">
-                            <p><b>퇴장</b></p>
-                        </li>
+                        <form id="exitForm" method="post" action="{% url 'web_exit' %}">
+                            {% csrf_token %}
+                            <button type="submit" style="background:none; border:none; padding:0;">
+                                <img src="{% static 'exit.png' %}" width="45" height="45">
+                                <p><b>퇴장</b></p>
+                            </button>
+                        </form>
                         <li>
                             <img src="{% static 'service.png' %}" width="45" height="45">
                             <p><b>고객센터</b></p>
