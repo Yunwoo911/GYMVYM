@@ -23,12 +23,12 @@ def read_with_timeout(timeout=1):
             return None, None
         time.sleep(0.1)
 
-# 이름으로 사용자 선택
+# 동명이인이 있을 시 사용자 선택
 def select_user(users):
-    print("여러 명의 사용자가 검색되었습니다. 업데이트할 사용자를 선택하세요.")
+    print("여러 명의 사용자가 검색되었습니다. 등록할 사용자를 선택하세요.")
     for i, user in enumerate(users):
         print(f"{i}: {user}")
-    index = int(input("업데이트할 사용자의 인덱스를 입력하세요: "))
+    index = int(input("등록할 사용자의 번호를 입력하세요: "))
     selected_user = users[index]
     return selected_user
 
