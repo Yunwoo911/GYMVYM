@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/gyms.css' %}">
+</head>
+
+<body>
+    <ul>
+        {% for info in personal_info %}
+        <li>
+            <h2>{{ info.gym_member_if.user.username }}님의 트레이닝 정보</h2><br>
+
+            {% if not info %}
+            <button onclick="location.href='{% url 'profile_add_page' info.gym_member_if.member_id %}'">
+                회원 정보 입력
+            </button><br>
+            {% endif %}
+
+            키: {{ info.height }} cm<br>
+            몸무게: {{ info.weight }} kg<br>
+            운동 빈도: 주 {{ info.frequency }}회<br>
+            운동 종류: {{ info.types }}<br>
+            운동 강도: {{ info.intensity }}<br>
+            목표: {{ info.goals }}<br>
+            식습관: {{ info.diet_habits }}<br>
+            수면 패턴: {{ info.sleep_pattern }}<br>
+            스트레스 수준: {{ info.stress_level }}<br>
+            흡연 여부: {{ info.smoking }}<br>
+            흡연량: {{ info.smoking_amount }}<br>
+            음주 여부: {{ info.drinking }}<br>
+            음주량: {{ info.drinking_amount }}<br>
+            체지방률: {{ info.body_fat_percentage }}%<br>
+            근육량: {{ info.muscle_mass }} kg<br>
+            기초대사량: {{ info.basal_metabolic_rate }} kcal<br>
+            BMI: {{ info.bmi }}<br>
+            단기 목표: {{ info.short_term_goals }}<br>
+            장기 목표: {{ info.long_term_goals }}<br>
+            선호 운동 종류: {{ info.preferred_exercise_types }}<br>
+            운동 가능 시간: {{ info.available_times }}<br>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

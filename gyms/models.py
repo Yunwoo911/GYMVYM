@@ -20,11 +20,11 @@ class Gym(models.Model):
 class Trainer(models.Model):
     trainer_id = models.AutoField(primary_key=True)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    # owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 1})
     trainer_name = models.CharField(max_length=100)
-    certificate = models.CharField(max_length=100, null=True)
+    certificate = models.CharField(max_length=500, null=True)
     trainer_image = models.ImageField(upload_to='trainer_images', null=True)
-
 
 class GymMember(models.Model):
     member_id = models.AutoField(primary_key=True)
@@ -104,7 +104,7 @@ class PersonalInfo(models.Model):
     available_times = models.CharField(max_length=255)
 
     def __str__(self) -> str:
-        return f"{self.member.user.username} - Personal Info"
+        return self.gym_member_if.user.username
 
 
 class PT(models.Model):

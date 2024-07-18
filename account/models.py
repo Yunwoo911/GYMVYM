@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils import timezone
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class CustomUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_fields):
@@ -55,6 +56,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
 
+    gym_entry_count = models.PositiveIntegerField(default=0) # 7/16 헬스장 입장 횟수 추가
+    gym_manual_exit_count = models.PositiveIntegerField(default=0) # 7/16 헬스장 수동 퇴실 횟수 추가
+    manual_exit_rate = models.DecimalField(
+        default=100.0,
+        max_digits=5, 
+        decimal_places=2, 
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
+    ) # 7/16 수동 퇴실율 추가
+
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -62,3 +72,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_userimage(self):
         return settings.WEBSITE_URL + self.user_image.url
+
+def calculate_manual_exit_rate(self):  # 7/16 수동 퇴실율 계산 함수 추가
+        if self.gym_entry_count > 0:
+            self.manual_exit_rate = float(self.gym_manual_exit_count) / self.gym_entry_count * 100
+        else:
+            self.manual_exit_rate = 100.0
+        self.save()

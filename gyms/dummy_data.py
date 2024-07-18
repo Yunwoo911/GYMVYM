@@ -6,7 +6,7 @@ from account.models import CustomUser
 from django.contrib.auth.hashers import make_password
 from datetime import datetime, timedelta
 import random
-from gyms.models import GymMember, Gym, Owner
+from gyms.models import GymMember, Gym, Owner, PersonalInfo
 
 # 더미 데이터 생성
 fake = Faker()
@@ -104,6 +104,43 @@ def create_gym_member(num_records):
         )
 
 
+def create_dummy_personal_info():
+    # GymMember 객체들을 가져옵니다.
+    gym_members = GymMember.objects.all()
+
+    for gym_member in gym_members:
+        personal_info = PersonalInfo(
+            gym_member_id=gym_member,
+            height=random.uniform(150.0, 200.0),
+            weight=random.uniform(50.0, 100.0),
+            medical_conditions="None",
+            medications="None",
+            frequency=random.randint(1, 7),
+            types=random.choice(["Cardio", "Strength", "Flexibility"]),
+            intensity=random.choice(["Low", "Moderate", "High"]),
+            goals=random.choice(["Lose weight", "Gain muscle", "Improve endurance"]),
+            diet_habits=random.choice(["Balanced diet", "High protein", "Low carb"]),
+            sleep_pattern=random.choice(["5-6 hours", "7-8 hours", "9+ hours"]),
+            stress_level=random.choice(["Low", "Medium", "High"]),
+            smoking=random.choice([True, False]),
+            smoking_amount=random.randint(0, 20) if random.choice([True, False]) else None,
+            drinking=random.choice([True, False]),
+            drinking_amount=random.randint(0, 10) if random.choice([True, False]) else None,
+            body_fat_percentage=random.uniform(10.0, 25.0),
+            muscle_mass=random.uniform(50.0, 80.0),
+            basal_metabolic_rate=random.uniform(1200.0, 2000.0),
+            bmi=random.uniform(18.5, 30.0),
+            short_term_goals="Run 5km without stopping",
+            long_term_goals="Complete a marathon",
+            preferred_exercise_types=random.choice(["Running", "Weight lifting", "Yoga"]),
+            available_times=random.choice(["Morning", "Afternoon", "Evening"])
+        )
+
+        personal_info.save()
+
+
+
+
 # 30개의 사용자 데이터 생성
 # for i in range(100, 140):
 #     create_custom_user(i)
@@ -113,3 +150,5 @@ def create_gym_member(num_records):
 # create_dummy_owners(50) # 원하는 더미 데이터 수
 
 # create_dummy_gyms(50)
+
+create_dummy_personal_info()

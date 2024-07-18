@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>트레이너 포트폴리오</title>
+    <link rel="stylesheet" href="{% static 'css/gyms.css' %}">
+</head>
+
+<body>
+    <h1>트레이너 포트폴리오</h1>
+    <button onclick="location.href='{% url 'trainer_portflio_page' trainer.id %}'">포트폴리오 작성하기</button>
+</body>
+
+</html>
