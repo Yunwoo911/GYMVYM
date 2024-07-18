@@ -1,79 +1,100 @@
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import time
-import tkinter as tk
-from threading import Thread
+import json
 
+# RFID 리더기 객체 생성
 reader = SimpleMFRC522()
+# 현재 읽은 RFID 카드의 ID를 저장할 변수
 global_id = ''
 
+# RFID 카드 정보를 JSON 파일에 추가하는 함수
 def add_to_list():
     global global_id
-    card_info = entry.get()
-    with open("list.txt", 'a') as file:
-        file.write(global_id + '\n')
-        file.write(card_info + '\n')
+    # 사용자로부터 카드 정보 입력 받기
+    card_info = input("카드 정보를 입력하세요: ")
+    
+    # JSON 파일 읽기
+    try:
+        with open("list.json", 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {}
+    
+    # RFID 카드 ID와 카드 정보 추가하기
+    data[global_id] = card_info
+    
+    # JSON 파일에 데이터 저장하기
+    with open("list.json", 'w') as file:
+        json.dump(data, file, indent=4)
+    
+    # 파일에 추가된 내용 출력하기
     print_list()
 
+# 출석 체크 기능을 수행하는 함수
 def check_attendance():
     global global_id
-    with open("list.txt", 'r') as file:
-        lines = file.readlines()
-        
+    
+    # JSON 파일 읽기
+    try:
+        with open("list.json", 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {}
+    
+    # 현재 날짜와 시간 가져오기
     current_date = time.strftime('%c', time.localtime(time.time()))
+    
+    # attendance_record.json 파일에 출석 기록 추가하기
+    try:
+        with open("attendance_record.json", 'r') as file:
+            attendance_data = json.load(file)
+    except FileNotFoundError:
+        attendance_data = {}
+    
+    if global_id in data:
+        attendance_data[data[global_id]] = {'status': '출석', 'date': current_date}
+        with open("attendance_record.json", 'w') as file:
+            json.dump(attendance_data, file, indent=4)
+        attendance_record = (data[global_id], '출석', current_date)
+        print(attendance_record)
 
-    with open("attendance_record.txt", 'a') as file:
-        for i in range(0, len(lines), 2):
-            if global_id == lines[i].strip():
-                file.write(lines[i+1].strip() + ' 출석 ' + current_date + '\n')
-                attendance_record = (lines[i+1].strip(), '출석', current_date)
-                print(attendance_record)
-
-def read_rfid_and_update_gui():
+# RFID 카드를 읽고 global_id 변수에 저장하는 함수
+def read_rfid_and_update():
     global global_id
     while True:
         id, text = reader.read()
         print(f'{id:#x}')
         global_id = str(id)
-        root.after(100, print_list)  # 0.1초마다 리스트 갱신
 
+# list.json 파일의 내용을 출력하는 함수
 def print_list():
-    with open("list.txt", 'r') as file:
-        lines = file.readlines()
+    try:
+        with open("list.json", 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {}
+    
+    print(json.dumps(data, indent=4))
 
-    list_content = ''.join(lines)
-    list_label.config(text=list_content)
+# 메인 함수
+def main():
+    while True:
+        # RFID 카드 읽기 및 global_id 변수 업데이트
+        read_rfid_and_update()
+        # 사용자 입력에 따라 기능 선택
+        option = input("1. 목록 추가, 2. 출석 체크, 3. 종료: ")
+        if option == '1':
+            add_to_list()
+        elif option == '2':
+            check_attendance()
+        elif option == '3':
+            break
+        else:
+            print("잘못된 입력입니다.")
 
-def on_closing():
-    root.destroy()
+    # GPIO 정리
     GPIO.cleanup()
 
-root = tk.Tk()
-root.title("출석체크")
-root.geometry("640x400+100+100")
-
-entry = tk.Entry(root)
-entry.grid(row=2, column=1)
-
-label = tk.Label(root, text='*출석체크*')
-label.grid(row=0, column=1)
-
-add_button = tk.Button(root, text='목록 추가', command=add_to_list)
-add_button.grid(row=1, column=1)
-
-check_button = tk.Button(root, text='출석', command=check_attendance)
-check_button.grid(row=3, column=1)
-
-list_label = tk.Label(root, text='')
-list_label.grid(row=2, column=2)
-
-# 종료 버튼 추가
-exit_button = tk.Button(root, text='종료', command=on_closing)
-exit_button.grid(row=4, column=1)
-
-# RFID 리더기 읽기와 GUI 갱신을 별도 스레드에서 실행
-rfid_thread = Thread(target=read_rfid_and_update_gui)
-rfid_thread.start()
-
-# 메인 루프 시작
-root.mainloop()
+if __name__ == "__main__":
+    main()
