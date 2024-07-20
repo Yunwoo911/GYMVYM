@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Equipment List</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Equipment List</h1>
+    <ul>
+        {% for equipment in equipments %}
+            <li>
+                {{ equipment.equipment_name }}
+                <form method="post" action="{% url 'equipment:reserve_equipment' equipment.equipment_id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary button" name="timeslot" value="18:00 - 18:30">18:00 - 18:30</button>
+                    <button type="submit" class="btn btn-primary button" name="timeslot" value="18:30 - 19:00">18:30 - 19:00</button>
+                    <button type="submit" class="btn btn-primary button" name="timeslot" value="19:00 - 19:30">19:00 - 19:30</button>
+                    <button type="submit" class="btn btn-primary button" name="timeslot" value="19:30 - 20:00">19:30 - 20:00</button>
+                    <button type="submit" class="btn btn-primary button" name="timeslot" value="20:00 - 20:30">20:00 - 20:30</button>
+                    <button type="submit" class="btn btn-primary button" name="timeslot" value="20:30 - 21:00">20:30 - 21:00</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+<style>
+    .button {
+        cursor: pointer;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        font-size: small;
+        font-family: inherit;
+        font-weight: bold;
+        color: #0011ff;
+        background-color: #f8f8fd;
+        padding: 0.8em 2.2em;
+        border-radius: 50em;
+        border: 6px solid #8b93f8;
+        box-shadow: 0px 8px #092dcf;
+    }
+    .button:active {
+        position: relative;
+        top: 8px;
+        border: 6px solid #646fff;
+        box-shadow: 0px 0px;
+    }
+</style>

@@ -10,8 +10,15 @@ from django.http import JsonResponse
 def web_exit(request):
     if request.method == 'POST':
         try:
+            # user는 요청을 보낸 유저
             user = request.user
+            # VisitLog 모델에서 현재 로그인한 사용자의 출입 기록을 가져옵니다.
+            # 조건: 
+            # 1. member 필드의 user가 현재 요청을 보낸 사용자와 일치해야 합니다.
+            # 2. exit_time 필드가 null이어야 합니다 (아직 퇴장하지 않은 기록).
+            # 3. enter_time 필드의 날짜가 오늘이어야 합니다.
             visitlog = VisitLog.objects.get(member__user=user, exit_time__isnull=True, enter_time__date=timezone.now().date())
+            # 퇴장 시간은 버튼을 누른 시점
             visitlog.exit_time = timezone.now()
             visitlog.save()
             return JsonResponse({'message': '퇴장이 완료되었습니다'})

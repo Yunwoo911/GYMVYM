@@ -62,13 +62,10 @@
                             <img src="{% static 'person.png' %}" width="45" height="45">
                             <p><b>실시간<br>인원</b></p>
                         </li>
-                        <form id="exitForm" method="post" action="{% url 'web_exit' %}">
-                            {% csrf_token %}
-                            <button type="submit" style="background:none; border:none; padding:0;">
-                                <img src="{% static 'exit.png' %}" width="45" height="45">
-                                <p><b>퇴장</b></p>
-                            </button>
-                        </form>
+                        <button type="button" id="exitForm" style="background:none; border:none; padding:0;">
+                            <img src="{% static 'exit.png' %}" width="45" height="45">
+                            <p><b>퇴장</b></p>
+                        </button>
                         <li>
                             <img src="{% static 'service.png' %}" width="45" height="45">
                             <p><b>고객센터</b></p>
@@ -179,4 +176,29 @@
         }
     </style>
     {% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+
+    {% block extra-script %}
+    <script>
+        // 아이디가 exitForm인 요소를 찾아서 이벤트 리스너 추가(클릭시 작동)
+        document.getElementById('exitForm').addEventListener('click', function() {
+            // 비동기처리(axios) POST 요청
+            axios({
+                method: 'POST',
+                url: '{% url "web_exit" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            // 요청 성공 시 views.py에 응답값(JsonResponse) 메시지 표시
+            .then((response) => {
+                alert(response.data.message);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('퇴장 처리 중 오류가 발생했습니다.');
+            });
+        });
+    </script>
+    {% endblock %}

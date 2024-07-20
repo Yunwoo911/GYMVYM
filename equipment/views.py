@@ -94,3 +94,10 @@ def tag_equipment(request):
 def show_equipment_status(request):
     equipments = Equipment.objects.all()
     return render(request, "equipment/equipment_status.html", {"equipments": equipments})
+
+# 예약 취소
+
+# 운동기구 사용 현황 표시
+def show_equipments_status(request):
+    equipments = Equipment.objects.all()
+    return render(request, "equipment/equipment_status.html", {"equipments": equipments})
