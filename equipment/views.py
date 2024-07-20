@@ -54,7 +54,6 @@ def reserve_equipment(request, equipment_id):
         return JsonResponse({"message": "예약 중 오류가 발생했습니다.", "error": str(e)}, status=500)
 
 # nfc 태그를 통한 사용과 사용대기
-def tag_equipment(request):
     # 운동기구에 nfc 태그 이벤트가 일어났을 때
     # 미사용중인 기구일 경우 바로 사용중으로 상태를 변경하고
     # 사용중인 기구일 경우 예약을 생성하는 함수
@@ -65,6 +64,7 @@ def tag_equipment(request):
     # 3. res_start_time이 됐을 때 equimentinuse 테이블에 추가
     # 4. res_end_time이 됐을 때 equimentinuse 테이블에서 삭제
     # 5. 매일 자정 equipmentreservation 테이블 초기화
+def tag_equipment(request):    
     try:
         tag_user = CustomUser.objects.filter(user=request.user, nfc_uid=request.nfc_uid).first()
         # 현재 요청을 보낸 사용자(request.user)와 NFC UID(request.nfc_uid)를 사용하여 CustomUser 테이블에서 해당 사용자를 조회합니다.
@@ -91,13 +91,11 @@ def tag_equipment(request):
     except Exception as e:
         return JsonResponse({"message": "태그 중 오류가 발생했습니다.", "error": str(e)}, status=500)
 
-def show_equipment_status(request):
-    equipments = Equipment.objects.all()
-    return render(request, "equipment/equipment_status.html", {"equipments": equipments})
-
-# 예약 취소
-
 # 운동기구 사용 현황 표시
-def show_equipments_status(request):
+def equipment_status(request):
     equipments = Equipment.objects.all()
-    return render(request, "equipment/equipment_status.html", {"equipments": equipments})
+    equipmentinuse_ids = EquipmentInUse.objects.values_list('equipment_id', flat=True)
+    return render(request, "equipment/equipment_status.html", {"equipments": equipments, "equipmentinuse_ids": equipmentinuse_ids})
+
+#기구의 사용이 끝난 경우 inuse 테이블에서 삭제되도록 하는 로직 필요
+# 예약 취소 로직 필요

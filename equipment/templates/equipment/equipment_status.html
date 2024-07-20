@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Equipment Status</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Equipment Status</h1>
+    <ul>
+        {% for equipment in equipments %}
+            <li>
+                {% if equipment.equipment_id in equipmentinuse_ids %}
+                    <span style="color: red;">&#9679; {{ equipment.equipment_name }}</span> 사용중    
+                {% else %}
+                    <span style="color: blue;">&#9679; {{ equipment.equipment_name }}</span> 사용 가능
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
