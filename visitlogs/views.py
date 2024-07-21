@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-# 현재 뷰의 문제점. 며칠 지난것도 퇴실이 가능할듯함
+# 현재 뷰의 문제점. 며칠 지난것도 퇴실이 가능할듯함 <-timezone.now().date()로 해결?
 
 def web_exit(request):
     if request.method == 'POST':
@@ -23,5 +23,7 @@ def web_exit(request):
             visitlog.save()
             return JsonResponse({'message': '퇴장이 완료되었습니다'})
         except VisitLog.DoesNotExist:
-            return JsonResponse({'message': '출입 기록이 없습니다.'})
+            return JsonResponse({'message': '출입 기록이 없습니다.'})   
     return JsonResponse({'message': '잘못된 요청'}, status=400)
+
+# 자동퇴실

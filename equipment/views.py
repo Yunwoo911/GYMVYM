@@ -66,7 +66,12 @@ def reserve_equipment(request, equipment_id):
     # 5. 매일 자정 equipmentreservation 테이블 초기화
 def tag_equipment(request):    
     try:
-        tag_user = CustomUser.objects.filter(user=request.user, nfc_uid=request.nfc_uid).first()
+        nfc_uid = request.POST.get('nfc_uid')  # nfc_uid를 요청에서 가져옵니다.
+        if not nfc_uid:
+            return JsonResponse({"message": "NFC UID가 제공되지 않았습니다."}, status=400)
+        
+        tag_user = CustomUser.objects.filter(user=request.user, nfc_uid=nfc_uid).first()
+
         # 현재 요청을 보낸 사용자(request.user)와 NFC UID(request.nfc_uid)를 사용하여 CustomUser 테이블에서 해당 사용자를 조회합니다.
         # filter() 메서드를 사용하여 조건에 맞는 사용자들을 필터링하고, first() 메서드를 사용하여 첫 번째 결과를 가져옵니다.
         if not tag_user:
@@ -97,5 +102,5 @@ def equipment_status(request):
     equipmentinuse_ids = EquipmentInUse.objects.values_list('equipment_id', flat=True)
     return render(request, "equipment/equipment_status.html", {"equipments": equipments, "equipmentinuse_ids": equipmentinuse_ids})
 
-#기구의 사용이 끝난 경우 inuse 테이블에서 삭제되도록 하는 로직 필요
+# 기구의 사용이 끝난 경우 inuse 테이블에서 삭제되도록 하는 로직 필요
 # 예약 취소 로직 필요
