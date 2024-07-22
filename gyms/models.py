@@ -106,7 +106,6 @@ class PersonalInfo(models.Model):
     def __str__(self) -> str:
         return f"{self.member.user.username} - Personal Info"
 
-
 class PT(models.Model):
     pt_id = models.AutoField(primary_key=True)
     member = models.ForeignKey(GymMember, on_delete=models.CASCADE)
@@ -116,3 +115,38 @@ class PT(models.Model):
     pt_end_date = models.DateField()
     duration = models.IntegerField()
 
+# 트레이너 권한 요청들을 관리하는 db
+class TrainerRequest(models.Model):
+    trainer_request_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
+    request_date = models.DateField(null=True, blank=True)
+    message = models.TextField(null=True, blank=True)  
+    approved = models.BooleanField(default=False)
+    approved_date = models.DateField(null=True, blank=True)
+    approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True)
+
+# 헬스장 소유 테이블
+class Ownership(models.Model):
+    ownership_id = models.AutoField(primary_key=True)
+    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
+    owner = models.ForeignKey(Owner, on_delete=models.PROTECT)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True) # 비고 필드
+
+# 고용된 트레이너 테이블
+class TrainerEmployment(models.Model):
+    trainer_employment_id = models.AutoField(primary_key=True)
+    trainer = models.ForeignKey(Trainer, on_delete=models.PROTECT)
+    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+# 헬스장 회원권 테이블
+class Membership(models.Model):
+    membership_id = models.AutoField(primary_key=True)
+    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
+    membership_type = models.CharField(max_length=50)
+    price = models.FloatField(null=True, blank=True)
+    duration = models.IntegerField(null=True, blank=True) # 멤버십 기간(일)
