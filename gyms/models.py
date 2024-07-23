@@ -16,13 +16,14 @@ class Gym(models.Model):
     gym_name = models.CharField(max_length=100)
     gym_address = models.CharField(max_length=255)
 
-
+# 7/23 수정
 class Trainer(models.Model):
     trainer_id = models.AutoField(primary_key=True)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    # owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 1})
     trainer_name = models.CharField(max_length=100)
-    certificate = models.CharField(max_length=100, null=True)
+    certificate = models.CharField(max_length=500, null=True)
     trainer_image = models.ImageField(upload_to='trainer_images', null=True)
 
 
@@ -115,16 +116,16 @@ class PT(models.Model):
     pt_end_date = models.DateField()
     duration = models.IntegerField()
 
-# 트레이너 권한 요청들을 관리하는 db
+# 트레이너 권한 요청들을 관리하는 테이블
 class TrainerRequest(models.Model):
     trainer_request_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
-    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
-    request_date = models.DateField(null=True, blank=True)
-    message = models.TextField(null=True, blank=True)  
-    approved = models.BooleanField(default=False)
-    approved_date = models.DateField(null=True, blank=True)
-    approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT) # 유저
+    requested_gym = models.ForeignKey(Gym, on_delete=models.PROTECT) # 트레이너 권한이 필요한 헬스장
+    request_date = models.DateField(null=True, blank=True) # 요청 일자
+    request_message = models.TextField(null=True, blank=True) # 요청 메세지
+    approved = models.BooleanField(default=False) # 승인 여부
+    approved_date = models.DateField(null=True, blank=True) # 승인 일자
+    approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True,default=None) # 승인자
 
 # 헬스장 소유 테이블
 class Ownership(models.Model):
@@ -146,7 +147,9 @@ class TrainerEmployment(models.Model):
 # 헬스장 회원권 테이블
 class Membership(models.Model):
     membership_id = models.AutoField(primary_key=True)
-    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
-    membership_type = models.CharField(max_length=50)
-    price = models.FloatField(null=True, blank=True)
-    duration = models.IntegerField(null=True, blank=True) # 멤버십 기간(일)
+    gym = models.ForeignKey(Gym, on_delete=models.PROTECT) # 헬스장
+    membership_type = models.CharField(max_length=5,null=True, blank=True) # 회원권 종류
+    membership_fee = models.FloatField(null=True, blank=True) # 회원권 지불 금액
+    start_date = models.DateField(null=True, blank=True) # 회원권 시작일
+    end_date = models.DateField(null=True, blank=True) # 회원권 종료일
+    note = models.TextField(null=True, blank=True) # 비고 필드

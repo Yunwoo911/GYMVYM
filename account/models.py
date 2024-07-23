@@ -66,6 +66,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         null=True
     ) # 7/16 수동 퇴실율 추가
 
+    # 7/23 추가
+    description = models.TextField(null=True) # 프로필에 자기소개 같은 느낌의 설명추가(ex. 인스타)
+
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
