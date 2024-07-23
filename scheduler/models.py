@@ -1,10 +1,10 @@
 from django.db import models
-from account.models import CustomUser
+from gyms.models import PT
 
 class Event(models.Model):
     schedule_id = models.AutoField(primary_key=True)
-    schedule_calendar_id = models.CharField(max_length=200)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) # 사용자 구분
+    # schedule_calendar_id = models.CharField(max_length=200)
+    pt = models.ForeignKey(PT, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     start = models.DateTimeField()
     end = models.DateTimeField()

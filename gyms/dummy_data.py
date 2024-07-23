@@ -4,9 +4,9 @@ from django.utils.text import slugify
 from faker import Faker
 from account.models import CustomUser 
 from django.contrib.auth.hashers import make_password
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import random
-from gyms.models import GymMember, Gym, Owner, PersonalInfo
+from gyms.models import GymMember, Gym, Owner, PersonalInfo, Trainer, PT
 
 # 더미 데이터 생성
 fake = Faker()
@@ -140,6 +140,59 @@ def create_dummy_personal_info():
 
 
 
+def create_dummy_trainers(n):
+    gyms = list(Gym.objects.all())
+    users = list(CustomUser.objects.filter(usertype=1))
+
+    if not gyms:
+        print("No gyms found. Please add some gyms to the database.")
+        return
+
+    if not users:
+        print("No custom users with usertype=1 found. Please add some users to the database.")
+        return
+
+    for _ in range(n):
+        gym = random.choice(gyms)
+        user = random.choice(users)
+        trainer_name = fake.name()
+        certificate = fake.text(max_nb_chars=500)
+        # trainer_image는 실제 이미지를 사용하거나 null로 설정할 수 있습니다.
+        
+        trainer = Trainer.objects.create(
+            gym=gym,
+            user=user,
+            trainer_name=trainer_name,
+            certificate=certificate,
+            # trainer_image는 null로 설정할 수 있습니다.
+            trainer_image=None
+        )
+        
+        print(f"Created trainer: {trainer.trainer_name}")
+
+
+# 더미 데이터 생성 함수
+def create_dummy_pt(num_records):
+    # GymMember와 Trainer 더미 데이터가 있다고 가정
+    gym_members = GymMember.objects.all()
+    trainers = Trainer.objects.all()
+
+    for _ in range(num_records):
+        member = random.choice(gym_members)
+        trainer = random.choice(trainers)
+        member_name = member.user.username  # GymMember 모델에 name 필드가 있다고 가정
+        registration_date = date.today() - timedelta(days=random.randint(1, 365))
+        duration = random.randint(1, 12) * 30  # 1개월에서 12개월
+        pt_end_date = registration_date + timedelta(days=duration)
+        
+        PT.objects.create(
+            member=member,
+            trainer=trainer,
+            member_name=member_name,
+            registration_date=registration_date,
+            pt_end_date=pt_end_date,
+            duration=duration
+        )
 
 # 30개의 사용자 데이터 생성
 # for i in range(100, 140):
@@ -151,4 +204,10 @@ def create_dummy_personal_info():
 
 # create_dummy_gyms(50)
 
-create_dummy_personal_info()
+# create_dummy_personal_info()
+
+# 예시로 10개의 더미 트레이너 데이터를 생성합니다.
+# create_dummy_trainers(10)
+
+# 예시: 10개의 더미 데이터 생성
+# create_dummy_pt(10)

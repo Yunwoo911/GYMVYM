@@ -25,6 +25,7 @@ class Trainer(models.Model):
     trainer_name = models.CharField(max_length=100)
     certificate = models.CharField(max_length=500, null=True)
     trainer_image = models.ImageField(upload_to='trainer_images', null=True)
+    
 
 class GymMember(models.Model):
     member_id = models.AutoField(primary_key=True)

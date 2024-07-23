@@ -93,7 +93,3 @@ def export_gym_member_usernames_to_json(file_path):
 
 
 # export_gym_member_usernames_to_json('gym_member_usernames.json')
-        
-
-
-

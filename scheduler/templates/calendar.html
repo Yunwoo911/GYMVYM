@@ -43,7 +43,13 @@
         </div>
         <!-- 일정 추가 폼 -->
         <div class="modal-body">
-          일정이름 : <input type="text" id="title" /><br />
+          제목 : <input type="text" id="title" /><br /><br />
+          회원 선택 :
+          <select id="member">
+            {% for member in members %}
+            <option value="{{ member.member_id }}">{{ member.member_name }}</option>
+            {% endfor %}
+          </select><br /><br />
           시작시간 : <input type="datetime-local" id="start" /><br />
           종료시간 : <input type="datetime-local" id="end" /><br /><br />
           세부내용 : <textarea id="description"></textarea><br />
@@ -119,6 +125,7 @@
             const eventArray = eventData.map(event => ({
               id: event.id,
               title: event.title,
+              gym_member: event.gym_member,
               start: event.start,
               end: event.end,
               description: event.description,
@@ -171,6 +178,7 @@
                 console.log(allEvent)
                 var eventArray = allEvent.map(event => ({
                   title: event.title,
+                  gym_member: event.extendedProps.gym_member,
                   start: event.start.toISOString(),
                   end: event.end.toISOString(),
                   description: event.extendedProps.description,
@@ -237,6 +245,7 @@
         var eventData = {
           // id: generateUniqueId(),
           title: $("#title").val(),
+          gym_member: $("#member").val(),
           start: $("#start").val(),
           end: $("#end").val(),
           description: $("#description").val(),
