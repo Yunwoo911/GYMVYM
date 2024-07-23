@@ -83,3 +83,10 @@ def calculate_manual_exit_rate(self):  # 7/16 수동 퇴실율 계산 함수 추
         else:
             self.manual_exit_rate = 100.0
         self.save()
+
+# 7/23 추가
+class EmailVerification(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    verification_code = models.CharField(max_length=20) # null,blank=True 추가 필요?
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(null=True,blank=True)

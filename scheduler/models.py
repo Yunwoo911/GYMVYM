@@ -10,7 +10,7 @@ class Event(models.Model):
     end = models.DateTimeField()
     background_color = models.CharField(max_length=20, default='blue')
     # 7/23 추가
-    pt = models.ForeignKey(PT, on_delete=models.CASCADE, null=True)
+    pt = models.ForeignKey(PT, on_delete=models.CASCADE, null=True)#cascade,null,blank=True 추가 필요?
 
     def __str__(self):
         return self.title
