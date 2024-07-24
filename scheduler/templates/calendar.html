@@ -103,8 +103,8 @@
         slotMaxTime: '20:00', // Day 캘린더에서 종료 시간          
         //initialDate: '2021-07-15', // 초기 날짜 설정 (설정X -> 오늘 날짜)
         navLinks: true, // 날짜 선택 시 Day 캘린더나 Week 캘린더로 링크
-        editable: true, // 편집 가능 여부
-        selectable: true, // 달력 일자 드래그 설정가능
+        // editable: true, // 편집 가능 여부
+        // selectable: true, // 달력 일자 드래그 설정가능
         nowIndicator: true, // 현재 시간 표시
         dayMaxEvents: true, // 이벤트가 오버되면 높이 제한
         locale: 'ko', // 한국어
@@ -126,6 +126,7 @@
               id: event.id,
               title: event.title,
               gym_member: event.gym_member,
+              user_name: event.gym_member_username,
               start: event.start,
               end: event.end,
               description: event.description,
@@ -142,10 +143,11 @@
         eventDidMount: function (info) {
 
           tippy(info.el, {
-            content: info.event.extendedProps.description,
+            content: "회원명 : " + info.event.extendedProps.user_name + "<br><br>pt내용 : " + info.event.extendedProps.description,
             placement: 'top',
             offset: [0, 0],
-            interactive: 'true'
+            interactive: 'true',
+            allowHTML: true,
           });
         },
 
@@ -174,9 +176,10 @@
             text: "저장하기",
             click: async function () {
               if (confirm("저장하시겠습니까?")) {
-                var allEvent = calendar.getEvents(); // 모든 이벤트 가져오기
-                console.log(allEvent)
-                var eventArray = allEvent.map(event => ({
+                var allEvent = calendar.getEvents(); // 모든 이벤트 가져오기                
+                var unsavedEvents = allEvent.filter(event => !event.extendedProps.saved); // 저장되지 않은 이벤트 필터링
+                console.log(unsavedEvents)
+                var eventArray = unsavedEvents.map(event => ({
                   title: event.title,
                   gym_member: event.extendedProps.gym_member,
                   start: event.start.toISOString(),
@@ -192,6 +195,9 @@
                   headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}' // CSRF 토큰 추가
+                  },
+                  success: function (response) {
+                    alert("저장 성공");
                   }
                 });
 
