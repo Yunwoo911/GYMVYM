@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from gyms.models import GymMember
 from django.shortcuts import get_object_or_404, redirect
 import datetime
+import json
 # 
 
 # 현재 뷰의 문제점. 며칠 지난것도 퇴실이 가능할듯함 <-timezone.now().date()로 해결?
@@ -52,8 +53,13 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def nfc_entrance(request):
     if request.method == 'POST':
-        reader_gym_id = request.POST.get('gym_id') # 입실 리더기에 고정된 gym_id를 가져온다.
-        taged_nfc_uid = request.POST.get('nfc_uid') # 입실 리더기로 읽은 휴대폰의 nfc_uid를 가져온다.
+        try:
+            # JSON 데이터를 파싱
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': '잘못된 JSON 데이터입니다.'}, status=400)
+        reader_gym_id = data.get('gym_id') # 입실 리더기에 고정된 gym_id를 가져온다.
+        taged_nfc_uid = data.get('nfc_uid') # 입실 리더기로 읽은 휴대폰의 nfc_uid를 가져온다.
         
         if not reader_gym_id: # reader_gym_id 없으면 에러
             return JsonResponse({'error': '헬스장 id가 없습니다.'}, status=400)
@@ -74,7 +80,7 @@ def nfc_entrance(request):
 
         nfc_enter_time = timezone.now() # 현재 시간
         # 입실 기록 생성 + 2시간 후 퇴실 정보 저장
-        enter_log = VisitLog.objects.create(nfc_uid=taged_nfc_uid, enter_time=nfc_enter_time, exit_time=nfc_enter_time + datetime.timedelta(hours=2), member=which_member.member_id)
+        enter_log = VisitLog.objects.create(nfc_uid=taged_nfc_uid, enter_time=nfc_enter_time, exit_time=nfc_enter_time + datetime.timedelta(hours=2), member=which_member)
         enter_log.save()
         return JsonResponse({'message': '입실이 완료되었습니다'})
     return JsonResponse({'error': '잘못된 요청'}, status=400)
@@ -103,14 +109,14 @@ def nfc_exit(request):
     return JsonResponse({'message': '잘못된 요청'}, status=400)
 
 # visitlog 테이블을 조회해서 enter_time이 현재시간으로부터 2시간 이내이고, exit_time이 현재시간보다 미래인 경우
-def current_member(request):
-    # request.gym_id
-    try: 
-        enter_exit_time_count = VisitLog.objects.filter(enter_time__gte = timezone.now() - datetime.timedelta(hours=2), exit_time__lte = timezone.now())
-        # exit_time_count = VisitLog.objects.get(exit_time__lte = timezone.now())
-        # active_member_count = VisitLog.objects.filter(enter_time_lte=?, exit_time__gte=?)
-    except:
-        pass
+# def current_member(request):
+#     # request.gym_id
+#     try: 
+#         enter_exit_time_count = VisitLog.objects.filter(enter_time__gte = timezone.now() - datetime.timedelta(hours=2), exit_time__lte = timezone.now())
+#         # exit_time_count = VisitLog.objects.get(exit_time__lte = timezone.now())
+#         # active_member_count = VisitLog.objects.filter(enter_time_lte=?, exit_time__gte=?)
+#     except:
+#         pass
 # 자동퇴실
 # def auto_exit(request):
 #     pass
