@@ -50,9 +50,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
     nfc_uid = models.CharField(unique=True, null=True, blank=True, editable=True)
     username = models.CharField(max_length=100, unique=True, blank=False)
-    phone1 = models.CharField(max_length=3)
-    phone2 = models.CharField(max_length=4)
-    phone3 = models.CharField(max_length=4)
+    phone1 = models.CharField(max_length=3, validators=[phone_regex])
+    phone2 = models.CharField(max_length=4, validators=[phone_regex])
+    phone3 = models.CharField(max_length=4, validators=[phone_regex])
     email = models.EmailField(unique=True, blank=False, null=False)
     address = models.CharField(max_length=255)
     detail_address = models.CharField(max_length=255, null=False)
@@ -91,6 +91,11 @@ def calculate_manual_exit_rate(self):  # 7/16 수동 퇴실율 계산 함수 추
         else:
             self.manual_exit_rate = 100.0
         self.save()
+
+class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['phone1', 'phone2', 'phone3'], name='unique_phone_number')
+        ]
 
 class EmailVerification(models.Model) :
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
