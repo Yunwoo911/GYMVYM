@@ -92,8 +92,9 @@ def nfc_exit(request):
             
             # taged_user는 CustomUser 테이블에서 태그된 nfc_uid가 일치하는 유저 객체를 가져온다.
             taged_user = CustomUser.objects.get(nfc_uid=taged_nfc_uid)
-            # GymMember 테이블에서 
-            gym_member_id = GymMember.objects.get(user=taged_user.user, gym_id=reader_gym_id).member_id
+            # GymMember 테이블에서 태그된 유저, 헬스장 id를 가져옵니다(db 중복 문제때문에 코드를 주석처리 했습니다. 중복 문제 해결시 바로 아래 주석 풀고 97번째 코드 삭제 )
+            # gym_member_id = GymMember.objects.get(user=taged_user.user, gym_id=reader_gym_id).member_id
+            gym_member_id = GymMember.objects.filter(gym_id=reader_gym_id, user=taged_user.user).last() # 중복 문제 해결시 삭제
             # exit_log는 VisitLog 테이블에서 퇴실기록(자동퇴실: 입장시간으로부터 2시간 뒤), 이 현재 시간에서 2시간 이내에 퇴장 기록이 없으면.
             exit_log = VisitLog.objects.filter(member_id=gym_member_id, exit_time__gte = timezone.now() - datetime.timedelta(hours=2)).last()
             # 퇴장 시간은 버튼을 누른 시점
