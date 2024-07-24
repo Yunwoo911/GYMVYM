@@ -21,6 +21,9 @@ class LoginForm(forms.Form):
 class SignupForm(UserCreationForm):
     user_image = forms.ImageField(required=False)
     birth = forms.DateField(required=True)
+    phone1 = forms.CharField(max_length=3, required=True)
+    phone2 = forms.CharField(max_length=4, required=True)
+    phone3 = forms.CharField(max_length=4, required=True)
 
     class Meta:
         model = CustomUser

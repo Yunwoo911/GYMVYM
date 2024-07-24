@@ -44,9 +44,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        phone1 = validated_data['phone1'],
-        phone2 = validated_data['phone2'],
-        phone3 = validated_data['phone3'],
+        phone1 = validated_data['phone1']
+        phone2 = validated_data['phone2']
+        phone3 = validated_data['phone3']
 
         # CREATE 요청에 대해 create 메서드를 오버라이딩하여, 유저를 생성하고 토큰도 생성하게 해준다.
         user = CustomUser.objects.create_user(

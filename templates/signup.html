@@ -184,12 +184,12 @@
                         <small id="email_feedback" class="form-text text-muted"></small>
                     </div>
 
-                    <!-- <div id="verification-code-container" class="form-group" style="display:none;">
+                    <div id="verification-code-container" class="form-group" style="display:none;">
                         <label for="verification_code">Verification Code:</label>
                         <input type="text" name="verification_code" id="verification_code" class="form-control">
                         <button type="button" class="btn btn-primary btn-block" id="send-code">인증코드 발송</button>
                         <small id="code-error" class="form-text text-muted"></small>
-                    </div> -->
+                    </div>
 
                     <div class="form-group">
                         <label for="phone_number">휴대폰번호:</label>
@@ -293,6 +293,35 @@
                 });
         });
 
+        document.getElementById('send-code').addEventListener('click', function() {
+            var email = document.getElementById('email').value;
+            var feedback = document.getElementById('code-error');
+            
+            fetch(`{% url "send_verification_code" %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({email: email})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sent) {
+                        feedback.textContent = '인증코드가 발송되었습니다.';
+                        feedback.style.color = 'green';
+                    } else {
+                        feedback.textContent = '인증코드 발송 실패. 다시 시도해주세요.';
+                        feedback.style.color = 'red';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    feedback.textContent = '인증코드 발송 중 오류가 발생했습니다.';
+                    feedback.style.color = 'red';
+                });
+        });
+
         function execDaumPostcode() {
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -305,32 +334,3 @@
     </script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 {% endblock %}
-
-<!-- document.getElementById('send-code').addEventListener('click', function() {
-    var email = document.getElementById('email').value;
-    var feedback = document.getElementById('code-error');
-    
-    fetch(`{% url "send_verification_code" %}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({email: email})
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.sent) {
-                feedback.textContent = '인증코드가 발송되었습니다.';
-                feedback.style.color = 'green';
-            } else {
-                feedback.textContent = '인증코드 발송 실패. 다시 시도해주세요.';
-                feedback.style.color = 'red';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            feedback.textContent = '인증코드 발송 중 오류가 발생했습니다.';
-            feedback.style.color = 'red';
-        });
-}); -->

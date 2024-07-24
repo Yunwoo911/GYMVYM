@@ -15,18 +15,15 @@ class Migration(migrations.Migration):
             model_name='customuser',
             name='phone1',
             field=models.CharField(default=1, max_length=3, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: 'OOO-OOOO-OOOO'.", regex='^\\d{3}-\\d{4}-\\d{4}$')]),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='customuser',
             name='phone2',
             field=models.CharField(default=1, max_length=4, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: 'OOO-OOOO-OOOO'.", regex='^\\d{3}-\\d{4}-\\d{4}$')]),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='customuser',
             name='phone3',
             field=models.CharField(default=1, max_length=4, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: 'OOO-OOOO-OOOO'.", regex='^\\d{3}-\\d{4}-\\d{4}$')]),
-            preserve_default=True,
         ),
     ]
