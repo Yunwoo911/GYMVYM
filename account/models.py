@@ -1,9 +1,17 @@
 from django.db import models
+from django.core.validators import RegexValidator
 import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils import timezone
+from datetime import timedelta
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
+
+phone_regex = RegexValidator(
+    regex=r'^\d{3}-\d{4}-\d{4}$',
+    message="Phone number must be entered in the format: 'OOO-OOOO-OOOO'."
+)
 
 class CustomUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_fields):
@@ -40,9 +48,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ]
 
     user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
-    nfc_uid = models.CharField(unique=True, null=True, blank=True, editable=False)
+    nfc_uid = models.CharField(unique=True, null=True, blank=True, editable=True)
     username = models.CharField(max_length=100, unique=True, blank=False)
-    phone_number = models.CharField(max_length=15, unique=True)
+    phone1 = models.CharField(max_length=3, validators=[phone_regex])
+    phone2 = models.CharField(max_length=4, validators=[phone_regex])
+    phone3 = models.CharField(max_length=4, validators=[phone_regex])
     email = models.EmailField(unique=True, blank=False, null=False)
     address = models.CharField(max_length=255)
     detail_address = models.CharField(max_length=255, null=False)
@@ -52,22 +62,20 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     usertype = models.IntegerField(choices=USERTYPE_CHOICES,default=2)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     is_staff = models.BooleanField(null=True, blank=True)
+    description = models.CharField(null=True, blank=True, max_length=255)
 
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
 
-    gym_entry_count = models.PositiveIntegerField(default=0,null=True) # 7/16 헬스장 입장 횟수 추가
-    gym_manual_exit_count = models.PositiveIntegerField(default=0,null=True) # 7/16 헬스장 수동 퇴실 횟수 추가
+    gym_entry_count = models.PositiveIntegerField(default=0, blank=True, null=True) # 7/16 헬스장 입장 횟수 추가
+    gym_manual_exit_count = models.PositiveIntegerField(default=0, blank=True, null=True) # 7/16 헬스장 수동 퇴실 횟수 추가
     manual_exit_rate = models.DecimalField(
         default=100.0,
-        max_digits=5,
+        max_digits=5, 
         decimal_places=2, 
         validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-        null=True
+        blank=True, null=True
     ) # 7/16 수동 퇴실율 추가
-
-    # 7/23 추가
-    description = models.TextField(null=True) # 프로필에 자기소개 같은 느낌의 설명추가(ex. 인스타)
 
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
@@ -84,9 +92,19 @@ def calculate_manual_exit_rate(self):  # 7/16 수동 퇴실율 계산 함수 추
             self.manual_exit_rate = 100.0
         self.save()
 
-# 7/23 추가
-class EmailVerification(models.Model):
+class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['phone1', 'phone2', 'phone3'], name='unique_phone_number')
+        ]
+
+class EmailVerification(models.Model) :
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    verification_code = models.CharField(max_length=20) # null,blank=True 추가 필요?
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(null=True,blank=True)
+    verification_code = models.UUIDField(default=uuid.uuid4)
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateField(auto_now_add=True)
+    expires_at = models.DateField()
+
+    def save(self, *args, **kwargs) :
+        if not self.expires_at :
+            self.expires_at = self.created_at + timedelta(minutes=5)
+            super().save(*args, **kwargs)

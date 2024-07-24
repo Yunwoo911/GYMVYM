@@ -16,20 +16,13 @@ from account.models import CustomUser
 def web_entrance(request):
     if request.method == 'POST':
         # taged_nfc_uid = request.POST.get('nfc_uid')
-        user = request.user
-        taged_nfc_uid = user.nfc_uid
-        # which_user = CustomUser.objects.get(nfc_uid=taged_nfc_uid)
-        which_user = CustomUser.objects.get(nfc_uid=taged_nfc_uid,nickname=user.nickname)
-        print(which_user)
-        # enter_log = VisitLog.objects.create(member__user=visitor, enter_time=timezone.now())
-        print(which_user.user)
-        # which_member = GymMember.objects.get(user=which_user.user)  # GymMember 인스턴스를 가져옴
-        which_member = GymMember.objects.get(user=which_user.user)
+        enter_user = request.user
+        which_member = GymMember.objects.filter(user=enter_user.user).last()
         print(which_member)
 
         real_enter_time = timezone.now()
-        enter_exit_log = VisitLog.objects.create(member=which_member, enter_time=real_enter_time,exit_time=real_enter_time + datetime.timedelta(hours=2))
-        enter_exit_log.save()
+        enter_log = VisitLog.objects.create(member_id=which_member.member_id, enter_time=real_enter_time,exit_time=real_enter_time + datetime.timedelta(hours=2))
+        enter_log.save()
         return JsonResponse({'message': '입장이 완료되었습니다'})
     return JsonResponse({'message': '잘못된 요청'}, status=400)
 
@@ -54,6 +47,9 @@ def web_exit(request):
             return JsonResponse({'message': '출입 기록이 없습니다.'})   
     return JsonResponse({'message': '잘못된 요청'}, status=400)
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def nfc_entrance(request):
     if request.method == 'POST':
         reader_gym_id = request.POST.get('gym_id') # 입실 리더기에 고정된 gym_id를 가져온다.
@@ -106,6 +102,15 @@ def nfc_exit(request):
             return JsonResponse({'message': '입장 기록이 없습니다.'})   
     return JsonResponse({'message': '잘못된 요청'}, status=400)
 
+# visitlog 테이블을 조회해서 enter_time이 현재시간으로부터 2시간 이내이고, exit_time이 현재시간보다 미래인 경우
+def current_member(request):
+    # request.gym_id
+    try: 
+        enter_exit_time_count = VisitLog.objects.filter(enter_time__gte = timezone.now() - datetime.timedelta(hours=2), exit_time__lte = timezone.now())
+        # exit_time_count = VisitLog.objects.get(exit_time__lte = timezone.now())
+        # active_member_count = VisitLog.objects.filter(enter_time_lte=?, exit_time__gte=?)
+    except:
+        pass
 # 자동퇴실
 # def auto_exit(request):
 #     pass
@@ -124,13 +129,8 @@ def nfc_exit(request):
 #     visit_log.save()
 #     return JsonResponse({"status": "checked_out", "nfc_uid": nfc_uid})
 
-
-
 # 예약, 입퇴실
-
 # nfc 여진님이 진행중이셔서 그동안 다른 기구예약이나, 웹퇴실버튼, 자동퇴실
-
-
 
 # 입퇴실 받는 고유번호를
 # nfc_uid로 or user_id로
