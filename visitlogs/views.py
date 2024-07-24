@@ -14,3 +14,6 @@ def web_exit(request):
         except VisitLog.DoesNotExist:
             return JsonResponse({'message': '출입 기록이 없습니다.'})
     return JsonResponse({'message': '잘못된 요청'}, status=400)
+
+def auto_exit(request):
+    
