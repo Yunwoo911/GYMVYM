@@ -19,10 +19,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         write_only =True,
         required = True,
     )
+    phone1 = serializers.CharField(
+        required=True,
+        max_length = 3,
+    )
+    phone2 = serializers.CharField(
+        required=True,
+        max_length = 4,
+    )
+    phone3 = serializers.CharField(
+        required=True,
+        max_length = 4,
+    )
 
     class Meta :
         model = CustomUser
-        fields = ['user_image', 'username', 'password', 'password2', 'email', 'usertype', 'phone_number', 'birth', 'address', 'detail_address', 'nickname', 'gender', 'is_superuser']
+        fields = ['user_image', 'username', 'password', 'password2', 'email', 'usertype', 'phone1', 'phone2', 'phone3', 'birth', 'address', 'detail_address', 'nickname', 'gender', 'is_superuser']
     
     def validate(self, data): # password과 password2의 일치 여부 확인
         if data['password'] != data['password2']:
@@ -32,11 +44,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        phone1 = validated_data['phone1'],
+        phone2 = validated_data['phone2'],
+        phone3 = validated_data['phone3'],
+
         # CREATE 요청에 대해 create 메서드를 오버라이딩하여, 유저를 생성하고 토큰도 생성하게 해준다.
         user = CustomUser.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            phone_number=validated_data['phone_number'],
+            phone1 = phone1,
+            phone2 = phone2,
+            phone3 = phone3,
             birth=validated_data['birth'],
             address=validated_data['address'],
             detail_address=validated_data['detail_address'],
@@ -63,5 +81,11 @@ class LoginSerializer(serializers.Serializer) :
             token = Token.objects.get(user=user)
             return token
         raise serializers.ValidationError({"error": "Unable to log in with provided credentials."})
+    
+class NFCSerializers(serializers.Serializer) :
+    nfc_uid = serializers.CharField(required=True) 
+
+
+    
     
 

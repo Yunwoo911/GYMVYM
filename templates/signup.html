@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - My Website{% endblock %}
+{% block title %}Signup - My Website{% endblock %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Include custom CSS -->
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
-    <!-- Include the specific CSS from uiverse.io -->
-
     <style>
         .profile-container {
             position: relative;
@@ -78,59 +76,58 @@
             width: 50%;
             margin: auto;
         }
+
         /* Input container */
-    .input-container {
-        position: relative;
-        margin: 20px;
-    }
+        .input-container {
+            position: relative;
+            margin: 20px;
+        }
 
-    /* Input field */
-    .input-field {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: none;
-        border-bottom: 2px solid #ccc;
-        outline: none;
-        background-color: transparent;
-    }
+        /* Input field */
+        .input-field {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid #ccc;
+            outline: none;
+            background-color: transparent;
+        }
 
-    /* Input label */
-    .input-label {
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-size: 16px;
-        color: rgba(204, 204, 204, 0);
-        pointer-events: none;
-        transition: all 0.3s ease;
-    }
+        /* Input label */
+        .input-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 16px;
+            color: rgba(204, 204, 204, 0);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
 
-    /* Input highlight */
-    .input-highlight {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 2px;
-        width: 0;
-        background-color: #007bff;
-        transition: all 0.3s ease;
-    }
+        /* Input highlight */
+        .input-highlight {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background-color: #007bff;
+            transition: all 0.3s ease;
+        }
 
-    /* Input field:focus styles */
-    .input-field:focus+.input-label {
-        top: -20px;
-        font-size: 12px;
-        color: #007bff;
-    }
+        /* Input field:focus styles */
+        .input-field:focus+.input-label {
+            top: -20px;
+            font-size: 12px;
+            color: #007bff;
+        }
 
-    .input-field:focus+.input-label+.input-highlight {
-        width: 100%;
-    }
+        .input-field:focus+.input-label+.input-highlight {
+            width: 100%;
+        }
     </style>
-
-    
 {% endblock %}
 
 {% block content %}
@@ -149,7 +146,7 @@
                     </div>
                 {% endif %}
 
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" action="{% url 'signup' %}">
                     {% csrf_token %}
                     <div class="form-group text-center">
                         <div class="profile-container mb-3">
@@ -168,14 +165,12 @@
 
                     <div class="form-group">
                         <label for="password">비밀번호:</label>
-                        <input type="password" name="password" id="password" class="form-control"
-                            autocomplete="new-password">
+                        <input type="password" name="password" id="password" class="form-control" autocomplete="new-password">
                     </div>
 
                     <div class="form-group">
                         <label for="password2">비밀번호 확인:</label>
-                        <input type="password" name="password2" id="password2" class="form-control"
-                            autocomplete="new-password">
+                        <input type="password" name="password2" id="password2" class="form-control" autocomplete="new-password">
                     </div>
 
                     <div class="form-group">
@@ -183,15 +178,28 @@
                         <div class="input-group">
                             <input type="email" name="email" id="email" class="form-control">
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="checkEmailDuplicate()">중복확인</button>
+                                <button type="button" class="btn btn-primary" id="check-email">중복확인</button>
                             </div>
                         </div>
                         <small id="email_feedback" class="form-text text-muted"></small>
                     </div>
 
+                    <!-- <div id="verification-code-container" class="form-group" style="display:none;">
+                        <label for="verification_code">Verification Code:</label>
+                        <input type="text" name="verification_code" id="verification_code" class="form-control">
+                        <button type="button" class="btn btn-primary btn-block" id="send-code">인증코드 발송</button>
+                        <small id="code-error" class="form-text text-muted"></small>
+                    </div> -->
+
                     <div class="form-group">
                         <label for="phone_number">휴대폰번호:</label>
-                        <input type="text" name="phone_number" id="phone_number" class="form-control">
+                        <div class="input-group">
+                            <input type="text" name="phone1" id="phone1" class="form-control" maxlength="3" placeholder="010">
+                            <span class="input-group-text">-</span>
+                            <input type="text" name="phone2" id="phone2" class="form-control" maxlength="4" placeholder="1234">
+                            <span class="input-group-text">-</span>
+                            <input type="text" name="phone3" id="phone3" class="form-control" maxlength="4" placeholder="5678">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -245,43 +253,51 @@
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
-    
-        function checkEmailDuplicate() {
-            var emailField = document.getElementById('email');
-            var feedback = document.getElementById('email_feedback');
-            var email = emailField.value;
 
-            if (email) {
-                fetch(`/account/check-email/?email=${email}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.is_duplicate) {
-                            feedback.textContent = '이미 사용 중인 이메일입니다.';
-                            feedback.style.color = 'red';
-                        } else {
-                            feedback.textContent = '사용 가능한 이메일입니다.';
-                            feedback.style.color = 'green';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        feedback.textContent = '이메일 확인 중 오류가 발생했습니다.';
-                        feedback.style.color = 'red';
-                    });
-            } else {
-                feedback.textContent = '이메일을 입력해 주세요.';
-                feedback.style.color = 'red';
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
         }
+
+        document.getElementById('check-email').addEventListener('click', function() {
+            var email = document.getElementById('email').value;
+            var feedback = document.getElementById('email_feedback');
+            
+            fetch(`{% url "check_email_duplicate" %}?email=${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_duplicate) {
+                        feedback.textContent = '이미 사용 중인 이메일입니다.';
+                        feedback.style.color = 'red';
+                    } else {
+                        feedback.textContent = '사용 가능한 이메일입니다.';
+                        feedback.style.color = 'green';
+                        document.getElementById('verification-code-container').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    feedback.textContent = '이메일 확인 중 오류가 발생했습니다.';
+                    feedback.style.color = 'red';
+                });
+        });
 
         function execDaumPostcode() {
             new daum.Postcode({
                 oncomplete: function(data) {
-                    var addr = data.address; // 최종 주소 변수
-    
-                    // 주소 정보를 해당 필드에 넣는다.
+                    var addr = data.address;
                     document.getElementById("address").value = addr;
-                    // 커서를 상세주소 필드로 이동한다.
                     document.getElementById("detail_address").focus();
                 }
             }).open();
@@ -289,3 +305,32 @@
     </script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 {% endblock %}
+
+<!-- document.getElementById('send-code').addEventListener('click', function() {
+    var email = document.getElementById('email').value;
+    var feedback = document.getElementById('code-error');
+    
+    fetch(`{% url "send_verification_code" %}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({email: email})
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.sent) {
+                feedback.textContent = '인증코드가 발송되었습니다.';
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = '인증코드 발송 실패. 다시 시도해주세요.';
+                feedback.style.color = 'red';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            feedback.textContent = '인증코드 발송 중 오류가 발생했습니다.';
+            feedback.style.color = 'red';
+        });
+}); -->
