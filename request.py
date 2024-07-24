@@ -5,20 +5,20 @@ import time
 
 reader = SimpleMFRC522()
 
-DJANGO_ENDPOINT = "http://your-django-server.com/api/nfc_entrance/"  # Django 서버의 실제 URL로 변경해야 합니다
+DJANGO_ENDPOINT = ""  # Django 서버의 실제 URL로 변경
 
 def send_to_django(nfc_uid):
     try:
         response = requests.post(DJANGO_ENDPOINT, data={'nfc_uid': nfc_uid})
         if response.status_code == 200:
-            print("Successfully sent NFC UID to Django server")
+            print("Django 서버에 NFC UID를 성공적으로 전송했습니다.")
         else:
-            print(f"Failed to send NFC UID. Status code: {response.status_code}")
+            print(f"NFC UID 전송에 실패했습니다. 상태 코드: {response.status_code}")
     except requests.RequestException as e:
-        print(f"An error occurred while sending data to Django: {e}")
+        print(f"Django에 데이터를 전송하는 중 오류가 발생했습니다: {e}")
 
 try:
-    print("Hold a tag near the reader")
+    print("리더기 근처에 태그를 가져다 대세요.")
     while True:
         id, text = reader.read()
         print(f"ID: {id}")
@@ -27,4 +27,4 @@ try:
 
 except KeyboardInterrupt:
     GPIO.cleanup()
-    print("Cleaned up GPIO")
+    print("GPIO 정리 완료")
