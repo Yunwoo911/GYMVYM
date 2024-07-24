@@ -24,7 +24,7 @@ class SignupForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('user_image', 'username', 'password1', 'password2', 'email', 'phone_number', 'birth', 'address', 'detail_address', 'nickname', 'gender', 'is_superuser')
+        fields = ('user_image', 'username', 'password1', 'password2', 'email', 'phone1', 'phone2', 'phone3', 'birth', 'address', 'detail_address', 'nickname', 'gender', 'is_superuser')
 
     def save(self, request, commit=True):
         user = super(SignupForm, self).save(commit=False)
@@ -34,14 +34,7 @@ class SignupForm(UserCreationForm):
             user.save()
         return user
 
-class ProfileForm(forms.ModelForm):
+class NFCForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'user_image',)
-    
-    def save(self, commit=True):
-        user = super(ProfileForm, self).save(commit=False)
-        user.user_image = self.cleaned_data['user_image']
-        if commit:
-            user.save()
-        return user
+        fields = ['nfc_uid']

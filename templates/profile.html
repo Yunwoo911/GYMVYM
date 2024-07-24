@@ -3,29 +3,91 @@
 {% load static %}
 
 {% block content %}
-    <div class="profile-container">
-        <h1>{{ user.username }}'s Profile</h1>
-        {% if user.user_image %}
-            <img src="{{ user.user_image.url }}" alt="Profile Image" width="150" height="150" style="border-radius: 50%;"/>
-        {% else %}
-            <img src="{% static 'default.png' %}" alt="Profile Image" width="150" height="150" style="border-radius: 50%;"/>
-        {% endif %}
-        <p>Email: {{ user.email }}</p>
-        <p>Nickname: {{ user.nickname }}</p>
-        <div class="form-group">
-            <label for="nfc_uid">NFC :</label>
-            <input type="text" name="nfc_uid" id="nfc_uid" class="form-control" autocomplete="nfc_uid">
-        </div>
-        
-        {% if user.is_authenticated %}
-        <!-- 로그아웃 버튼 -->
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        {% else %}
-            <p>You are not logged in.</p>
-        {% endif %}
-        <!-- 여기에 다른 사용자 정보 추가 -->
-    </div>
+
+<header>
+	<div class="container">
+		<div class="profile">
+			<div class="profile-user">
+                <div class="profile-image">
+				{% if user.user_image %}
+                    <img src="{{ user.user_image.url }}" alt="Profile Image"/>
+                {% else %}
+                    <img src="{% static 'default.png' %}" alt="Profile Image"/>
+                {% endif %}
+                <div class="profile-button">
+                    <button class="btn profile-edit-btn btn-primary">Edit Profile</button>
+                    {% if user.is_authenticated %}
+                    <!-- 로그아웃 버튼 -->
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit">Logout</button>
+                        </form>
+                    {% else %}
+                        <p>You are not logged in.</p>
+                    {% endif %}
+                </div>
+            </div>
+                <div class="profile-info">
+                    <p><b>Email:</b> {{ user.email }}<br><br><b>Nickname:</b> {{ user.nickname }}</p>
+                </div>
+			</div>
+
+            <!-- 프로필에서 NFC 등록하기 input -->
+            <div class="form-group">
+                <form method="post" action="{% url 'update_nfc' %}" class="form-inline">
+                    {% csrf_token %}
+                    <label for="nfc_uid" class="mr-2">NFC :</label><br>
+                    <input type="text" name="nfc_uid" id="nfc_uid" class="form-control mr-2" autocomplete="nfc_uid">
+                    <div class="nfc_btn">
+                        <button class="nfc_regi btn btn-primary" type="submit">등록하기</button>
+                    </div>
+                </form>
+            </div>
+
+		</div>
+		<!-- End of profile section -->
+
+	</div>
+	<!-- End of container -->
+
+</header>
+<style>
+    .container{
+        width : 600px;
+    }
+    .profile-user{
+        display: flex;
+        margin: auto;
+    }
+    .profile-image img{
+        width : 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+    .profile-info{
+        margin: auto;
+    }
+    .form-group input{
+        display: inline-block;
+        width : 70%;
+        padding : 6px;
+    }
+    .nfc_btn{
+        display: inline-block;
+    }
+    .nfc_regi{
+        padding : 5px;
+        margin-bottom : 5px;
+    }
+    .profile-button{
+        display: flex;
+        margin : 20px 0;
+    }
+    .profile-edit-btn{
+        margin-right : 10px;
+    }
+    .profile-info p{
+        font-size : 18px;
+    }
+</style>
 {% endblock %}
