@@ -13,7 +13,7 @@
         <h1>회원 프로필 검색</h1>
     </header>
     <main>
-        <form method="get" action="{% url 'member_profile_search_page' %}">
+        <form method="get" action="{% url 'gyms:member_profile_search_page' %}">
             <input type="text" name="query" placeholder="회원 검색">
             <button type="submit">검색</button>
         </form>
@@ -22,7 +22,7 @@
             <ul>
                 {% for result in results %}
                 <li>
-                    <a href="{% url 'trainer_detail_page' result.member_id %}">
+                    <a href="{% url 'gyms:trainer_detail_page' result.member_id %}">
                         {{ result.user.username }} - {{ result.membership_type }}<br>
                         가입일 : {{ result.join_date }}
                     </a>

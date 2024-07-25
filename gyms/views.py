@@ -5,6 +5,8 @@ from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
 import json
+from django.shortcuts import redirect
+
 # from gyms.search.search_gym_member import Search
 
 # Create your views here.
@@ -27,7 +29,7 @@ class TrainerDetailPageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         gym_member_id = self.kwargs.get('id')
-        # context['gym_members'] = GymMember.objects.all()
+        context['gym_member_id'] = gym_member_id
         context['personal_info'] = PersonalInfo.objects.filter(gym_member_if__member_id=gym_member_id)
         return context
     
@@ -38,18 +40,20 @@ class ProfileAddPageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         gym_member_id = self.kwargs.get('id')
+        context['gym_member_id'] = gym_member_id
         context['form'] = PersonalInfoForm()
-        return context
+        return context        
 
-    # def post(self, request, *args, **kwargs):
-    #     form = PersonalInfoForm(request.POST)
-    #     if form.is_valid():
-    #         personal_info = form.save(commit=False)
-    #         gym_member_id = self.kwargs.get('id')
-    #         personal_info.gym_member_if = GymMember.objects.get(member_id=gym_member_id)
-    #         personal_info.save()
-    #         return render(request, 'profile_add_success.html', {'form': form})
-    #     return render(request, self.template_name, {'form': form})    
+
+def profile_save(request, **kwargs):
+    form = PersonalInfoForm(request.POST)
+    if form.is_valid():
+        personal_info = form.save(commit=False)        
+        personal_info.gym_member_if_id = kwargs['id']
+        personal_info.save()
+        return redirect('gyms:trainer_detail_page', id=kwargs['id'])
+    else:
+        return render(request, 'profile_add_page.html', {'form': form})
 
 
 class TrainerPortfolioView(TemplateView):
@@ -61,6 +65,8 @@ class TrainerPortfolioView(TemplateView):
         user = 15
         context['trainer'] = CustomUser.objects.filter(user = user)
         # context['trainer'] = Trainer.objects.filter(user = user)
+        # 트레이너 테이블에서 로그인한 트레이너의 유저 아이디를 찾아서 반환
+        # 포트폴리오 입력 폼 작성하고, 작성한 거 받아서 데이터베이스에 저장.
         return context
 
 

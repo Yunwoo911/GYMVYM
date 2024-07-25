@@ -81,7 +81,7 @@
     async function deleteEventById(eventId) {
       const deleteEvent = await axios({
         method: "POST",
-        url: "{% url 'delete_event' %}", // 삭제 엔드포인트 URL
+        url: "{% url 'scheduler:delete_event' %}", // 삭제 엔드포인트 URL
         data: JSON.stringify({ id: eventId }), // 삭제할 이벤트 ID 전송
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@
           try {
             const eventResult = await axios({
               method: "POST",
-              url: "{% url 'event_data' %}", // 이벤트 데이터 엔드포인트 URL
+              url: "{% url 'scheduler:event_data' %}", // 이벤트 데이터 엔드포인트 URL
               headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}' // CSRF 토큰 추가
@@ -131,6 +131,7 @@
               end: event.end,
               description: event.description,
               backgroundColor: event.backgroundColor,
+              saved: event.saved,
             }));
 
             successCallback(eventArray); // 이벤트 데이터 성공 콜백
@@ -153,7 +154,7 @@
 
         // 헤더 툴바 설정
         headerToolbar: {
-          left: 'prev,next today',
+          left: 'home prev,next today',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay',
         },
@@ -188,20 +189,38 @@
                   backgroundColor: event.backgroundColor,
                 }));
 
-                const saveEvent = await axios({
-                  method: "POST",
-                  url: "{% url 'save_event' %}", // 저장 엔드포인트 URL
-                  data: JSON.stringify(eventArray), // 데이터 전송
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}' // CSRF 토큰 추가
-                  },
-                  success: function (response) {
-                    alert("저장 성공");
+                try {
+                  const response = await axios({
+                    method: "POST",
+                    url: "{% url 'scheduler:save_event' %}", // 저장 엔드포인트 URL
+                    data: JSON.stringify(eventArray), // 데이터 전송
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': '{{ csrf_token }}' // CSRF 토큰 추가
+                    }
+                  });
+
+                  if (response.status === 200) {
+                    alert("저장 되었습니다.");
+                    // 저장된 이벤트에 saved 속성 추가
+                    unsavedEvents.forEach(event => {
+                      event.setExtendedProp('saved', true);
+                    });
+                  } else {
+                    console.error("저장에 실패하였습니다.");
                   }
-                });
+                } catch (error) {
+                  console.error("저장 중 오류 발생하였습니다 :", error);
+                }
 
               }
+            }
+          },
+
+          home: {
+            text: "홈",
+            click: function () {
+              window.location.href = "/"; // 홈으로 이동
             }
           },
         },
@@ -256,6 +275,7 @@
           end: $("#end").val(),
           description: $("#description").val(),
           color: $("#color").val(),
+          saved: false,
         };
         console.log(eventData)
         //빈 값 입력시 오류
@@ -274,8 +294,8 @@
           $("#title").val(""); // 필드 초기화
           $("#start").val("");
           $("#end").val("");
-          $("#description").val(""),
-            $("#color").val("");
+          $("#description").val("");
+          $("#color").val("");
         }
       });
       calendar.setOption('contentHeight', 650);
