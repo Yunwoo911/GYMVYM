@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .models import GymMember
+from .models import GymMember, Owner
+# from .models import Trainer_request
 
 
 
@@ -12,3 +13,7 @@ class TrainerPageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['gym_members'] = GymMember.objects.all()
         return context
+
+# 7/21 시작
+class OwnerPageView(TemplateView):
+    template_name = 'owner_page.html'
