@@ -16,8 +16,11 @@ import json
 def show_equipments(request):
     equipments = Equipment.objects.all()
     return render(request, "equipment/reservations_test.html", {"equipments": equipments})
+    # 프론트엔드에서 카테고리 별로 나눠서 보여주는 기능 필요
+    # 예약 페이지가 퇴실률에 따라서 접근할 수 있는 시간이 다를 수 있도록 장치 필요
 
 ## 예약 로직
+# 예약페이지에 접근할 수 없는 시간에 예약 로직이 작동하지 않도록 방지하는 방법 고민해보기
 def reserve_equipment(request, equipment_id):
     try:
         # 주어진 equipment_id로 장비를 조회합니다.
@@ -37,15 +40,15 @@ def reserve_equipment(request, equipment_id):
         
         # 이미 예약된 장비인지 확인합니다.
         if EquipmentReservation.objects.filter(
-            equipment=equipment,
+            equipment_id=equipment.equipment_id,
             time_slot_id=time_slot_id
         ).exists():
             return JsonResponse({"message": "해당 타임슬롯에 이미 예약되었습니다."}, status=400)
         
         # 예약 정보를 EquipmentReservation 모델에 저장합니다.
         reservation = EquipmentReservation.objects.create(
-            equipment=equipment,
-            # user=request.user,  # 예약한 사용자 정보
+            equipment_id=equipment.equipment_id,
+            user_id=request.user.user,  # 예약한 회원의 user_id
             time_slot_id=time_slot_id  # time_slot_id 설정
         )
         
@@ -58,20 +61,20 @@ def reserve_equipment(request, equipment_id):
 # nfc 태그를 통한 사용과 사용대기
     # 운동기구에 nfc 태그 이벤트가 일어났을 때
     # 미사용중인 기구일 경우 바로 사용중으로 상태를 변경하고
-    # 사용중인 기구일 경우 예약을 생성하는 함수
+    # 사용중인 기구일 경우 예약을 생성하는 뷰
 
     # 1. 태그한 기구가 미사용중일 경우 equimentinuse 테이블에 바로 사용 정보 추가
     # 2. 태그한 기구가 사용중일 경우 equipmentreservation 테이블에 예약 정보 추가(res_start_time, res_end_time 포함)
     
-    # 3. res_start_time이 됐을 때 equimentinuse 테이블에 추가
+    # 3. res_start_time이 됐을 때 equipmentreservation의 예약 정보를 equimentinuse에 사용 정보로 바꿔주기
     # 4. res_end_time이 됐을 때 equimentinuse 테이블에서 삭제
-    # 5. 매일 자정 equipmentreservation 테이블 초기화
+    # 5. 매일 자정 직전 equipmentreservation 테이블 초기화
 def tag_equipment(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body) # JSON 데이터를 파싱
+            data = json.loads(request.body) # JSON 데이터를 파싱 / json.loads() 함수를 사용하여 JSON 문자열을 Python 딕셔너리로 변환
         except json.JSONDecodeError:
-            return JsonResponse({'error': '잘못된 11JSON 데이터입니다.'}, status=400)
+            return JsonResponse({'error': '잘못된 JSON 데이터입니다.'}, status=400)
         
         # NFC 리더기로 읽은 값과 고정값 가져오기
         reader_gym_id = data.get('gym_id') 
