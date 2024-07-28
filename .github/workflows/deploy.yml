@@ -3,7 +3,7 @@ name: Deploy to GCP
 on:
   push:
     branches:
-      - dev2  # main 브랜치에 푸시될 때 실행
+      - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
   deploy:
