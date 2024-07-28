@@ -9,14 +9,19 @@ from .models import EquipmentInUse, EquipmentReservation
 from datetime import datetime, timedelta
 import json
 
-# 퇴실률에 따른 예약시간 배정?
-
 # 피크타임 예약
+# 수동 퇴장률에 따른 예약시간 배정
 ## 예약 페이지
+# 프론트엔드에서 카테고리 별로 나눠서 보여주는 기능 필요
 def show_equipments(request):
-    equipments = Equipment.objects.all()
-    return render(request, "equipment/reservations_test.html", {"equipments": equipments})
-    # 프론트엔드에서 카테고리 별로 나눠서 보여주는 기능 필요
+    #퇴장률별 예약 시작 시간 배정
+    exit_rate = request.user.manual_exit_rate # 현재 로그인 한 유저의 퇴장률
+    equipments = Equipment.objects.all() # 모든 운동 기구
+    equipment_types = Equipment.objects.values_list('equipment_type', flat=True)
+    equipment_type_list = equipment_types.distinct()
+    return render(request, "equipment/reservations_test.html", {"equipments": equipments, "exit_rate": exit_rate,"equipment_type_list":equipment_type_list})
+    # exit_rate를 프론트엔드에서 받아서 exit_rate별 예약 페이지 접근 가능 시간 계산 로직 구현 필요
+    # reserve_equipment에서는 exit_rate와 접근 가능 시간이 클라이언트에서 조작되지 않았는지 검증하는 로직 필요
     # 예약 페이지가 퇴실률에 따라서 접근할 수 있는 시간이 다를 수 있도록 장치 필요
 
 ## 예약 로직
