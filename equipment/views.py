@@ -15,14 +15,39 @@ import json
 # 프론트엔드에서 카테고리 별로 나눠서 보여주는 기능 필요
 def show_equipments(request):
     #퇴장률별 예약 시작 시간 배정
-    exit_rate = request.user.manual_exit_rate # 현재 로그인 한 유저의 퇴장률
+    current_time = datetime.now() # 현재 시간
+    exit_rate = int(request.user.manual_exit_rate) # 현재 로그인 한 유저의 퇴장률)
+    '''
+    exit_rate
+    100% : 12시 이후
+    90% 대  :  12시 1분 이후
+    80% 대  :  12시 2분 이후
+    70% 대  :  12시 3분 이후
+    60% 대  :  12시 4분 이후
+    50% 대  : 12시 5분 이후
+    40% 대  :  12시 6분 이후
+    30% 대  : 12시 7분 이후
+    20% 대  :  12시 8분 이후
+    10% 대  :  12시 9분 이후
+    0% 대  :  12시 10분 이후
+    '''
+    if exit_rate == 100:
+        # reservation_available_time = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
+        reservation_available_time = current_time
+    else:
+        # reservation_available_time = current_time.replace(hour=12, minute=10 - (exit_rate // 10), second=0, microsecond=0)
+        reservation_available_time = current_time.replace(minute=current_time.minute + 10 - (exit_rate // 10))
+    
     equipments = Equipment.objects.all() # 모든 운동 기구
     equipment_types = Equipment.objects.values_list('equipment_type', flat=True)
     equipment_type_list = equipment_types.distinct()
-    return render(request, "equipment/reservations_test.html", {"equipments": equipments, "exit_rate": exit_rate,"equipment_type_list":equipment_type_list})
-    # exit_rate를 프론트엔드에서 받아서 exit_rate별 예약 페이지 접근 가능 시간 계산 로직 구현 필요
-    # reserve_equipment에서는 exit_rate와 접근 가능 시간이 클라이언트에서 조작되지 않았는지 검증하는 로직 필요
-    # 예약 페이지가 퇴실률에 따라서 접근할 수 있는 시간이 다를 수 있도록 장치 필요
+    context = {
+        'equipment_type_list': equipment_type_list,
+        'current_time': current_time,
+        "equipments" : equipments,
+        "reservation_available_time" : reservation_available_time,
+    }
+    return render(request, "equipment/reservations_test.html", context)
 
 ## 예약 로직
 # 예약페이지에 접근할 수 없는 시간에 예약 로직이 작동하지 않도록 방지하는 방법 고민해보기
@@ -117,10 +142,11 @@ def tag_equipment(request):
     return JsonResponse({"message": "태그 중 오류가 발생했습니다."}, status=500)
 
 # 운동기구 사용 현황 표시
+# 운동기구 type별로 3분할로 보여주기
 def equipment_status(request):
     equipments = Equipment.objects.all()
     equipmentinuse_ids = EquipmentInUse.objects.values_list('equipment_id', flat=True)
     return render(request, "equipment/equipment_status.html", {"equipments": equipments, "equipmentinuse_ids": equipmentinuse_ids})
 
 # 기구의 사용이 끝난 경우 inuse 테이블에서 삭제되도록 하는 로직 필요
-# 예약 취소 로직 필요
+# 예약 취소 기능 필요

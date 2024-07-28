@@ -1,37 +1,15 @@
-<!-- 
- 1.
- equipment_type_list에는 총 3가지 equipment_type이 존재하는데
- equipment_type에 따라 총 3부분으로 나눠서 사용자의 운동기구 예약이 편리하게 돕는다.
-
- 2.
-퇴장률별 예약 시작 시간 배정
-뷰에서 exit_rate를
-request.user.manual_exit_rate로 현재 로그인 한 유저의 퇴장률 정의해두고
-이 html으로 exit_rate로 받아오는데,
-exit_rate에 따라 이 html에 접근할 수 있는 시간대가 달라지고
-아래와 같이 그 시간대를 적용한다.
-    '''
-    100% : 12시
-    90% 대 : 12시 1분
-    80% 대 : 12시 2분
-    70% 대 : 12시 3분
-    60% 대 : 12시 4분
-    50% 대 : 12시 5분
-    40% 대 : 12시 6분
-    30% 대 : 12시 7분
-    20% 대 : 12시 8분
-    10% 대 : 12시 9분
-    0% 대 : 12시 10분
-    '''
- -->
-    
 {% block head %}
-    <title>Equipment List</title>
+
+<title>Equipment List</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Equipment List</h1>
-    <ul>
+
+<h1>Equipment List</h1>
+<ul>
+    현재시간 : {{ current_time }}<br>
+    예약 가능한 시간은 {{ reservation_available_time }} <br>
+    {% if current_time >= reservation_available_time %}
         {% for equipment in equipments %}
             <li>
                 {{ equipment.equipment_name }}
@@ -46,7 +24,12 @@ exit_rate에 따라 이 html에 접근할 수 있는 시간대가 달라지고
                 </form>
             </li>
         {% endfor %}
-    </ul>
+    {% else %}
+        아직 예약 가능한 시간이 아닙니다. <br>
+        
+        
+    {% endif %}
+</ul>
 {% endblock %}
 
 <style>
