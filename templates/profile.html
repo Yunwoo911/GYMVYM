@@ -31,19 +31,6 @@
                     <p><b>Email:</b> {{ user.email }}<br><br><b>Nickname:</b> {{ user.nickname }}</p>
                 </div>
 			</div>
-
-            <!-- 프로필에서 NFC 등록하기 input -->
-            <div class="form-group">
-                <form method="post" action="{% url 'update_nfc' %}" class="form-inline">
-                    {% csrf_token %}
-                    <label for="nfc_uid" class="mr-2">NFC :</label><br>
-                    <input type="text" name="nfc_uid" id="nfc_uid" class="form-control mr-2" autocomplete="nfc_uid">
-                    <div class="nfc_btn">
-                        <button class="nfc_regi btn btn-primary" type="submit">등록하기</button>
-                    </div>
-                </form>
-            </div>
-
 		</div>
 		<!-- End of profile section -->
 
