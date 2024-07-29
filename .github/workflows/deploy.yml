@@ -19,7 +19,8 @@ jobs:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'    
 
     - name: 'Use gcloud CLI'
-      run: 'gcloud info'
+      run: |
+        conda activate gym_vym
 # g
 
 
