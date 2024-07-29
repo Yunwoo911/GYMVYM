@@ -174,6 +174,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="nickname">닉네임:</label>
+                        <input type="text" name="nickname" id="nickname" class="form-control">
+                    </div>
+
+                    <div class="form-group">
                         <label for="email">이메일:</label>
                         <div class="input-group">
                             <input type="email" name="email" id="email" class="form-control">
@@ -186,7 +191,7 @@
 
                     <div id="verification-code-container" class="form-group" style="display:none;">
                         <label for="verification_code">Verification Code:</label>
-                        <input type="text" name="verification_code" id="verification_code" class="form-control">
+                        <input type="text" name="verification_code" id="verification_code" class="form-control" disabled>
                         <button type="button" class="btn btn-primary btn-block" id="send-code">인증코드 발송</button>
                         <small id="code-error" class="form-text text-muted"></small>
                     </div>
@@ -223,11 +228,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="nickname">닉네임:</label>
-                        <input type="text" name="nickname" id="nickname" class="form-control">
-                    </div>
-
-                    <div class="form-group">
                         <label for="gender">성별:</label>
                         <select name="gender" id="gender" class="form-control">
                             <option value="0">남성</option>
@@ -244,13 +244,15 @@
     <script>
         function previewImage(event) {
             var reader = new FileReader();
-            reader.onload = function () {
-                var output = document.getElementById('image_preview');
-                output.src = reader.result;
-                output.style.display = 'block';
-            };
-            if (event.target.files.length > 0) {
+            var imagePreview = document.getElementById('image_preview');
+    
+            if (event.target.files && event.target.files[0]) {
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                }
                 reader.readAsDataURL(event.target.files[0]);
+            } else {
+                imagePreview.src = "{% static 'default.png' %}";
             }
         }
 

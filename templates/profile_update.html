@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .profile-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: auto;
+        }
+
+        .profile-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .upload-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #8FCBDD;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .upload-button input[type="file"] {
+            display: none;
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Update Profile</h1>
+<form method="post" action="{% url 'profile_update' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+        <div class="profile-container mb-3">
+            <img id="image_preview" src="{% static 'default.png' %}" class="img-fluid rounded-circle" width="150" height="150">
+            <label class="upload-button" for="id_user_image">
+                <i class="fa fa-camera"></i>
+                <input type="file" name="user_image" id="id_user_image" class="form-control" onchange="previewImage(event)">
+            </label>
+        </div>
+        {{ form.user_image }}
+        {{ form.user_image.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.username.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.phone1.label_tag }}
+        {{ form.phone1 }}
+        {{ form.phone1.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.phone2.label_tag }}
+        {{ form.phone2 }}
+        {{ form.phone2.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.phone3.label_tag }}
+        {{ form.phone3 }}
+        {{ form.phone3.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.birth.label_tag }}
+        {{ form.birth }}
+        {{ form.birth.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+        {{ form.address.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.detail_address.label_tag }}
+        {{ form.detail_address }}
+        {{ form.detail_address.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.nickname.label_tag }}
+        {{ form.nickname }}
+        {{ form.nickname.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.gender.label_tag }}
+        {{ form.gender }}
+        {{ form.gender.errors }}
+    </div>
+    
+    <!-- <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">이름:</label>
+        <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+               class="form-control" value="{{ form.username.value|stringformat:'s' }}" autocomplete="username">
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">패스워드:</label>
+        <input type="password" name="{{ form.password.name }}" id="password-field"
+               class="form-control" autocomplete="new-password">
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password2.id_for_label }}">패스워드 확인:</label>
+        <input type="password" name="{{ form.password2.name }}" id="password2-field"
+               class="form-control" autocomplete="new-password">
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.nickname.id_for_label }}">닉네임:</label>
+        <input type="text" name="{{ form.nickname.name }}" id="{{ form.nickname.id_for_label }}"
+               class="form-control" value="{{ form.nickname.value|stringformat:'s' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.email.id_for_label }}">이메일:</label>
+        <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+               class="form-control" value="{{ form.email.value|stringformat:'s' }}" readonly disabled>
+    </div>
+
+    <div class="form-group">
+        <label for="phone_number">휴대폰번호:</label>
+        <div class="input-group">
+            <input type="text" name="{{ form.phone1.name }}" id="{{ form.phone1.id_for_label }}"
+                   class="form-control" maxlength="3" placeholder="010" value="{{ form.phone1.value|stringformat:'s' }}">
+            <span class="input-group-text">-</span>
+            <input type="text" name="{{ form.phone2.name }}" id="{{ form.phone2.id_for_label }}"
+                   class="form-control" maxlength="4" placeholder="1234" value="{{ form.phone2.value|stringformat:'s' }}">
+            <span class="input-group-text">-</span>
+            <input type="text" name="{{ form.phone3.name }}" id="{{ form.phone3.id_for_label }}"
+                   class="form-control" maxlength="4" placeholder="5678" value="{{ form.phone3.value|stringformat:'s' }}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.birth.id_for_label }}">생년 월 일:</label>
+        <input type="date" name="{{ form.birth.name }}" id="{{ form.birth.id_for_label }}"
+               class="form-control" value="{{ form.birth.value|stringformat:'s' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.address.id_for_label }}">주소:</label>
+        <div class="input-group">
+            <input type="text" name="{{ form.address.name }}" id="{{ form.address.id_for_label }}"
+                   class="form-control" value="{{ form.address.value|stringformat:'s' }}">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-primary" onclick="execDaumPostcode()">주소찾기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.detail_address.id_for_label }}">상세주소:</label>
+        <input type="text" name="{{ form.detail_address.name }}" id="{{ form.detail_address.id_for_label }}"
+               class="form-control" value="{{ form.detail_address.value|stringformat:'s' }}">
+    </div>        
+
+    <div class="form-group">
+        <label for="{{ form.user_image.id_for_label }}">프로필 이미지:</label>
+        <input type="file" name="{{ form.user_image.name }}" id="{{ form.user_image.id_for_label }}"
+               class="form-control" accept="image/*" onchange="previewImage(event)">
+        <img id="image_preview" src="#" alt="Image Preview" style="display:none; width:100px; height:100px; margin-top:10px;">
+    </div> -->
+    <button type="submit" class="btn btn-primary">저장하기</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        var imagePreview = document.getElementById('image_preview');
+
+        if (event.target.files && event.target.files[0]) {
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        } else {
+            imagePreview.src = "{% static 'default.png' %}";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('profile-update-form');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            fetch("{% url 'profile_update_api' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // 성공 시 처리할 코드 추가
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // 실패 시 처리할 코드 추가
+            });
+        });
+    });
+</script>
+
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                    document.getElementById("sample6_extraAddress").value = extraAddr;
+                
+                } else {
+                    document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('sample6_postcode').value = data.zonecode;
+                document.getElementById("sample6_address").value = addr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("sample6_detailAddress").focus();
+            }
+        }).open();
+    }
+</script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+{% endblock %}

@@ -6,8 +6,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.exceptions import ValidationError
 
+# 한국의 표준 전화번호 형식을 검증하는데 사용
 phone_regex = RegexValidator(
     regex=r'^\d{3}-\d{4}-\d{4}$',
     message="Phone number must be entered in the format: 'OOO-OOOO-OOOO'."
@@ -49,10 +49,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # UUID 사용 : 중복 방지, 난수 기반으로 보안 상승, 식별자 생성시 충돌방지
     nfc_uid = models.CharField(unique=True, null=True, blank=True, editable=True)
-    username = models.CharField(max_length=100, unique=True, blank=False)
-    phone1 = models.CharField(max_length=3, validators=[phone_regex])
-    phone2 = models.CharField(max_length=4, validators=[phone_regex])
-    phone3 = models.CharField(max_length=4, validators=[phone_regex])
+    username = models.CharField(max_length=100, blank=False)
+    phone1 = models.CharField(max_length=3)
+    phone2 = models.CharField(max_length=4)
+    phone3 = models.CharField(max_length=4)
     email = models.EmailField(unique=True, blank=False, null=False)
     address = models.CharField(max_length=255)
     detail_address = models.CharField(max_length=255, null=False)

@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Event
 from gyms.models import PT
 import json
 
+@login_required
 def calendar_view(request):
 
     # 로그인한 계정이 트레이너 계정일 경우에 

@@ -82,10 +82,11 @@ class LoginSerializer(serializers.Serializer) :
             return token
         raise serializers.ValidationError({"error": "Unable to log in with provided credentials."})
     
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['user_image', 'username', 'email', 'phone1', 'phone2', 'phone3', 'birth', 'address', 'detail_address', 'nickname', 'gender']
+
+
 class NFCSerializers(serializers.Serializer) :
-    nfc_uid = serializers.CharField(required=True) 
-
-
-    
-    
-
+    nfc_uid = serializers.CharField(required=True)
