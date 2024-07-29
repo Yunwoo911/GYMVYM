@@ -1,5 +1,7 @@
 from django import forms
 from .models import PersonalInfo
+from .models import TrainerRequest, Gym
+
 
 class PersonalInfoForm(forms.ModelForm):
     class Meta:
@@ -34,4 +36,13 @@ class PersonalInfoForm(forms.ModelForm):
             'long_term_goals': forms.TextInput(attrs={'class': 'form-control'}),
             'preferred_exercise_types': forms.TextInput(attrs={'class': 'form-control'}),
             'available_times': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class TrainerRequestForm(forms.ModelForm):
+    class Meta:
+        model = TrainerRequest
+        fields = ['requested_gym', 'request_message']
+        widgets = {
+            'request_message': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
         }

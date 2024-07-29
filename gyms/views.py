@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import GymMember, PersonalInfo, Trainer
+from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser
 from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
 import json
-from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from .forms import TrainerRequestForm
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
 
 # from gyms.search.search_gym_member import Search
 
@@ -99,3 +102,38 @@ def export_gym_member_usernames_to_json(file_path):
 
 
 # export_gym_member_usernames_to_json('gym_member_usernames.json')
+
+
+# 기존의 request_trainer_role 뷰
+@login_required
+def request_trainer_role(request):
+    if request.method == 'POST':
+        form = TrainerRequestForm(request.POST)
+        if form.is_valid():
+            trainer_request = form.save(commit=False)
+            trainer_request.user = request.user
+            trainer_request.request_date = timezone.now()
+            trainer_request.save()
+            # 관리자에게 이메일 알림 보내기 (선택사항)
+            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션
+    else:
+        form = TrainerRequestForm()
+    return render(request, 'request_trainer_role.html', {'form': form})
+
+# 기존의 approve_trainer_request 뷰
+@staff_member_required
+def approve_trainer_request(request, request_id):
+    trainer_request = get_object_or_404(TrainerRequest, trainer_request_id=request_id)
+    if request.method == 'POST':
+        trainer_request.user.usertype = 1  # 트레이너 역할로 변경
+        trainer_request.user.save()
+        trainer_request.approved = True
+        trainer_request.approved_date = timezone.now()
+        trainer_request.approved_by = request.user
+        trainer_request.save()
+        # 사용자에게 승인 알림 보내기 (선택사항)
+        return redirect('trainer_requests_list')  # 요청 리스트 페이지로 리디렉션
+    return render(request, 'approve_trainer_request.html', {'trainer_request': trainer_request})
+
+class TrainerRequestSuccessView(TemplateView):
+    template_name = 'trainer_request_success.html'
