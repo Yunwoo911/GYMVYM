@@ -4,3 +4,5 @@ steps:
       - -f
       - docker-compose.yml
       - build
+options:
+  logging: CLOUD_LOGGING_ONLY
