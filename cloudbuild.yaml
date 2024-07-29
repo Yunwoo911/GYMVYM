@@ -1,0 +1,8 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud compute ssh --zone ${{_GCP_REGION}} gym-vym2 --project gym-vym --command "cd fork_GYMVYM && sudo docker-compose down && sudo docker-compose up -d --build"
+    
