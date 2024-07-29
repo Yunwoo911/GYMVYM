@@ -17,6 +17,9 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
 from .forms import ProfileUpdateForm
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -58,15 +61,13 @@ def home_view(request):
 def profile_view(request):
     return render(request, 'profile.html')
 
-class ProfileUpdateView(generics.UpdateAPIView):
-    serializer_class = ProfileUpdateSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(request):
-        return render(request, 'profile_update.html')
-
-    def get_object(self):
-        return self.request.user
+class ProfileUpdateView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ProfileUpdateSerializer(instance=request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @login_required
 def profile_update_view(request):

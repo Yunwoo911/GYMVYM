@@ -47,12 +47,12 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
+        for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
-
-        # If you want to apply specific widget attributes for certain fields, you can do so like this:
-        self.fields['user_image'].widget.attrs.update({'class': 'form-control-file'})
+        
+        # Disable the email field
         self.fields['email'].widget.attrs.update({'disabled': 'disabled'})
+        self.fields['user_image'].widget.attrs.update({'class': 'form-control-file'})
 
 class NFCForm(forms.ModelForm):
     class Meta:
