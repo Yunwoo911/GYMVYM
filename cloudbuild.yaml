@@ -19,6 +19,9 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t', 'gcr.io/1200604642636894741/fork_gymvym-web', '.' ]
 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/1200604642636894741/fork_gymvym-web']
+
 # By default, all built docker images will be lost once the build is complete.
 # Rather than writing a build step to push this image, you can simply list the
 # image below and it will automatically be uploaded to Google Cloud Container
