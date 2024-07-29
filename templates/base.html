@@ -17,7 +17,7 @@
         <a href="#category">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
+            </svg>
             <span>카테고리</span>
         </a>
         <a href="{% url 'home' %}">
@@ -33,9 +33,11 @@
             <span>마이</span>
         </a>
     </div>
+    {% block extra-script %}
+    {% endblock %}
 </body>
 </html>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
     body {
         margin: auto;

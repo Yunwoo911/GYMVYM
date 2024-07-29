@@ -9,12 +9,15 @@
 </head>
 
 <body>
-    <h1> 프로필 딴따라 </h1>
-    <form method="post" action="">
+    <h1> 프로필 페이지 </h1>
+    <form method="post" action="{% url 'gyms:user_profile_save' id=gym_member_id %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">제출</button>
     </form>
 </body>
+<script>
+
+</script>
 
 </html>

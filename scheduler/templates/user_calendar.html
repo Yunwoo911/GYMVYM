@@ -58,7 +58,7 @@
                     try {
                         const eventResult = await axios({
                             method: "POST",
-                            url: "{% url 'user_event_data' %}", // 이벤트 데이터 엔드포인트 URL
+                            url: "{% url 'scheduler:user_event_data' %}", // 이벤트 데이터 엔드포인트 URL
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRFToken': '{{ csrf_token }}' // CSRF 토큰 추가
@@ -93,7 +93,7 @@
 
                 // 헤더 툴바 설정
                 headerToolbar: {
-                    left: 'prev,next today',
+                    left: 'home prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay',
                 },
@@ -102,6 +102,16 @@
                     start: 'listWeek',
                     center: '',
                     end: ''
+                },
+
+                // 커스텀 버튼 추가
+                customButtons: {
+                    home: {
+                        text: "홈",
+                        click: function () {
+                            window.location.href = "/"; // 홈으로 이동
+                        }
+                    },
                 },
 
                 eventAdd: function (obj) { // 이벤트 추가 시 발생 이벤트

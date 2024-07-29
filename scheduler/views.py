@@ -31,6 +31,7 @@ def event_data(request):
             'end': event.end.strftime('%Y-%m-%dT%H:%M:%S'),
             'description': event.description,
             'backgroundColor': event.background_color,
+            'saved': True,            
         } for event in events
     ]
     return JsonResponse(events_json, safe=False)

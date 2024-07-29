@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'scheduler'
+
 urlpatterns = [
     path('calendar/', views.calendar_view, name='calendar'),
     path('eventData/', views.event_data, name='event_data'),

@@ -9,16 +9,17 @@
 </head>
 
 <body>
+    {% if not personal_info %}
+    <h1>회원 정보가 없습니다. 회원 정보를 입력해주세요.</h1>
+    <button onclick="redirectToPage()">회원 정보 입력</button>
+    {% endif %}
+
     <ul>
         {% for info in personal_info %}
         <li>
             <h2>{{ info.gym_member_if.user.username }}님의 트레이닝 정보</h2><br>
 
-            {% if not info %}
-            <button onclick="location.href='{% url 'profile_add_page' info.gym_member_if.member_id %}'">
-                회원 정보 입력
-            </button><br>
-            {% endif %}
+
 
             키: {{ info.height }} cm<br>
             몸무게: {{ info.weight }} kg<br>
@@ -45,5 +46,11 @@
         {% endfor %}
     </ul>
 </body>
+
+<script>
+    function redirectToPage() {
+        window.location.href = "{% url 'gyms:profile_add_page' gym_member_id %}";
+    }
+</script>
 
 </html>
