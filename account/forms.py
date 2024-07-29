@@ -2,6 +2,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth import authenticate
 from .models import CustomUser
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from django.contrib.auth import update_session_auth_hash
 
 class LoginForm(forms.Form):
     email = forms.EmailField()
@@ -36,6 +39,20 @@ class SignupForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['user_image', 'username', 'email', 'phone1', 'phone2', 'phone3', 'birth', 'address', 'detail_address', 'nickname', 'gender']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+        self.fields['user_image'].widget.attrs.update({'class': 'form-control-file'})
+        self.fields['email'].widget.attrs.update({'readonly': 'readonly'})
+
 
 class NFCForm(forms.ModelForm):
     class Meta:

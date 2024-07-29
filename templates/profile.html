@@ -15,7 +15,7 @@
                     <img src="{% static 'default.png' %}" alt="Profile Image"/>
                 {% endif %}
                 <div class="profile-button">
-                    <button class="btn profile-edit-btn btn-primary">Edit Profile</button>
+                    <button class="btn profile-edit-btn btn-primary" onclick="location.href='{% url 'profile_update' %}'">Edit Profile</button>                    
                     {% if user.is_authenticated %}
                     <!-- 로그아웃 버튼 -->
                         <form action="{% url 'logout' %}" method="post">

@@ -1,5 +1,5 @@
 from .models import CustomUser, EmailVerification
-from rest_framework import generics
+from rest_framework import generics, permissions
 from .serializers import RegisterSerializer, LoginSerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
@@ -9,7 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from datetime import timedelta
 from django.utils import timezone
-from .forms import NFCForm
+from rest_framework import generics, permissions
+from .serializers import RegisterSerializer, LoginSerializer, ProfileUpdateSerializer
+from .forms import ProfileUpdateForm, NFCForm
 import uuid
 import random
 import string
@@ -17,6 +19,8 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
+from rest_framework.decorators import api_view, permission_classes
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -56,7 +60,34 @@ def home_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'profile.html')
+    return render(request, 'profile.html', {'user': request.user})
+
+class ProfileUpdateView(generics.UpdateAPIView):
+    serializer_class = ProfileUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+@login_required
+def profile_update_view(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileUpdateForm(instance=user)
+
+    return render(request, 'profile_update.html', {'form': form})
+
+def check_email_duplicate(request):
+    email = request.GET.get('email', None)
+    if CustomUser.objects.filter(email=email).exists():
+        return JsonResponse({'is_duplicate': True})
+    else:
+        return JsonResponse({'is_duplicate': False})
 
 def check_email_duplicate(request):
     email = request.GET.get('email', None)

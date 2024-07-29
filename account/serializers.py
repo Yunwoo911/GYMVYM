@@ -4,6 +4,8 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.validators import UniqueValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -86,7 +88,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['user_image', 'username', 'email', 'phone1', 'phone2', 'phone3', 'birth', 'address', 'detail_address', 'nickname', 'gender']
-
 
 class NFCSerializers(serializers.Serializer) :
     nfc_uid = serializers.CharField(required=True)
