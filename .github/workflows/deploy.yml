@@ -16,11 +16,9 @@ jobs:
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
-        project_id: 'your-gcp-project-id'
+        project_id: '1200604642636894741'
         service_account_key: ${{ secrets.GCP_SA_KEY }}
 
-
-
-        
-        
-
+    - name: Build Docker image
+      run: |
+        docker build -t gcr.io/1200604642636894741/fork_gymvym-web:$GITHUB_SHA /fork_GYMVYM
