@@ -25,5 +25,5 @@ jobs:
 
     - name: Push Docker image
       run: |
-        echo ${{ secrets.GCP_SA_KEY }} | docker login -u _json_key --password-stdin https://gcr.io
-        docker push gcr.io/1200604642636894741/fork_gymvym-web:$GITHUB_SHA
+        echo ${{ secrets.GCP_SA_KEY }} | docker login -u _json_key --password-stdin https://gcr.io.
+        
