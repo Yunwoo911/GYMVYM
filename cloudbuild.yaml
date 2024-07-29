@@ -18,7 +18,7 @@
 steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'gcr.io/1200604642636894741/fork_gymvym-web', '.' ]
+  args: [ 'build', '-t', 'gcr.io/1200604642636894741/fork_gymvym-web', '.']
 
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
@@ -28,7 +28,7 @@ steps:
   # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'fork-gymvym3', '--image', 'gcr.io/1200604642636894741/fork_gymvym-web', '--region', 'asia-northeast3']
+  args: ['run', 'deploy', 'fork-gymvym4', '--image', 'gcr.io/1200604642636894741/fork_gymvym-web', '--region', 'asia-northeast3', '--port', '8000']
 images:
 - gcr.io/1200604642636894741/fork_gymvym-web
 
