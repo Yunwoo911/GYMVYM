@@ -13,14 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Google Cloud SDK
-      uses: 'google-github-actions/auth@v2'
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
       with:
-        credentials_json: '${{ secrets.GCP_SA_KEY }}'
-
-    - name: Run gcloud command
-      run: |
-        gcloud compute ssh --zone ${{ secrets.GCP_REGION }} gym-vym2 --project gym-vym --command "cd fork_GYMVYM"
+        host: ${{ secrets.HOST }} 
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+              cd fork_GYMVYM
 
 
 
