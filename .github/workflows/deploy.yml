@@ -20,7 +20,7 @@ jobs:
 
     - name: 'Use gcloud CLI'
       run: |
-        conda activate gym_vym
+        gcloud compute ssh --zone ${{ secrets.GCP_REGION }} "gym-vym2" --project "gym-vym"
 # g
 
 
