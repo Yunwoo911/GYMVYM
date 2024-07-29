@@ -46,13 +46,18 @@
     {{ form.non_field_errors }}
     <div class="form-group">
         <div class="profile-container mb-3">
-            <img id="image_preview" src="{% static 'default.png' %}" class="img-fluid rounded-circle" width="150" height="150">
+            {% if user.user_image %}
+                    <img src="{{ user.user_image.url }}" id="image_preview" alt="Profile Image" class="img-fluid rounded-circle" width="150" height="150"/>
+                {% else %}
+                    <img src="{% static 'default.png' %}" alt="Profile Image"/>
+                {% endif %}
+            <!-- <img id="image_preview" src="{% static 'default.png' %}" class="img-fluid rounded-circle" width="150" height="150"> -->
             <label class="upload-button" for="id_user_image">
                 <i class="fa fa-camera"></i>
                 <input type="file" name="user_image" id="id_user_image" class="form-control" onchange="previewImage(event)">
             </label>
         </div>
-        {{ form.user_image }}
+        <!-- {{ form.user_image }} -->
         {{ form.user_image.errors }}
     </div>
     <div class="form-group">
@@ -201,38 +206,6 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('profile-update-form');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const formData = new FormData(form);
-
-            fetch("{% url 'profile_update_api' %}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken,
-                },
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-                // 성공 시 처리할 코드 추가
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // 실패 시 처리할 코드 추가
-            });
-        });
-    });
 </script>
 
 <script>

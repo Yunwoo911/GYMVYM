@@ -52,7 +52,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
         # If you want to apply specific widget attributes for certain fields, you can do so like this:
         self.fields['user_image'].widget.attrs.update({'class': 'form-control-file'})
-        self.fields['email'].widget.attrs.update({'disabled': 'disabled'})
+        self.fields['email'].widget.attrs.update({'readonly': 'readonly'})
 
 class NFCForm(forms.ModelForm):
     class Meta:
