@@ -16,11 +16,21 @@
 # repository as source. Here we use the 'docker' image to build the image and
 # tag it with the name of the image.
 steps:
+# Build the container image
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-t', 'gcr.io/1200604642636894741/fork_gymvym-web', '.' ]
 
+# Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/1200604642636894741/fork_gymvym-web']
+
+
+  # Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'fork-gymvym2', '--image', 'gcr.io/1200604642636894741/fork_gymvym-web', '--region', 'asia-northeast3']
+images:
+- gcr.io/1200604642636894741/fork_gymvym-web
 
 # By default, all built docker images will be lost once the build is complete.
 # Rather than writing a build step to push this image, you can simply list the
