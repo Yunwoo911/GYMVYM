@@ -1,5 +1,5 @@
 steps:
-  - name: docker/compose:lastest
+  - name: docker/compose:2.29.1
     args: 
       - -f
       - docker-compose.yml
