@@ -1,24 +1,24 @@
   steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/1200604642636894741/fork-gymvym5:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA', '.']
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/1200604642636894741/fork-gymvym5:$COMMIT_SHA']
+    args: ['push', 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA']
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
     - 'run'
     - 'deploy'
-    - 'fork-gymvym5'
+    - 'fork-gymvym'
     - '--image'
-    - 'gcr.io/1200604642636894741/fork-gymvym5:$COMMIT_SHA'
+    - 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA'
     - '--region'
     - 'asia-northeast3'
     - '--port'
     - '8000'
   images:
-  - 'gcr.io/1200604642636894741/fork-gymvym5:$COMMIT_SHA'
+  - 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA'
   tags: ['gcp-cloud-build-sample-build']
 
