@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - My Website{% endblock %}
+{% load static %}
+
+{% block content %}
+    <div class="title">
+        <h1>회원 검색</h1>
+    </div>
+    <div class="search">
+        <form id="search-form" onsubmit="event.preventDefault(); searchUser();">
+            <input type="text" id="username" name="username" placeholder="Enter username" required>
+            <button type="submit">찾기</button>
+        </form>
+        <div id="results"></div>
+    </div>
+
+    <style>
+        .title {
+            display: block;
+            margin-bottom: 20px;
+        }
+        .search {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .form-group {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .form-group input,
+        .form-group button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #results {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .result-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .nfc-form {
+            margin-top: 10px;
+        }
+        .nfc-form input,
+        .nfc-form button {
+            margin-right: 5px;
+        }
+    </style>
+
+    <script>
+        function searchUser() {
+            const username = document.getElementById('username').value;
+            fetch(`/search/search-user/${username}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '';
+    
+                    if (data.length > 0) {
+                        data.forEach(user => {
+                            const userDiv = document.createElement('div');
+                            userDiv.classList.add('result-item');
+                            userDiv.innerHTML = `
+                                <div>Username: ${user.username}</div>
+                                <div>Email: ${user.email}</div>
+                                <div>NFC UID: ${user.nfc_uid}</div>
+                                <div class="form-group nfc-form">
+                                    <form method="post" action="{% url 'member_search:register_nfc' %}" class="form-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="email" value="{{ user.email }}">
+                                        <label for="nfc_uid_{{ user.email }}" class="mr-2">NFC :</label><br>
+                                        <input type="text" name="nfc_uid" id="nfc_uid_{{ user.email }}" class="form-control mr-2" autocomplete="nfc_uid">
+                                        <div class="nfc_btn">
+                                            <button class="nfc_regi btn btn-primary" type="submit">등록하기</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            `;
+                            resultsDiv.appendChild(userDiv);
+                        });
+                    } else {
+                        resultsDiv.innerText = 'No users found';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const resultsDiv = document.getElementById('results');  
+                    resultsDiv.innerText = 'Error fetching data';
+                });
+        }
+    </script>
+{% endblock %}

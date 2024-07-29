@@ -13,6 +13,6 @@ urlpatterns = [
     path('check-email/', check_email_duplicate, name='check_email_duplicate'),
     path('verify-email/<int:user_id>/', verify_email, name='verify_email'),
     path('send-verification-code/', send_verification_code, name='send_verification_code'),
-    path('update_nfc/', update_nfc_view, name='update_nfc'),
+    path('update_nfc/', update_nfc_view, name='register_nfc'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

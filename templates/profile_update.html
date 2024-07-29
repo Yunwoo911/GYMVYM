@@ -1,0 +1,119 @@
+    {% extends 'base.html' %}
+
+    {% block content %}
+    <h1>Update Profile</h1>
+        <form method="post" action="{% url 'profile_update' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">이름:</label>
+                <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                    class="form-control" value="{{ form.username.value|stringformat:'s' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">패스워드:</label>
+                <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+                    class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">패스워드 확인:</label>
+                <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
+                    class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.nickname.id_for_label }}">닉네임:</label>
+                <input type="text" name="{{ form.nickname.name }}" id="{{ form.nickname.id_for_label }}"
+                    class="form-control" value="{{ form.nickname.value|stringformat:'s' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">이메일:</label>
+                <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                    class="form-control" value="{{ form.email.value|stringformat:'s' }}" readonly disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number">휴대폰번호:</label>
+                <div class="input-group">
+                    <input type="text" name="{{ form.phone1.name }}" id="{{ form.phone1.id_for_label }}"
+                        class="form-control" maxlength="3" placeholder="010" value="{{ form.phone1.value|stringformat:'s' }}">
+                    <span class="input-group-text">-</span>
+                    <input type="text" name="{{ form.phone2.name }}" id="{{ form.phone2.id_for_label }}"
+                        class="form-control" maxlength="4" placeholder="1234" value="{{ form.phone2.value|stringformat:'s' }}">
+                    <span class="input-group-text">-</span>
+                    <input type="text" name="{{ form.phone3.name }}" id="{{ form.phone3.id_for_label }}"
+                        class="form-control" maxlength="4" placeholder="5678" value="{{ form.phone3.value|stringformat:'s' }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.birth.id_for_label }}">생년 월 일:</label>
+                <input type="date" name="{{ form.birth.name }}" id="{{ form.birth.id_for_label }}"
+                    class="form-control" value="{{ form.birth.value|stringformat:'s' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.address.id_for_label }}">주소:</label>
+                <div class="input-group">
+                    <input type="text" name="{{ form.address.name }}" id="{{ form.address.id_for_label }}"
+                        class="form-control" value="{{ form.address.value|stringformat:'s' }}">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary" onclick="execDaumPostcode()">주소찾기</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.detail_address.id_for_label }}">상세주소:</label>
+                <input type="text" name="{{ form.detail_address.name }}" id="{{ form.detail_address.id_for_label }}"
+                    class="form-control" value="{{ form.detail_address.value|stringformat:'s' }}">
+            </div>        
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('image_preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            if (event.target.files.length > 0) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 선택된 주소와 상세 주소를 가져와서 입력 필드에 설정합니다.
+                var address = data.address; // 최종 주소 변수
+                var extraAddress = ''; // 참고항목 변수
+
+                // 참고항목 추가
+                if (data.addressType === 'R') { // 도로명 주소인 경우
+                    if (data.bname !== '') {
+                        extraAddress += data.bname;
+                    }
+                    if (data.buildingName !== '') {
+                        extraAddress += (extraAddress !== '' ? ', ' : '') + data.buildingName;
+                    }
+                    address += (extraAddress !== '' ? ' ('+ extraAddress +')' : '');
+                }
+
+                // 입력 필드 업데이트
+                document.getElementById('{{ form.address.id_for_label }}').value = address;
+            }
+        }).open();
+    }
+    </script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+{% endblock %}
+

@@ -49,10 +49,10 @@
                 <div class="menu_box">
                     <ul class="list-none">
                         <li>
-                            <a href="{% url 'calendar' %}">
+                            {% comment %} <a href="{% url 'calendar' %}"> {% endcomment %}
                                 <img src="{% static 'calendar.png' %}" width="45" height="45">
                                 <p><b>피티일정</b></p>
-                            </a>
+                            {% comment %} </a> {% endcomment %}
                         </li>
                         <li>
                             <img src="{% static 'person.png' %}" width="45" height="45">
