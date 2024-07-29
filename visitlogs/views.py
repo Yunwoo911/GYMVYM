@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import VisitLog
 from django.utils import timezone
 from django.http import JsonResponse
@@ -6,14 +6,16 @@ from gyms.models import GymMember
 from django.shortcuts import get_object_or_404, redirect
 import datetime
 import json
-# 
+from account.models import CustomUser
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
+
 
 # 현재 뷰의 문제점. 며칠 지난것도 퇴실이 가능할듯함 <-timezone.now().date()로 해결?
 
 # 입실확인 뷰
 
 # request.nfc_uid
-from account.models import CustomUser
 def web_entrance(request):
     if request.method == 'POST':
         # taged_nfc_uid = request.POST.get('nfc_uid')
@@ -32,14 +34,8 @@ def web_exit(request):
         try:
             # user는 요청을 보낸 유저
             user = request.user
+            # exit_log는 
             exit_log = VisitLog.objects.filter(member__user=user, exit_time__gte = timezone.now() - datetime.timedelta(hours=2)).last()
-            # VisitLog 모델에서 현재 로그인한 사용자의 출입 기록을 가져옵니다.
-            # 조건: 어서오세요
-            # 1. member 필드의 user가 현재 요청을 보낸 사용자와 일치해야 합니다. 
-            # 2. exit_time 필드가 null이어야 합니다 (아직 퇴장하지 않은 기록).
-            # 3. enter_time 필드의 날짜가 오늘이어야 합니다.
-            # exit_log = VisitLog.objects.get(member__user=user, exit_time__isnull=True, enter_time__date=timezone.now().date())
-            # entertime = VisitLog.objects.get(member__user=user)  
             if exit_log.exit_time < timezone.now():
                 return JsonResponse({'message': "이미 퇴장 처리 되었습니다."})
             else:
@@ -51,27 +47,50 @@ def web_exit(request):
             return JsonResponse({'message': '출입 기록이 없습니다.'})
     return JsonResponse({'message': '잘못된 요청'}, status=400)
 
-from django.views.decorators.csrf import csrf_exempt
+        
+# 입실인지 퇴실인지 확인하는 뷰
 
-# 입실인지 퇴실인지 구분하는 뷰
+
+
 # @csrf_exempt
-# def nfc_status(request):
+# def identify_nfc(request):
 #     if request.method == 'POST':
 #         try:
 #             data = json.loads(request.body) # JSON 데이터를 파싱
 #         except json.JSONDecodeError:
 #             return JsonResponse({'error': '잘못된 11JSON 데이터입니다.'}, status=400)
-#         reader_nfc_uid = data.get('nfc_uid')
-#         taged_gym_id = data.get('gym_id')
+#         reader_gym_id = data.get('gym_id') # 입실 리더기에 고정된 gym_id를 가져온다.
+#         taged_nfc_uid = data.get('nfc_uid') # 입실 리더기로 읽은 nfc_uid를 가져온다.
 
-#         which_user = CustomUser.objects.get(nfc_uid = reader_nfc_uid)
-#         if not which_user:
+#         if not reader_gym_id: # reader_gym_id 없으면 에러
+#             return JsonResponse({'error': '헬스장 id가 없습니다.'}, status=400)
+#         if not taged_nfc_uid: # taged_nfc_uid 없으면 에러
+#             return JsonResponse({'error': 'nfc_uid가 없습니다.'}, status=400)
+        
+#         try:
+#             which_user = CustomUser.objects.get(nfc_uid=taged_nfc_uid) # customuser 테이블에서 taged_nfc_uid로 어떤 유저인지 찾는다.
+#         except CustomUser.DoesNotExist:
 #             return JsonResponse({'error': '해당 nfc_uid를 가진 사용자가 없습니다.'}, status=404)
-#         which_member = GymMember.objects.filter(gym_id = taged_gym_id, user = which_user.user).last()
-#         if not which_member:
+        
+#         try:
+#             # which_member = GymMember.objects.get(gym_id=reader_gym_id, user=which_user.user)  # gymmember 테이블에서 gym_id와 user로 멤버인지 찾는다.
+#             # gymmember 상에서의 중복 오류 해결하기 전까지 임시 방편
+#             which_member = GymMember.objects.filter(gym_id=reader_gym_id, user=which_user.user).last()
+#         except GymMember.DoesNotExist:
 #             return JsonResponse({'error': '해당 헬스장에 등록된 사용자가 아닙니다.'}, status=404)
         
-        
+#         a = VisitLog.objects.filter(nfc_uid = taged_nfc_uid, member_id = which_member.member_id)
+#         #그 회원의 입장로그에서 오늘꺼(혹시 한번 더 올 수 있으니 수정 필요하긴함)
+#         # attandance_info = a.
+
+#         if attandance_info == False:
+#             return JsonResponse({'redirect_url': reverse('visitlogs:nfc_entrance')})
+#         else:
+#             return JsonResponse({'redirect_url': reverse('visitlogs:nfc_exit')})
+#     return JsonResponse({'error': '잘못된 요청'}, status=400)
+
+
+
 
 @csrf_exempt
 def nfc_entrance(request):
