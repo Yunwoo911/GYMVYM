@@ -6,6 +6,7 @@ from gyms.models import GymMember
 from django.shortcuts import get_object_or_404, redirect
 import datetime
 import json
+from django.db.models import F
 # 
 
 # 현재 뷰의 문제점. 며칠 지난것도 퇴실이 가능할듯함 <-timezone.now().date()로 해결?
@@ -79,7 +80,7 @@ def nfc_entrance(request):
         try:
             data = json.loads(request.body) # JSON 데이터를 파싱
         except json.JSONDecodeError:
-            return JsonResponse({'error': '잘못된 11JSON 데이터입니다.'}, status=400)
+            return JsonResponse({'error': '잘못된 JSON 데이터입니다.'}, status=400)
         reader_gym_id = data.get('gym_id') # 입실 리더기에 고정된 gym_id를 가져온다.
         taged_nfc_uid = data.get('nfc_uid') # 입실 리더기로 읽은 nfc_uid를 가져온다.
         
@@ -102,8 +103,13 @@ def nfc_entrance(request):
 
         nfc_enter_time = timezone.now() # 현재 시간
         # 입실 기록 생성 + 2시간 후 퇴실 정보 저장
-        enter_log = VisitLog.objects.create(nfc_uid=taged_nfc_uid, enter_time=nfc_enter_time, exit_time=nfc_enter_time + datetime.timedelta(hours=2), member= which_member.member_id)
+        enter_log = VisitLog.objects.create(nfc_uid=taged_nfc_uid, enter_time=nfc_enter_time, exit_time=nfc_enter_time + datetime.timedelta(hours=2), member_id= which_member.member_id)
         enter_log.save()
+        # customuser의 gym_entry_count에 1을 추가하는 코드 필요
+        # which_user.gym_entry_count += 1 
+        which_user.gym_entry_count = F('gym_entry_count') + 1
+        which_user.save()
+        # save() 필요?
         return JsonResponse({'message': '입실이 완료되었습니다'})
     return JsonResponse({'error': '잘못된 요청'}, status=400)
 
@@ -127,6 +133,13 @@ def nfc_exit(request):
             exit_log.exit_time = timezone.now()
             # 퇴장 기록 DB에 저장
             exit_log.save()
+            if which_user.gym_manual_exit_count >= 1:
+                which_user.gym_manual_exit_count = F('gym_manual_exit_count') + 1
+                which_user.save()
+
+            # gym_entry_count 는 어떻게보면 총 입장 횟수
+            # 그럼 퇴장시에도 manual_exit_count를 하나씩 +1 굿
+            # exit_rate는 수동 퇴장률이니깐 입장횟수  
             return JsonResponse({'message': '퇴장이 완료되었습니다'})
         except VisitLog.DoesNotExist:
             return JsonResponse({'message': '입장 기록이 없습니다.'})   
@@ -140,7 +153,7 @@ def nfc_enter_exit(request):
         try:
             data = json.loads(request.body) # JSON 데이터를 파싱
         except json.JSONDecodeError:
-            return JsonResponse({'error': '잘못된 11JSON 데이터입니다.'}, status=400)
+            return JsonResponse({'error': '잘못된 JSON 데이터입니다.'}, status=400)
         reader_gym_id = data.get('gym_id') # 입실 리더기에 고정된 gym_id를 가져온다.
         taged_nfc_uid = data.get('nfc_uid') # 입실 리더기로 읽은 nfc_uid를 가져온다.
         
@@ -168,18 +181,25 @@ def nfc_enter_exit(request):
             # 입실 기록 생성 + 2시간 후 퇴실 정보 저장
             enter_log = VisitLog.objects.create(nfc_uid=taged_nfc_uid, enter_time=nfc_enter_time, exit_time=nfc_enter_time + datetime.timedelta(hours=2), member_id= which_member.member_id)
             enter_log.save() #입장 처리
+            which_user.gym_entry_count = F('gym_entry_count') + 1
+            which_user.save()
             return JsonResponse({'message': '입실이 완료되었습니다'})
         else: #입퇴장 로그가 존재
             recent_log = visit_log.last() # 가장 최신 기록
             if recent_log.exit_time < timezone.now(): # 퇴장시간이 과거 -> 이미 퇴장 했고 nfc 태그를 입장 요청으로 분류
                 enter_log = VisitLog.objects.create(nfc_uid=taged_nfc_uid, enter_time=nfc_enter_time, exit_time=nfc_enter_time + datetime.timedelta(hours=2), member_id= which_member.member_id)
                 enter_log.save()
+                which_user.gym_entry_count = F('gym_entry_count') + 1
+                which_user.save()
                 return JsonResponse({'message': '입실이 완료되었습니다'})
             elif recent_log.exit_time == timezone.now():
                 return JsonResponse({'message': '2시간이 경과하여 자동 퇴실되었습니다.'})
             else:# 퇴장시간이 미래 -> 아직 퇴장하지 않았다
                 recent_log.exit_time = timezone.now()
-                recent_log.save() # 퇴장 시간에 현재 시간을 저장
+                if which_user.gym_manual_exit_count >= 1:
+                    which_user.gym_manual_exit_count = F('gym_manual_exit_count') + 1
+                    which_user.save()
+                    recent_log.save() # 퇴장 시간에 현재 시간을 저장
                 return JsonResponse({'message': '퇴장이 완료되었습니다'})  
     return JsonResponse({'error': '잘못된 요청'}, status=400)
 
