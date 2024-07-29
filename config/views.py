@@ -3,6 +3,8 @@ from visitlogs.models import VisitLog
 from django.utils import timezone
 from gyms.models import GymMember
 import datetime
+from django.db.models import F
+from account.models import CustomUser
 
 
 def index(request):
@@ -22,7 +24,16 @@ def index(request):
 
         # 인원 카운트 
         # current_count는 read_gym_db의 길이
-        print(read_gym_db)
+        # print(read_gym_db)
         current_count = read_gym_db.count()
-        # print(current_count)
-        return render(request, 'home.html', {'current_count': current_count})
+
+        # 0으로 나누는 것을 방지하기 위한 체크
+        exit_rate = login_user.manual_exit_rate
+        
+        return render(request, 'home.html', {'current_count': current_count,'exit_rate': exit_rate})
+
+    
+    
+
+    # # exit_rate를 템플릿에 전달
+    # return render(request, 'home.html', {'exit_rate': exit_rate})

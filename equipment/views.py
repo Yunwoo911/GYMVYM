@@ -32,15 +32,16 @@ def show_equipments(request):
     0% 대  :  12시 10분 이후
     '''
     if exit_rate == 100:
-        # reservation_available_time = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
-        reservation_available_time = current_time
+        reservation_available_time = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
+        # reservation_available_time = current_time
     else:
-        # reservation_available_time = current_time.replace(hour=12, minute=10 - (exit_rate // 10), second=0, microsecond=0)
-        reservation_available_time = current_time.replace(minute=current_time.minute + 10 - (exit_rate // 10))
+        reservation_available_time = current_time.replace(hour=12, minute=10 - (exit_rate // 10), second=0, microsecond=0)
+        # reservation_available_time = current_time.replace(minute=current_time.minute + 10 - (exit_rate // 10))
     
     equipments = Equipment.objects.all() # 모든 운동 기구
     equipment_types = Equipment.objects.values_list('equipment_type', flat=True)
     equipment_type_list = equipment_types.distinct()
+    
     context = {
         'equipment_type_list': equipment_type_list,
         'current_time': current_time,

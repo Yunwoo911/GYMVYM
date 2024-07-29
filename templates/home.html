@@ -48,6 +48,10 @@
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                         </svg>
                         <p>회원</p>
+                        <div class="progress" style="width: 155px; height: 20px;" role="progressbar" aria-label="Example with label" aria-valuenow="{{ exit_rate }}%" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{ exit_rate }}%">퇴장률:{{ exit_rate }}%</div>
+                        </div>
+                            <p></p>
                     </div>
                 </div>
             </div>
@@ -186,7 +190,7 @@
             // 비동기처리(axios) POST 요청
             axios({
                 method: 'POST',
-                url: '{% url "web_exit" %}',
+                url: '{% url "visitlogs:web_exit" %}',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}'
                 }
@@ -198,26 +202,6 @@
             .catch((error) => {
                 console.error('Error:', error);
                 alert('퇴장 처리 중 오류가 발생했습니다.');
-            });
-        });
-
-        // 아이디가 exitForm인 요소를 찾아서 이벤트 리스너 추가(클릭시 작동)
-        document.getElementById('enterForm').addEventListener('click', function() {
-            // 비동기처리(axios) POST 요청
-            axios({
-                method: 'POST',
-                url: '{% url "web_entrance" %}',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            // 요청 성공 시 views.py에 응답값(JsonResponse) 메시지 표시
-            .then((response) => {
-                alert(response.data.message);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('에러: 약오르지?.');
             });
         });
     </script>
