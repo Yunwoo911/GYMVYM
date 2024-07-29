@@ -20,10 +20,7 @@ jobs:
 
     - name: 'Use gcloud CLI'
       run: |
-        gcloud compute ssh --zone ${{ secrets.GCP_REGION }} "gym-vym2" --project "gym-vym"
-        source ~/.bashrc
-        conda init bash
-        conda activate gym_vym
+        gcloud compute ssh --zone ${{ secrets.GCP_REGION }} "gym-vym2" --project "gym-vym"        
         cd GYMVYM
         sudo docker-compose down
         sudo docker-compose up -d --build
