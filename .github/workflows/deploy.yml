@@ -21,7 +21,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t gym-vym-images/1200604642636894741/fork_gymvym-web:$GITHUB_SHA .
+        docker build -t asia-northeast3-docker.pkg.dev/gym-vym/gym-vym-images/1200604642636894741/fork_gymvym-web:$GITHUB_SHA .
 
     - name: Push Docker image
       run: |
