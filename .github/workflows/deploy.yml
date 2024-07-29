@@ -21,7 +21,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t gcr.io/1200604642636894741/fork_gymvym-web:$GITHUB_SHA .
+        docker build -t gym-vym-images/1200604642636894741/fork_gymvym-web:$GITHUB_SHA .
 
     - name: Push Docker image
       run: |
