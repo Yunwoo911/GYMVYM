@@ -6,21 +6,18 @@ on:
       - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: executing remote ssh commands using ssh key
-      uses: appleboy/ssh-action@master
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
       with:
-        host: ${{ secrets.HOST }} 
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-              cd fork_GYMVYM
+        project_id: 'your-gcp-project-id'
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
 
 
 
