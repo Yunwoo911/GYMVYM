@@ -27,7 +27,7 @@ def read_with_timeout(timeout=1):
 def select_user(users):
     print("여러 명의 사용자가 검색되었습니다. 등록할 사용자를 선택하세요.")
     for i, user in enumerate(users):
-        print(f"{i}: {user}")
+        print(f"{i+1}: {user}")
     while True:
         try:
             index = int(input("등록할 사용자의 번호를 입력하세요: "))

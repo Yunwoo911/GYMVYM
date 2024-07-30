@@ -44,7 +44,7 @@ class CRUD(Databases):
 
     # (Read) select 읽기/찾기
     def readDB(self, name):
-        sql = "SELECT username, nfc_uid, phone_number, email  \
+        sql = "SELECT username, nfc_uid, email  \
             FROM public.account_customuser where username='{name}'"  \
             .format(name=name)
         try:
@@ -60,7 +60,7 @@ class CRUD(Databases):
 
     # (Read) NFC UID로 검색
     def read_by_nfc_uid(self, nfc_uid):
-        sql = "SELECT username, nfc_uid, phone_number, email  \
+        sql = "SELECT username, nfc_uid, email  \
             FROM public.account_customuser WHERE nfc_uid='{nfc_uid}'"  \
             .format(nfc_uid=nfc_uid)
         try:
