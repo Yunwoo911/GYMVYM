@@ -125,9 +125,6 @@ class TrainerRequest(models.Model):
     request_message = models.TextField(null=True, blank=True) # 요청 메세지
     approved = models.BooleanField(default=False) # 승인 여부
     approved_date = models.DateField(null=True, blank=True) # 승인 일자
-<<<<<<< HEAD
-    approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True,default=None) # 승인자
-=======
     approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True,default=None) # 승인자
 
 # 헬스장 소유 테이블
@@ -156,4 +153,3 @@ class Membership(models.Model):
     start_date = models.DateField(null=True, blank=True) # 회원권 시작일
     end_date = models.DateField(null=True, blank=True) # 회원권 종료일
     note = models.TextField(null=True, blank=True) # 비고 필드
->>>>>>> origin/visitlog
