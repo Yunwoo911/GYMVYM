@@ -1,0 +1,28 @@
+name: Deploy to GCP
+
+on:
+  push:
+    branches:
+      - dev2  # main 브랜치에 푸시될 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: '1200604642636894741'
+
+    - name: Deploy to GCP
+      run: |
+        gcloud config set project 1200604642636894741
+        gcloud app deploy --quiet
+        gcloud compute ssh --zone ${{ secrets.GCP_REGION }} "gym-vym2" --project "gym-vym"
+

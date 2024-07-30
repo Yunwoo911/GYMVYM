@@ -10,14 +10,14 @@
 
 <body>
     <h2>회원 목록</h2>
-    <form method="get" action="{% url 'member_profile_search_page' %}">
+    <form method="get" action="">
         <input type="text" name="query" placeholder="회원 검색">
         <button type="submit">검색</button>
     </form>
     <ul>
         {% for member in gym_members %}
         <li>
-            <a href="{% url 'trainer_detail_page' member.member_id %}">
+            <a href="{% url 'gyms:trainer_detail_page' member.member_id %}">
                 {{ member.user.username }} - {{member.membership_type }}<br>
                 가입일 : {{ member.join_date }}
             </a>

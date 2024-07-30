@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Approve Trainer Request{% endblock %}
+
+{% block content %}
+    <h1>Approve Trainer Request</h1>
+    <p><strong>User:</strong> {{ trainer_request.user.username }}</p>
+    <p><strong>Requested Gym:</strong> {{ trainer_request.requested_gym.name }}</p>
+    <p><strong>Request Message:</strong> {{ trainer_request.request_message }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Approve</button>
+    </form>
+{% endblock %}

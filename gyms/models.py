@@ -21,7 +21,7 @@ class Trainer(models.Model):
     trainer_id = models.AutoField(primary_key=True)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
     # owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 1})
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 1}, null=True)
     trainer_name = models.CharField(max_length=100)
     certificate = models.CharField(max_length=500, null=True)
     trainer_image = models.ImageField(upload_to='trainer_images', null=True)
@@ -117,3 +117,13 @@ class PT(models.Model):
     pt_end_date = models.DateField()
     duration = models.IntegerField()
 
+# 트레이너 권한 요청들을 관리하는 테이블
+class TrainerRequest(models.Model):
+    trainer_request_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT) # 유저
+    requested_gym = models.ForeignKey(Gym, on_delete=models.PROTECT) # 트레이너 권한이 필요한 헬스장
+    request_date = models.DateField(null=True, blank=True) # 요청 일자
+    request_message = models.TextField(null=True, blank=True) # 요청 메세지
+    approved = models.BooleanField(default=False) # 승인 여부
+    approved_date = models.DateField(null=True, blank=True) # 승인 일자
+    approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True,default=None) # 승인자

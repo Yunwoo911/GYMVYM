@@ -4,15 +4,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>PT 회원 관리 페이지</title>
+    <title>트레이너 페이지</title>
     <link rel="stylesheet" href="">
 </head>
 
 <body>
     <nav>
         <ul>
-            <li><a href="{% url 'profile_page' %}">회원 목록</a></li>
-            <li><a href="{% url 'calendar' %}">일정 관리</a></li>
+            <li><a href="{% url 'gyms:profile_page' %}">회원 목록</a></li>
+            <li><a href="{% url 'scheduler:calendar' %}">일정 관리</a></li>
         </ul>
     </nav>
     <section>
