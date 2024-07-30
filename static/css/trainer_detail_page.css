@@ -1,0 +1,30 @@
+body {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.member-info {
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.member-info h2 {
+    margin-bottom: 10px;
+}
+
+.member-info p {
+    margin: 5px 0;
+}
+
+.btn-primary {
+    display: block;
+    margin: 0 auto;
+}
