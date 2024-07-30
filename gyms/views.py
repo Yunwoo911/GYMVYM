@@ -9,20 +9,17 @@ from django.contrib.auth.decorators import login_required
 from .forms import TrainerRequestForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
-# from .models import Trainer_request
-# from gyms.search.search_gym_member import Search
+from django.core.paginator import Paginator
 
-class PtMembershipManagementPageView(TemplateView):
-    template_name = 'pt_membership_page.html'
+# from gyms.search.search_gym_member import Search    
+def profile_page(request):
+    gymmember_list = GymMember.objects.order_by('-join_date')
+    paginator = Paginator(gymmember_list, 10)  # 페이지당 10개 항목
 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-class ProfilePageView(TemplateView):
-    template_name = 'profile_page.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['gym_members'] = GymMember.objects.all()
-        return context
+    return render(request, 'profile_page.html', {'page_obj': page_obj})
     
 
 class TrainerDetailPageView(TemplateView):
@@ -35,7 +32,7 @@ class TrainerDetailPageView(TemplateView):
         context['personal_info'] = PersonalInfo.objects.filter(gym_member_if__member_id=gym_member_id)
         return context
     
-
+# 
 class ProfileAddPageView(TemplateView):
     template_name = 'profile_add_page.html'
 
@@ -73,17 +70,14 @@ class TrainerPortfolioView(TemplateView):
 
 
 def search(request):
-    results = []
-    client = Search()
+    query = request.POST.get('query', '')
+    results = GymMember.objects.filter(user__username__icontains=query)
+    paginator = Paginator(results, 10)  # 페이지당 10개 항목
 
-    # 검색어를 받아오기
-    if 'query' in request.GET:
-        query = request.GET['query']
-        # 검색결과를 가져와야 하지 않나?        
-        usernames = client.making_query(query)
-        results = GymMember.objects.filter(user__username=usernames)
-    
-    return render(request, 'member_profile_search.html', {'results': results})
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'member_profile_search.html', {'page_obj': page_obj})
 
 
 def export_gym_member_usernames_to_json(file_path):

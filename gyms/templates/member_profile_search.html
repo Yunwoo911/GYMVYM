@@ -13,14 +13,15 @@
         <h1>회원 프로필 검색</h1>
     </header>
     <main>
-        <form method="get" action="{% url 'gyms:member_profile_search_page' %}">
-            <input type="text" name="query" placeholder="회원 검색">
+        <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
+            {% csrf_token %}
+            <input type="search" name="query" placeholder="회원 검색" required>
             <button type="submit">검색</button>
         </form>
         <section id="results">
             <!-- 검색 결과가 여기에 표시됩니다 -->
             <ul>
-                {% for result in results %}
+                {% for result in page_obj.object_list %}
                 <li>
                     <a href="{% url 'gyms:trainer_detail_page' result.member_id %}">
                         {{ result.user.username }} - {{ result.membership_type }}<br>
@@ -31,6 +32,23 @@
                 <li>검색 결과가 없습니다.</li>
                 {% endfor %}
             </ul>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 처음</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+                    {% endif %}
+
+                    <span class="current">
+                        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">다음</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">마지막 &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
         </section>
     </main>
     <footer>

@@ -5,8 +5,8 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
-<link href="" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous">
 {% endblock %}
 
 {% block content %}
@@ -88,8 +88,10 @@
                 </ul>
                 <ul class="list-none menu-list">
                     <li>
-                        <img src="{% static 'trainer.png' %}" width="45" height="45">
-                        <p><b>트레이너</b></p>
+                        <a href="{% url 'gyms:profile_page' %}" style="background:none; border:none; padding:0;">
+                            <img src="{% static 'trainer.png' %}" width="45" height="45">
+                            <p><b>트레이너</b></p>
+                        </a>
                     </li>
                     <li>
                         <img src="{% static 'person.png' %}" width="45" height="45">
@@ -207,7 +209,7 @@
 {% endblock %}
 
 
-{% comment %} {% block extra-script %}
+{% block extra-script %}
 <script>
     // 아이디가 exitForm인 요소를 찾아서 이벤트 리스너 추가(클릭시 작동)
     document.getElementById('exitForm').addEventListener('click', function () {
@@ -229,4 +231,4 @@
             });
     });
 </script>
-{% endblock %} {% endcomment %}
+{% endblock %}

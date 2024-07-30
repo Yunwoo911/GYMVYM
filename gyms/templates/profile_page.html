@@ -10,12 +10,13 @@
 
 <body>
     <h2>회원 목록</h2>
-    <form method="get" action="">
+    <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
+        {% csrf_token %}
         <input type="text" name="query" placeholder="회원 검색">
         <button type="submit">검색</button>
     </form>
     <ul>
-        {% for member in gym_members %}
+        {% for member in page_obj.object_list %}
         <li>
             <a href="{% url 'gyms:trainer_detail_page' member.member_id %}">
                 {{ member.user.username }} - {{member.membership_type }}<br>
@@ -24,6 +25,24 @@
         </li>
         {% endfor %}
     </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 처음</a>
+            <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+            {% endif %}
+
+            <span class="current">
+                {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">다음</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">마지막 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
 </body>
 
