@@ -108,7 +108,7 @@ def request_trainer_role(request):
             trainer_request.request_date = timezone.now()
             trainer_request.save()
             # 관리자에게 이메일 알림 보내기 (선택사항)
-            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션
+            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션1
     else:
         form = TrainerRequestForm()
     return render(request, 'request_trainer_role.html', {'form': form})
