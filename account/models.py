@@ -6,6 +6,12 @@ from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
+
+phone_regex = RegexValidator(
+    regex=r'^\d{3}-\d{4}-\d{4}$',
+    message="Phone number must be entered in the format: 'OOO-OOOO-OOOO'."
+)
 
 # 한국의 표준 전화번호 형식을 검증하는데 사용
 phone_regex = RegexValidator(
