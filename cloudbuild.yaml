@@ -16,8 +16,6 @@
     - 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA'
     - '--region'
     - 'asia-northeast3'
-    - '--port'
-    - '8000'
   images:
   - 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA'
   tags: ['gcp-cloud-build-sample-build']
