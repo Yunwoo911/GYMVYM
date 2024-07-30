@@ -36,7 +36,7 @@ class TrainerDetailPageView(TemplateView):
         context['personal_info'] = PersonalInfo.objects.filter(gym_member_if__member_id=gym_member_id)
         return context
     
-
+# 
 class ProfileAddPageView(TemplateView):
     template_name = 'profile_add_page.html'
 
