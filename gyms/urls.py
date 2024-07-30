@@ -1,11 +1,14 @@
 from django.urls import path
 from .views import ProfilePageView, TrainerDetailPageView, ProfileAddPageView, TrainerPortfolioView, search, PtMembershipManagementPageView, profile_save
+from .views import TrainerPageView, OwnerPageView
 from . import views
 
 
 app_name = 'gyms'
 
 urlpatterns = [
+    path('trainer/', TrainerPageView.as_view(), name='trainer_page'),
+    path('owner/', OwnerPageView.as_view(), name='owner_page'),
     path('trainer/PT_management/', PtMembershipManagementPageView.as_view(), name='pt_membership_management_page'),
     path('trainer/PT_management/profile/', ProfilePageView.as_view(), name='profile_page'),
     path('trainer/PT_management/profile/user_num/<int:id>/', TrainerDetailPageView.as_view(), name='trainer_detail_page'),
