@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser, Owner
+from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser, Owner, Gym
 from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
@@ -59,14 +59,30 @@ class TrainerPortfolioView(TemplateView):
     template_name = 'trainer_portfolio_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)        
-        # user = self.kwargs.get('id')
-        user = 15
-        context['trainer'] = CustomUser.objects.filter(user = user)
-        # context['trainer'] = Trainer.objects.filter(user = user)
-        # 트레이너 테이블에서 로그인한 트레이너의 유저 아이디를 찾아서 반환
-        # 포트폴리오 입력 폼 작성하고, 작성한 거 받아서 데이터베이스에 저장.
+        context = super().get_context_data(**kwargs)
+        # user = self.request.user
+        context['gyms'] = Gym.objects.all()        
+              
         return context
+    
+    def post(self, request, *args, **kwargs):
+        trainer_name = request.POST.get('trainer_name')
+        gym_id = request.POST.get('gym')
+        certificate = request.POST.get('certificate')
+        trainer_image = request.FILES.get('trainer_image')
+
+        gym = Gym.objects.get(pk=gym_id)
+        user = request.user
+
+        Trainer.objects.create(
+            gym=gym,
+            user=user,
+            trainer_name=trainer_name,
+            certificate=certificate,
+            trainer_image=trainer_image
+        )
+        return redirect('home')
+           
 
 
 def search(request):
