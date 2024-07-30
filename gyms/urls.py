@@ -2,8 +2,7 @@ from django.urls import path
 from .views import TrainerDetailPageView, ProfileAddPageView, search, profile_save, profile_page, TrainerPortfolioView
 from . import views
 
-
-
+app_name = 'gyms'
 
 urlpatterns = [    
     path('trainer/profile/', profile_page, name='profile_page'),
