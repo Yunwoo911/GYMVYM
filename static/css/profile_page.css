@@ -1,0 +1,26 @@
+body {
+    background-color: #f8f9fa;
+    padding-top: 50px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.member-list li {
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+
+.member-list a {
+    text-decoration: none;
+    color: #343a40;
+}
+
+.member-list a:hover {
+    color: #007bff;
+}
+
+.pagination {
+    justify-content: center;
+}

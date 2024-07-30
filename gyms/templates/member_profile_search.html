@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 프로필 검색</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'css/profile_page.css' %}">
 </head>
 
 <body>
@@ -13,6 +14,9 @@
         <h1>회원 프로필 검색</h1>
     </header>
     <main>
+        <nav>
+            <a href="/">Home</a>
+        </nav>
         <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
             {% csrf_token %}
             <input type="search" name="query" placeholder="회원 검색" required>
