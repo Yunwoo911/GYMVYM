@@ -1,7 +1,7 @@
 steps:
   # Step 1: Git 리포지토리를 클론합니다 (docker 브랜치).
   - name: 'gcr.io/cloud-builders/git'
-    args: ['clone', '-b', 'docker', 'https://github.com/Yunwoo911/GYMVYM.git', '/workspace/GYMVYM']
+    args: ['clone', '-b', 'dev2', 'https://github.com/Yunwoo911/GYMVYM.git', '/workspace/GYMVYM']
 
   # Step 2: 최신 코드를 가져옵니다 (git pull).
   - name: 'gcr.io/cloud-builders/git'

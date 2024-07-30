@@ -13,7 +13,6 @@ intel-openmp==2021.4.0
 Jinja2==3.1.4
 joblib==1.4.2
 MarkupSafe==2.1.5
-mkl==2021.4.0
 networkx==3.3
 packaging==24.1
 pillow==10.4.0
@@ -21,18 +20,13 @@ psycopg2-binary==2.9.9
 PyJWT==2.8.0
 python-dateutil==2.9.0.post0
 python-decouple==3.8
-python-dotenv==1.0.1
 PyYAML==6.0.1
 regex==2024.5.15
 requests==2.32.3
 safetensors==0.4.3
-scikit-learn==1.5.1
-scipy==1.14.0
 sentence-transformers==2.7.0
 six==1.16.0
 sqlparse==0.5.0
-sympy==1.13.0
-tbb==2021.13.0
 threadpoolctl==3.5.0
 tokenizers==0.19.1
 tqdm==4.66.4
