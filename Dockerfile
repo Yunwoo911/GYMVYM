@@ -14,5 +14,5 @@ COPY . /app/
 RUN python manage.py collectstatic --noinput
 
 # 장고 애플리케이션을 시작
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]1
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
