@@ -1,7 +1,11 @@
-<!-- templates/trainer_request_success.html -->
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}
+Request Submitted
+{% endblock %}
 
 {% block content %}
-  <h2>트레이너 신청이 성공적으로 제출되었습니다.</h2>
-  <p>승인 여부는 관리자에게 이메일로 통지됩니다.</p>
+<h1>Request Submitted Successfully</h1>
+<p>Your request to become a trainer has been submitted successfully. Please wait for approval.</p>
+<a href="/">Go back to Home</a>
 {% endblock %}

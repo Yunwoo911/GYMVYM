@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser
+from .models import GymMember, PersonalInfo, Trainer,CustomUser
 from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
@@ -137,3 +137,15 @@ def approve_trainer_request(request, request_id):
 
 class TrainerRequestSuccessView(TemplateView):
     template_name = 'trainer_request_success.html'
+
+
+def reject_trainer_request(request, trainer_request_id):
+    trainer_request = get_object_or_404(TrainerRequest, id=trainer_request_id)
+    if request.method == 'POST':
+        reject_reason = request.POST.get('reject_reason')
+        # 거절 로직 추가
+        trainer_request.status = 'rejected'
+        trainer_request.reject_reason = reject_reason  # 거절 사유 저장
+        trainer_request.save()
+        return redirect('some_view_name')  # 거절 후 리디렉션할 뷰 이름
+    return render(request, 'reject_trainer_request.html', {'trainer_request': trainer_request})

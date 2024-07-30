@@ -3,7 +3,7 @@ from .views import ProfilePageView, TrainerDetailPageView, ProfileAddPageView, T
 from . import views
 
 
-app_name = 'gyms'
+
 
 urlpatterns = [
     path('trainer/PT_management/', PtMembershipManagementPageView.as_view(), name='pt_membership_management_page'),
@@ -16,4 +16,5 @@ urlpatterns = [
     path('trainer/request-trainer-role/', views.request_trainer_role, name='request_trainer_role'),
     path('trainer/approve-trainer-request/<int:request_id>/', views.approve_trainer_request, name='approve_trainer_request'),
     path('trainer/request-success/', views.TrainerRequestSuccessView.as_view(), name='trainer_request_success'),
+    path('reject_trainer_request/<int:trainer_request_id>/', views.reject_trainer_request, name='reject_trainer_request'),
 ]

@@ -1,12 +1,14 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Request Trainer Role{% endblock %}
+{% block title %}
+Request Trainer Role
+{% endblock %}
 
 {% block content %}
-    <h1>Request Trainer Role</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Request Trainer Role</button>
-    </form>
+<h1>Request Trainer Role</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Request</button>
+</form>
 {% endblock %}

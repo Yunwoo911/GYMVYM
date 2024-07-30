@@ -48,7 +48,10 @@
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                         </svg>
                         <p>회원</p>
-                        <p>내 퇴장률: {{ exit_rate }}</p>
+                        <div class="progress" style="width: 155px; height: 20px;" role="progressbar" aria-label="Example with label" aria-valuenow="{{ exit_rate }}%" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{ exit_rate }}%">퇴장률:{{ exit_rate }}%</div>
+                        </div>
+                            <p></p>
                     </div>
                 </div>
             </div>
@@ -78,8 +81,11 @@
                             <p><b>트레이너</b></p>
                         </li>
                         <li>
-                            <img src="{% static 'person.png' %}" width="45" height="45">
-                            <p><b>헬스장<br>채팅</b></p>
+                            <a href="{% url 'request_trainer_role' %}">
+                                <img src="{% static 'person.png' %}" width="45" height="45">
+                                <!-- <p>❤️</p> -->
+                                <p><b>트레이너<br>신청</b></p>
+                            </a>
                         </li>
                         <li>
                             <img src="{% static 'door.png' %}" width="45" height="45">
