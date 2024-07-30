@@ -128,12 +128,12 @@ def approve_trainer_request(request, request_id):
         return redirect('trainer_requests_list')  # 요청 리스트 페이지로 리디렉션
     return render(request, 'approve_trainer_request.html', {'trainer_request': trainer_request})
 
-# class TrainerRequestSuccessView(TemplateView):
-#     template_name = 'trainer_request_success.html'
+class TrainerRequestSuccessView(TemplateView):
+    template_name = 'trainer_request_success.html'
 
-# # 7/21 시작
-# class OwnerPageView(TemplateView):
-#     template_name = 'owner_page.html'
+# 7/21 시작
+class OwnerPageView(TemplateView):
+    template_name = 'owner_page.html'
 
 
 
