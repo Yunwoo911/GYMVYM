@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+app_name = 'visitlogs'
 
 urlpatterns = [
     path('web_exit/', views.web_exit, name='web_exit'),
