@@ -70,17 +70,14 @@ class TrainerPortfolioView(TemplateView):
 
 
 def search(request):
-    results = []
-    client = Search()
+    query = request.POST.get('query', '')
+    results = GymMember.objects.filter(user__username__icontains=query)
+    paginator = Paginator(results, 10)  # 페이지당 10개 항목
 
-    # 검색어를 받아오기
-    if 'query' in request.GET:
-        query = request.GET['query']
-        # 검색결과를 가져와야 하지 않나?        
-        usernames = client.making_query(query)
-        results = GymMember.objects.filter(user__username=usernames)
-    
-    return render(request, 'member_profile_search.html', {'results': results})
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'member_profile_search.html', {'page_obj': page_obj})
 
 
 def export_gym_member_usernames_to_json(file_path):

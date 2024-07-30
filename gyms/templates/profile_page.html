@@ -10,7 +10,8 @@
 
 <body>
     <h2>회원 목록</h2>
-    <form method="get" action="">
+    <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
+        {% csrf_token %}
         <input type="text" name="query" placeholder="회원 검색">
         <button type="submit">검색</button>
     </form>
