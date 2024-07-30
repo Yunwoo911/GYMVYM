@@ -56,94 +56,51 @@
         }
     </style>
 
-    <script>
-        function searchUser() {
-            const username = document.getElementById('username').value;
-            fetch(`/search/search-user/${username}/`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const resultsDiv = document.getElementById('results');
-                    resultsDiv.innerHTML = '';
+<script>
+    function searchUser() {
+        const username = document.getElementById('username').value;
+        fetch(`/search/search-user/${username}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
 
-                    if (data.length > 0) {
-                        data.forEach(user => {
-                            const userDiv = document.createElement('div');
-                            userDiv.classList.add('result-item');
-                            userDiv.innerHTML = `
-                                <div>Username: ${user.username}</div>
-                                <div>Email: ${user.email}</div>
-                                <div>NFC UID: ${user.nfc_uid}</div>
-                                <div class="form-group nfc-form">
+                if (data.length > 0) {
+                    data.forEach(user => {
+                        const userDiv = document.createElement('div');
+                        userDiv.classList.add('result-item');
+                        userDiv.innerHTML = `
+                            <div>Username: ${user.username}</div>
+                            <div>Email: ${user.email}</div>
+                            <div>NFC UID: ${user.nfc_uid}</div>
+                            <div class="form-group nfc-form">
+                                <form method="post" action="{% url 'member_search:register_nfc' %}" class="form-inline">
+                                    {% csrf_token %}
                                     <input type="hidden" name="email" value="${user.email}">
                                     <label for="nfc_uid_${user.email}" class="mr-2">NFC :</label><br>
                                     <input type="text" name="nfc_uid" id="nfc_uid_${user.email}" class="form-control mr-2" autocomplete="nfc_uid">
                                     <div class="nfc_btn">
-                                        <button class="nfc_regi btn btn-primary" type="button" onclick="registerNfc('${user.email}')">등록하기</button>
+                                        <button class="nfc_regi btn btn-primary" type="submit">등록하기</button>
                                     </div>
-                                    <div class="nfc_timer" id="timer_${user.email}"></div>
-                                </div>
-                            `;
-                            resultsDiv.appendChild(userDiv);
-                        });
-                    } else {
-                        resultsDiv.innerText = 'No users found';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    const resultsDiv = document.getElementById('results');  
-                    resultsDiv.innerText = 'Error fetching data';
-                });
-        }
-
-        function registerNfc(email) {
-            let timer = 10;
-            const timerDiv = document.getElementById(`timer_${email}`);
-            const intervalId = setInterval(() => {
-                if (timer > 0) {
-                    timerDiv.innerText = `Time remaining: ${timer} seconds`;
-                    timer--;
+                                </form>
+                            </div>
+                        `;
+                        resultsDiv.appendChild(userDiv);
+                    });
                 } else {
-                    clearInterval(intervalId);
-                    timerDiv.innerText = 'Time expired. Click "등록하기" to try again.';
+                    resultsDiv.innerText = 'No users found';
                 }
-            }, 1000);
-
-            document.addEventListener('nfcDetected', function handler(event) {
-                clearInterval(intervalId);
-                const nfcUid = event.detail.nfcUid;
-                document.getElementById(`nfc_uid_${email}`).value = nfcUid;
-                fetch('/search/register/nfc/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        nfc_uid: nfcUid
-                    })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        timerDiv.innerText = 'NFC UID 등록 성공';
-                        return response.json();
-                    } else {
-                        throw new Error('Network response was not ok');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    timerDiv.innerText = 'NFC UID 등록 실패';
-                });
-
-                document.removeEventListener('nfcDetected', handler);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const resultsDiv = document.getElementById('results');  
+                resultsDiv.innerText = 'Error fetching data';
             });
-        }
-    </script>
+    }
+</script>
 {% endblock %}

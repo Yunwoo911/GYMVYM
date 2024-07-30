@@ -7,7 +7,7 @@ from . import views
 app_name = 'member_search'
 
 urlpatterns = [
-    path('', search_member_view, name="search_member"),
+    path('search-member/', search_member_view, name="search_member"),
     path('search-user/<str:username>/', SearchUserName.as_view(), name="search_user"),
     path('register/nfc/', register_nfc, name='register_nfc'),
 
