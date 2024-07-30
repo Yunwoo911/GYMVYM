@@ -6,7 +6,7 @@ from gyms.models import Gym
 # Create your models here.
 class Equipment(models.Model): # 헬스장 기구
     equipment_id = models.AutoField(primary_key=True)
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) # 사용자 구분 7/21 삭제
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True) # 사용자 구분
     equipment_name = models.CharField(max_length=50) #이름
     # 추가 필드
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE) # 헬스장 아이디
