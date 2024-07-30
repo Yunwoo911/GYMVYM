@@ -27,7 +27,7 @@ urlpatterns = [
     path('gyms/', include('gyms.urls')),  # 새로 만든 앱의 urls.py 추가
     path('scheduler/', include('scheduler.urls')), 
     path('visitlogs/', include('visitlogs.urls', namespace='visitlogs')), 
-    path('equip/', include('equipment.urls')), #equipment로 추후 수정 예정
+    path('equip/', include('equipment.urls', namespace='equipment')), #equipment로 추후 수정 예정
 ]
 
 if settings.DEBUG:

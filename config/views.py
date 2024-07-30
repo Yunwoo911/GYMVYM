@@ -6,7 +6,6 @@ import datetime
 from django.db.models import F
 from account.models import CustomUser
 
-
 def index(request):
     if not request.user.is_authenticated:
         return render(request, 'home.html')
@@ -29,8 +28,9 @@ def index(request):
 
         # 0으로 나누는 것을 방지하기 위한 체크
         exit_rate = login_user.manual_exit_rate
-        
-        return render(request, 'home.html', {'current_count': current_count,'exit_rate': exit_rate})
+
+        context = {'current_count': current_count,'exit_rate': exit_rate}
+        return render(request, 'home.html',context )
 
     
     

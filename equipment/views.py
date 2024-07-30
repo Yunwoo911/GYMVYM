@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import Equipment, EquipmentReservation, TimeSlot
 from django.utils import timezone
 from datetime import datetime
@@ -33,11 +33,11 @@ def show_equipments(request):
     0% 대  :  12시 10분 이후
     '''
     if exit_rate == 100:
-        reservation_available_time = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
-        # reservation_available_time = current_time
+        # reservation_available_time = current_time.replace(hour=12, minute=0, second=0, microsecond=0)
+        reservation_available_time = current_time
     else:
-        reservation_available_time = current_time.replace(hour=12, minute=10 - (exit_rate // 10), second=0, microsecond=0)
-        # reservation_available_time = current_time.replace(minute=current_time.minute + 10 - (exit_rate // 10))
+        # reservation_available_time = current_time.replace(hour=12, minute=10 - (exit_rate // 10), second=0, microsecond=0)
+        reservation_available_time = current_time.replace(minute=current_time.minute + 10 - (exit_rate // 10))
     
     equipments = Equipment.objects.all() # 모든 운동 기구
     equipment_types = Equipment.objects.values_list('equipment_type', flat=True)
@@ -77,11 +77,35 @@ def reserve_equipment(request, equipment_id):
         ).exists():
             return JsonResponse({"message": "해당 타임슬롯에 이미 예약되었습니다."}, status=400)
         
+                # 예약 시작 및 종료 시간을 time_slot_id에 따라 설정합니다.
+        if time_slot_id == 1:
+            res_start_time = timezone.now().replace(hour=18, minute=0, second=0, microsecond=0)+timedelta(hours=15)
+            res_end_time = timezone.now().replace(hour=18, minute=30, second=0, microsecond=0)+timedelta(hours=15)
+        elif time_slot_id == 2:
+            res_start_time = timezone.now().replace(hour=18, minute=30, second=0, microsecond=0)+timedelta(hours=15)
+            res_end_time = timezone.now().replace(hour=19, minute=0, second=0, microsecond=0)+timedelta(hours=15)
+        elif time_slot_id == 3:
+            res_start_time = timezone.now().replace(hour=19, minute=0, second=0, microsecond=0)+timedelta(hours=15)
+            res_end_time = timezone.now().replace(hour=19, minute=30, second=0, microsecond=0)+timedelta(hours=15)
+        elif time_slot_id == 4:
+            res_start_time = timezone.now().replace(hour=19, minute=30, second=0, microsecond=0)+timedelta(hours=15)
+            res_end_time = timezone.now().replace(hour=20, minute=0, second=0, microsecond=0)+timedelta(hours=15)
+        elif time_slot_id == 5:
+            res_start_time = timezone.now().replace(hour=20, minute=0, second=0, microsecond=0)+timedelta(hours=15)
+            res_end_time = timezone.now().replace(hour=20, minute=30, second=0, microsecond=0)+timedelta(hours=15)
+        elif time_slot_id == 6:
+            res_start_time = timezone.now().replace(hour=20, minute=30, second=0, microsecond=0)+timedelta(hours=15)
+            res_end_time = timezone.now().replace(hour=21, minute=0, second=0, microsecond=0)+timedelta(hours=15)
+        else:
+            return JsonResponse({"message": "유효하지 않은 타임슬롯입니다."}, status=400)
+
         # 예약 정보를 EquipmentReservation 모델에 저장합니다.
         reservation = EquipmentReservation.objects.create(
             equipment_id=equipment.equipment_id,
             user_id=request.user.user,  # 예약한 회원의 user_id
-            time_slot_id=time_slot_id  # time_slot_id 설정
+            time_slot_id=time_slot_id,  # time_slot_id 설정
+            res_start_time=res_start_time,
+            res_end_time=res_end_time,
         )
         
         # 예약 성공 메시지를 반환합니다.
@@ -131,30 +155,43 @@ def tag_equipment(request):
         # 리더기에 등록된 equipment_id에 해당하는 Equipment 객체를 조회합니다.
         # 만약 해당 equipment_id를 가진 Equipment 객체가 존재하지 않을 경우 404 에러를 반환합니다.
 
-        is_using = EquipmentInUse.objects.filter(equipment_id=reader_equipment_id,start_time__gte=timezone.now() - timedelta(hours=0.5), end_time__isnull=False)
+        is_using = EquipmentInUse.objects.filter(equipment_id=reader_equipment_id,start_time__lte=timezone.now(), end_time__gte = timezone.now())
         # 기구가 사용중인지 확인 (start_time이 지금부터 30분전 안쪽인지, end_time이 비어있는지 확인)
-        
-        # NFC 리더기로 읽은 값과 고정값 가져오기
-        # reader_gym_id = data.get('gym_id') 
-        # reader_equipment_id = data.get('equipment_id')
-        # taged_nfc_uid = data.get('nfc_uid')
 
         # 태그한 유저
         taged_user = CustomUser.objects.get(nfc_uid = taged_nfc_uid)
-        # 현재 사용중인 유저
-        current_using_user = EquipmentInUse.objects.filter(equipment_id = reader_equipment_id, user = taged_user.user)
-        
-        if is_using: # 태그한 기구가 사용중일 경우
-            if current_using_user != taged_user:# 태그한 유저가 사용중인 유저가 아니면
-                last_res = EquipmentReservation.objects.filter(res_end_time = request.res_end_time).last() # 예약 테이블의 res_end_time 필드의 항목 중 마지막 항목
-                last_res_end_time = last_res.res_end_time
-                EquipmentReservation.objects.create(equipment_id = reader_equipment_id, res_start_time = last_res_end_time, res_end_time = last_res_end_time + timedelta(hours=0.5))
-            else: # 태그한 유저 = 사용중인 유저
-                return JsonResponse({'message':"또 쓰시려고?"}, status = 400)
+
+
+        if is_using: # 태그한 기구가 사용중일 경우    start_time < 현재 < end_time
+            current_using_user = EquipmentInUse.objects.get(equipment_id = reader_equipment_id, start_time__lte=timezone.now(), end_time__gte = timezone.now()) # 현재 사용중인 유저
+            if current_using_user.user_id == taged_user.user:
+                a = EquipmentInUse.objects.get(user_id = taged_user.user, start_time__lte=timezone.now(), end_time__gte = timezone.now())
+                a.end_time = timezone.now()
+                a.save()
+                return JsonResponse({'message':"퇴장이 완료되었습니다"})
+            else:
+                if not EquipmentReservation.objects.exists(): # 예약 테이블이 비어있을 때
+                    last_user_end_time = current_using_user.end_time
+                    EquipmentReservation.objects.create(equipment_id = reader_equipment_id, res_start_time = last_user_end_time, res_end_time = last_user_end_time + timedelta(hours=0.5),user_id=taged_user.user)
+                    return JsonResponse({'message':'예약이 완료되었습니다.'})   
+                else: # 예약 테이블에 값이 존재할 때                           
+                    taged_user_reservations = EquipmentReservation.objects.filter(user_id=taged_user.user,res_start_time__gte=timezone.now)
+                    if taged_user_reservations.count() >= 1: # 나의 유효한 예약의 갯수가 1개 이상일 경우
+                        return JsonResponse({'message':'중복 예약은 불가합니다.', 'error': '예약 제한 초과'}, status=400)
+                    else:
+                        last_res = EquipmentReservation.objects.all().last() # 예약 테이블의 res_end_time 필드의 항목 중 마지막 항목
+                        last_res_end_time = last_res.res_end_time
+                        EquipmentReservation.objects.create(equipment_id = reader_equipment_id, res_start_time = last_res_end_time, res_end_time = last_res_end_time + timedelta(hours=0.5))
+                        return JsonResponse({'message':'예약이 완료되었습니다.'})
         else: # 태그한 기구가 미사용중일 경우
-            EquipmentInUse.objects.create(user = which_user, equipment_id = reader_equipment_id.equipment_id, start_time = timezone.now(), end_time = timezone.now() + timedelta(hours=0.5))
-    
-    return JsonResponse({"message": "태그 중 오류가 발생했습니다."}, status=500)
+            EquipmentInUse.objects.create(user = which_user, equipment_id = reader_equipment_id, start_time = timezone.now(), end_time = timezone.now() + timedelta(hours=0.5))
+            return JsonResponse({'message':'바로 사용하시면 됩니다.'})
+    else:
+        return JsonResponse({"message": "태그 중 오류가 발생했습니다."}, status=500)
+
+# 기구예약 테이블에서 태그한 유저 id 검색 => res_start_time 과 res_end_time 
+# 예약을_하는_유저 = EquipmentReservation.objects.filter(user_id = taged_user, )
+
 
 # 운동기구 사용 현황 표시
 # 운동기구 type별로 3분할로 보여주기
@@ -185,3 +222,29 @@ def equipment_status(request):
 # @app.task(bind=True)
 # def debug_task(self):
 #     print(f'Request: {self.request!r}')
+
+def show_reserve(request):
+    user = request.user
+    reservations = EquipmentReservation.objects.filter(user_id=user.user)  # 사용자의 예약 정보 조회
+    # equipments = Equipment.objects.filter()
+    return render(request,"equipment/show_reserve.html", {"reservations": reservations})
+
+# def show_reserve(request):
+#     user = request.user
+#     reservations = EquipmentReservation.objects.filter(user=user)  # 사용자의 예약 정보 조회
+    
+#     # 실제 기구 ID와 이름을 매핑
+#     equipment_names = {
+#         1: "트레드밀",
+#         2: "자전거",
+#         3: "덤벨"
+#     }
+    
+#     return render(request, "equipment/show_reserve.html", {"reservations": reservations, "equipment_names": equipment_names})
+
+# def show_reserve(request):
+#     user = request.user
+#     reservations = EquipmentReservation.objects.filter(user=user)  # 사용자의 예약 정보 조회
+#     reserved_equipments = reservations.values_list('equipment_id', flat=True)  # 예약된 기구 ID 목록
+#     equipment_names = Equipment.objects.filter(equipment_id__in=reserved_equipments).values_list('equipment_name', flat=True)
+#     return render(request, "equipment/show_reserve.html", {"reservations": reservations, "equipment_names": equipment_names})
