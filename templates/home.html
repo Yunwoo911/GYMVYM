@@ -88,8 +88,10 @@
                 </ul>
                 <ul class="list-none menu-list">
                     <li>
-                        <img src="{% static 'trainer.png' %}" width="45" height="45">
-                        <p><b>트레이너</b></p>
+                        <a href="{% url 'gyms:pt_membership_management' %}" style="background:none; border:none; padding:0;">
+                            <img src="{% static 'trainer.png' %}" width="45" height="45">
+                            <p><b>트레이너</b></p>
+                        </a>
                     </li>
                     <li>
                         <img src="{% static 'person.png' %}" width="45" height="45">

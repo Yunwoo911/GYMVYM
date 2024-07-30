@@ -10,7 +10,7 @@ urlpatterns = [
     #path('trainer/', TrainerPageView.as_view(), name='trainer_page'),
     #path('owner/', OwnerPageView.as_view(), name='owner_page'),
     
-    path('trainer/PT_management/', PtMembershipManagementPageView.as_view(), name='pt_membership_management_page'),
+    path('trainer/PT_management/', PtMembershipManagementPageView.as_view(), name='pt_membership_management'),
     path('trainer/PT_management/profile/', ProfilePageView.as_view(), name='profile_page'),
     path('trainer/PT_management/profile/user_num/<int:id>/', TrainerDetailPageView.as_view(), name='trainer_detail_page'),
     path('trainer/PT_management/profile_add/user_num/<int:id>/', ProfileAddPageView.as_view(), name='profile_add_page'),
