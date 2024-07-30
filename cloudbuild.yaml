@@ -1,21 +1,36 @@
-  steps:
-  # Build the container image
+steps:
+  # Step 1: Git 리포지토리를 클론합니다 (docker 브랜치).
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', '-b', 'docker', 'https://github.com/Yunwoo911/GYMVYM.git', '/workspace/GYMVYM']
+
+  # Step 2: 최신 코드를 가져옵니다 (git pull).
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['-C', '/workspace/GYMVYM', 'pull']
+
+  # Step 3: Docker 이미지를 빌드합니다.
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/1200604642636894741/fork-gymvym2:$COMMIT_SHA', '.']
-  # Push the container image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/1200604642636894741/fork-gymvym2:$COMMIT_SHA']
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
     args:
-    - 'run'
-    - 'deploy'
-    - 'fork-gymvym2'
-    - '--image'
-    - 'gcr.io/1200604642636894741/fork-gymvym2:$COMMIT_SHA'
-    - '--region'
-    - 'asia-northeast3'
-  images:
-  - 'gcr.io/1200604642636894741/fork-gymvym:$COMMIT_SHA'
-  tags: ['gcp-cloud-build-sample-build']
+      - 'build'
+      - '-t'
+      - 'gcr.io/gymvym-112233/gymvym:latest'
+      - '-f'
+      - '/workspace/GYMVYM/Dockerfile'
+      - '/workspace/GYMVYM'
+
+  # Step 4: Docker 이미지를 GCP Container Registry에 푸시합니다.
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/gymvym-112233/gymvym:latest'
+
+  # Step 5: Kubernetes에 배포합니다.
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - '/workspace/GYMVYM/deployment.yaml'
+
+images:
+  - 'gcr.io/gymvym-112233/gymvym:latest'
+
+logsBucket: gs://gymvym-log-bucket
