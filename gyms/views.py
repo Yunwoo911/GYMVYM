@@ -9,21 +9,17 @@ from django.contrib.auth.decorators import login_required
 from .forms import TrainerRequestForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
+from django.core.paginator import Paginator
 
-# from gyms.search.search_gym_member import Search
+# from gyms.search.search_gym_member import Search    
+def profile_page(request):
+    gymmember_list = GymMember.objects.order_by('-join_date')
+    paginator = Paginator(gymmember_list, 10)  # 페이지당 10개 항목
 
-# Create your views here.
-class PtMembershipManagementPageView(TemplateView):
-    template_name = 'pt_membership_page.html'
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-
-class ProfilePageView(TemplateView):
-    template_name = 'profile_page.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['gym_members'] = GymMember.objects.all()
-        return context
+    return render(request, 'profile_page.html', {'page_obj': page_obj})
     
 
 class TrainerDetailPageView(TemplateView):
