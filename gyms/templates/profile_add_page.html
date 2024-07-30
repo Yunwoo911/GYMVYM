@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <h1 class="text-center">회원 정보 입력</h1>
-        <form method="post" action="">
+        <form method="post" action="{% url 'gyms:user_profile_save' gym_member_id %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary btn-block">저장</button>

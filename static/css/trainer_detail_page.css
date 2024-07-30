@@ -3,28 +3,33 @@ body {
     padding: 20px;
 }
 
-h1 {
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header,
+.content {
     text-align: center;
     margin-bottom: 20px;
 }
 
+.btn-primary {
+    margin-top: 20px;
+}
+
 .member-info {
+    background-color: #fff;
     border: 1px solid #dee2e6;
+    border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    background-color: #fff;
-    border-radius: 8px;
 }
 
 .member-info h2 {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .member-info p {
     margin: 5px 0;
-}
-
-.btn-primary {
-    display: block;
-    margin: 0 auto;
 }
