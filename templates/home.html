@@ -59,7 +59,7 @@
                 <div class="menu_box">
                     <ul class="list-none menu-list">
                         <li>
-                            <a href="{% url 'calendar' %}" style="background:none; border:none; padding:0;">
+                            <a href="{% url 'scheduler:calendar' %}" style="background:none; border:none; padding:0;">
                                 <img src="{% static 'calendar.png' %}" width="45" height="45">
                                 <p><b>입장(예비)</b></p>
                             </a>
@@ -81,12 +81,16 @@
                     </ul>
                     <ul class="list-none menu-list">
                         <li>
-                            <img src="{% static 'trainer.png' %}" width="45" height="45">
-                            <p><b>트레이너</b></p>
+                            <a href="{% url 'scheduler:calendar' %}">
+                                <img src="{% static 'trainer.png' %}" width="45" height="45">
+                                <p><b>pt 일정 확인</b></p>
+                            </a>
                         </li>
                         <li>
-                            <img src="{% static 'person.png' %}" width="45" height="45">
-                            <p><b>헬스장 채팅</b></p>
+                            <a href="{% url 'gyms:pt_membership_management_page' %}">
+                                <img src="{% static 'trainer.png' %}" width="45" height="45">
+                                <p><b>트레이너</b></p>
+                            </a>
                         </li>
                         <li>
                             <img src="{% static 'door.png' %}" width="45" height="45">
