@@ -132,7 +132,7 @@
             {{ form.address.errors }}
             <button type="button" onclick="execDaumPostcode()">주소 검색</button>
         </div>
-        <div class="form-group">
+        <div class="form-group"
             {{ form.detail_address.label_tag }}
             {{ form.detail_address }}
             {{ form.detail_address.errors }}
@@ -176,33 +176,23 @@
     function execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
-                var addr = '';
-                var extraAddr = '';
+                // 선택된 주소와 상세 주소를 가져와서 입력 필드에 설정합니다.
+                var address = data.address; // 최종 주소 변수
+                var extraAddress = ''; // 참고항목 변수
 
-                if (data.userSelectedType === 'R') {
-                    addr = data.roadAddress;
-                } else {
-                    addr = data.jibunAddress;
+                // 참고항목 추가
+                if (data.addressType === 'R') { // 도로명 주소인 경우
+                    if (data.bname !== '') {
+                        extraAddress += data.bname;
+                    }
+                    if (data.buildingName !== '') {
+                        extraAddress += (extraAddress !== '' ? ', ' : '') + data.buildingName;
+                    }
+                    address += (extraAddress !== '' ? ' ('+ extraAddress +')' : '');
                 }
 
-                if(data.userSelectedType === 'R'){
-                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                        extraAddr += data.bname;
-                    }
-                    if(data.buildingName !== '' && data.apartment === 'Y'){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
-                    }
-                    document.getElementById("sample6_extraAddress").value = extraAddr;
-                } else {
-                    document.getElementById("sample6_extraAddress").value = '';
-                }
-
-                document.getElementById('sample6_postcode').value = data.zonecode;
-                document.getElementById("sample6_address").value = addr;
-                document.getElementById("sample6_detailAddress").focus();
+                // 입력 필드 업데이트
+                document.getElementById('{{ form.address.id_for_label }}').value = address;
             }
         }).open();
     }
