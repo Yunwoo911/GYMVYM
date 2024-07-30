@@ -5,45 +5,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/gyms.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/profile_page.css' %}">
 </head>
 
 <body>
-    <h2>회원 목록</h2>
-    <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
-        {% csrf_token %}
-        <input type="text" name="query" placeholder="회원 검색">
-        <button type="submit">검색</button>
-    </form>
-    <ul>
-        {% for member in page_obj.object_list %}
-        <li>
-            <a href="{% url 'gyms:trainer_detail_page' member.member_id %}">
-                {{ member.user.username }} - {{member.membership_type }}<br>
-                가입일 : {{ member.join_date }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; 처음</a>
-            <a href="?page={{ page_obj.previous_page_number }}">이전</a>
-            {% endif %}
+    <div class="container">
+        <h2>회원 목록</h2>
 
-            <span class="current">
-                {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-            </span>
+        <nav>
+            <a href="/">Home</a>
+        </nav>
 
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">다음</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">마지막 &raquo;</a>
-            {% endif %}
-        </span>
+        <div class="portfolio-button mb-3">
+            <a href="{% url 'gyms:trainer_portflio_page' %}" class="btn btn-primary">포트폴리오 작성</a>
+        </div>
+
+        <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="회원 검색" required>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+        </form>
+
+        <ul class="member-list">
+            {% for member in page_obj.object_list %}
+            <li>
+                <a href="{% url 'gyms:trainer_detail_page' member.member_id %}">
+                    <strong>{{ member.user.username }}</strong> - {{member.membership_type }}<br>
+                    가입일 : {{ member.join_date }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="처음">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="마지막">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -5,19 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/gyms.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/profile_add_page.css' %}">
 </head>
 
 <body>
-    <h1> 프로필 페이지 </h1>
-    <form method="post" action="{% url 'gyms:user_profile_save' id=gym_member_id %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">제출</button>
-    </form>
+    <div class="container">
+        <h1 class="text-center">회원 정보 입력</h1>
+        <form method="post" action="{% url 'gyms:user_profile_save' gym_member_id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block">저장</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-<script>
-
-</script>
 
 </html>

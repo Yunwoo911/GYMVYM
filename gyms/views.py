@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser, Owner
+from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser, Owner, Gym
 from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
@@ -59,14 +59,30 @@ class TrainerPortfolioView(TemplateView):
     template_name = 'trainer_portfolio_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)        
-        # user = self.kwargs.get('id')
-        user = 15
-        context['trainer'] = CustomUser.objects.filter(user = user)
-        # context['trainer'] = Trainer.objects.filter(user = user)
-        # 트레이너 테이블에서 로그인한 트레이너의 유저 아이디를 찾아서 반환
-        # 포트폴리오 입력 폼 작성하고, 작성한 거 받아서 데이터베이스에 저장.
+        context = super().get_context_data(**kwargs)
+        # user = self.request.user
+        context['gyms'] = Gym.objects.all()        
+              
         return context
+    
+    def post(self, request, *args, **kwargs):
+        trainer_name = request.POST.get('trainer_name')
+        gym_id = request.POST.get('gym')
+        certificate = request.POST.get('certificate')
+        trainer_image = request.FILES.get('trainer_image')
+
+        gym = Gym.objects.get(pk=gym_id)
+        user = request.user
+
+        Trainer.objects.create(
+            gym=gym,
+            user=user,
+            trainer_name=trainer_name,
+            certificate=certificate,
+            trainer_image=trainer_image
+        )
+        return redirect('home')
+           
 
 
 def search(request):
@@ -108,7 +124,7 @@ def request_trainer_role(request):
             trainer_request.request_date = timezone.now()
             trainer_request.save()
             # 관리자에게 이메일 알림 보내기 (선택사항)
-            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션
+            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션1
     else:
         form = TrainerRequestForm()
     return render(request, 'request_trainer_role.html', {'form': form})
@@ -128,9 +144,22 @@ def approve_trainer_request(request, request_id):
         return redirect('trainer_requests_list')  # 요청 리스트 페이지로 리디렉션
     return render(request, 'approve_trainer_request.html', {'trainer_request': trainer_request})
 
-# class TrainerRequestSuccessView(TemplateView):
-#     template_name = 'trainer_request_success.html'
+class TrainerRequestSuccessView(TemplateView):
+    template_name = 'trainer_request_success.html'
 
-# # 7/21 시작
-# class OwnerPageView(TemplateView):
-#     template_name = 'owner_page.html'
+# 7/21 시작
+class OwnerPageView(TemplateView):
+    template_name = 'owner_page.html'
+
+
+
+def reject_trainer_request(request, trainer_request_id):
+    trainer_request = get_object_or_404(TrainerRequest, id=trainer_request_id)
+    if request.method == 'POST':
+        reject_reason = request.POST.get('reject_reason')
+        # 거절 로직 추가
+        trainer_request.status = 'rejected'
+        trainer_request.reject_reason = reject_reason  # 거절 사유 저장
+        trainer_request.save()
+        return redirect('some_view_name')  # 거절 후 리디렉션할 뷰 이름
+    return render(request, 'reject_trainer_request.html', {'trainer_request': trainer_request})

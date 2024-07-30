@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-check {
+    margin-bottom: 15px;
+}
+
+.form-check-input {
+    margin-top: 0.3em;
+}
+
+.form-check-label {
+    margin-left: 1.5em;
+}

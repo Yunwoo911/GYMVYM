@@ -1,4 +1,6 @@
+import django
 from django.db import models
+from django.conf import settings
 from account.models import CustomUser
 
 
@@ -21,7 +23,7 @@ class Trainer(models.Model):
     trainer_id = models.AutoField(primary_key=True)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
     # owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 1}, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'usertype': 1}, null=True)
     trainer_name = models.CharField(max_length=100)
     certificate = models.CharField(max_length=500, null=True)
     trainer_image = models.ImageField(upload_to='trainer_images', null=True)
@@ -126,30 +128,4 @@ class TrainerRequest(models.Model):
     approved = models.BooleanField(default=False) # 승인 여부
     approved_date = models.DateField(null=True, blank=True) # 승인 일자
     approved_by = models.ForeignKey(Owner, on_delete=models.PROTECT, null=True, blank=True,default=None) # 승인자
-
-# 헬스장 소유 테이블
-class Ownership(models.Model):
-    ownership_id = models.AutoField(primary_key=True)
-    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
-    owner = models.ForeignKey(Owner, on_delete=models.PROTECT)
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    note = models.TextField(null=True, blank=True) # 비고 필드
-
-# 고용된 트레이너 테이블
-class TrainerEmployment(models.Model):
-    trainer_employment_id = models.AutoField(primary_key=True)
-    trainer = models.ForeignKey(Trainer, on_delete=models.PROTECT)
-    gym = models.ForeignKey(Gym, on_delete=models.PROTECT)
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-# 헬스장 회원권 테이블
-class Membership(models.Model):
-    membership_id = models.AutoField(primary_key=True)
-    gym = models.ForeignKey(Gym, on_delete=models.PROTECT) # 헬스장
-    membership_type = models.CharField(max_length=5,null=True, blank=True) # 회원권 종류
-    membership_fee = models.FloatField(null=True, blank=True) # 회원권 지불 금액
-    start_date = models.DateField(null=True, blank=True) # 회원권 시작일
-    end_date = models.DateField(null=True, blank=True) # 회원권 종료일
-    note = models.TextField(null=True, blank=True) # 비고 필드
+    reject_reason = models.TextField(blank=True, null=True)  # 거절 사유 필드 추가

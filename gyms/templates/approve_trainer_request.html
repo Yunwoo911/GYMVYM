@@ -3,12 +3,13 @@
 {% block title %}Approve Trainer Request{% endblock %}
 
 {% block content %}
-    <h1>Approve Trainer Request</h1>
-    <p><strong>User:</strong> {{ trainer_request.user.username }}</p>
-    <p><strong>Requested Gym:</strong> {{ trainer_request.requested_gym.name }}</p>
-    <p><strong>Request Message:</strong> {{ trainer_request.request_message }}</p>
+    <h1>트레이너를 승인 하시겠습니까?</h1>
+    <p><strong>이름 : </strong> {{ trainer_request.user.username }}</p>
+    <p><strong>신청 헬스장 : </strong> {{ trainer_request.requested_gym.name }}</p>
+    <p><strong>소개 : </strong> {{ trainer_request.request_message }}</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Approve</button>
+        <button type="submit" name="action" value="approve">승인</button>
+        <a href="{% url 'reject_trainer_request' trainer_request.id %}" class="button">거절</a>
     </form>
 {% endblock %}
