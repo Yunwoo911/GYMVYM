@@ -8,6 +8,7 @@ from gyms.models import GymMember
 from .models import EquipmentInUse, EquipmentReservation
 from datetime import datetime, timedelta
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 # 피크타임 예약
 # 수동 퇴장률에 따른 예약시간 배정
@@ -100,6 +101,7 @@ def reserve_equipment(request, equipment_id):
     # 3. res_start_time이 됐을 때 equipmentreservation의 예약 정보를 equimentinuse에 사용 정보로 바꿔주기
     # 4. res_end_time이 됐을 때 equimentinuse 테이블에서 삭제
     # 5. 매일 자정 직전 equipmentreservation 테이블 초기화
+@csrf_exempt
 def tag_equipment(request):
     if request.method == 'POST':
         try:
@@ -110,9 +112,9 @@ def tag_equipment(request):
         # NFC 리더기로 읽은 값과 고정값 가져오기
         reader_gym_id = data.get('gym_id') 
         reader_equipment_id = data.get('equipment_id')
-        taged_nfc_uid = data.get('nfc_uid')
+        taged_nfc_uid = data.get('nfc_uid') 
         
-        try:
+        try:        
             which_user = CustomUser.objects.get(nfc_uid=taged_nfc_uid) # customuser 테이블에서 taged_nfc_uid로 어떤 유저인지 찾는다.
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': '해당 nfc_uid를 가진 사용자가 없습니다.'}, status=404)
@@ -124,21 +126,33 @@ def tag_equipment(request):
         except GymMember.DoesNotExist:
             return JsonResponse({'error': '해당 헬스장에 등록된 사용자가 아닙니다.'}, status=404)
 
-        equipment = get_object_or_404(Equipment, equipment_id=request.equipment_id)
-        # equipment_id에 해당하는 Equipment 객체를 조회합니다.
+        # 지울 예정(일단 보류)
+        # which_equipment = get_object_or_404(Equipment, equipment_id=reader_equipment_id)
+        # 리더기에 등록된 equipment_id에 해당하는 Equipment 객체를 조회합니다.
         # 만약 해당 equipment_id를 가진 Equipment 객체가 존재하지 않을 경우 404 에러를 반환합니다.
 
         is_using = EquipmentInUse.objects.filter(equipment_id=reader_equipment_id,start_time__gte=timezone.now() - timedelta(hours=0.5), end_time__isnull=False)
         # 기구가 사용중인지 확인 (start_time이 지금부터 30분전 안쪽인지, end_time이 비어있는지 확인)
+        
+        # NFC 리더기로 읽은 값과 고정값 가져오기
+        # reader_gym_id = data.get('gym_id') 
+        # reader_equipment_id = data.get('equipment_id')
+        # taged_nfc_uid = data.get('nfc_uid')
 
+        # 태그한 유저
+        taged_user = CustomUser.objects.get(nfc_uid = taged_nfc_uid)
+        # 현재 사용중인 유저
+        current_using_user = EquipmentInUse.objects.filter(equipment_id = reader_equipment_id, user = taged_user.user)
+        
         if is_using: # 태그한 기구가 사용중일 경우
-            last_res  = EquipmentReservation.objects.filter(res_end_time = request.res_end_time).last() # 예약 테이블의 res_end_time 필드의 항목 중 마지막 항목
-            last_res_end_time = last_res.res_end_time
-
-            EquipmentReservation.objects.create(equipment_id = equipment.equipment_id, res_start_time = last_res_end_time, res_end_time = last_res_end_time + timedelta(hours=0.5))
-            
+            if current_using_user != taged_user:# 태그한 유저가 사용중인 유저가 아니면
+                last_res = EquipmentReservation.objects.filter(res_end_time = request.res_end_time).last() # 예약 테이블의 res_end_time 필드의 항목 중 마지막 항목
+                last_res_end_time = last_res.res_end_time
+                EquipmentReservation.objects.create(equipment_id = reader_equipment_id, res_start_time = last_res_end_time, res_end_time = last_res_end_time + timedelta(hours=0.5))
+            else: # 태그한 유저 = 사용중인 유저
+                return JsonResponse({'message':"또 쓰시려고?"}, status = 400)
         else: # 태그한 기구가 미사용중일 경우
-            EquipmentInUse.objects.create(user_id = which_user.user_id, equipment_id = equipment.equipment_id, start_time = timezone.now(), end_time = timezone.now() + timedelta(hours=0.5))
+            EquipmentInUse.objects.create(user = which_user, equipment_id = reader_equipment_id.equipment_id, start_time = timezone.now(), end_time = timezone.now() + timedelta(hours=0.5))
     
     return JsonResponse({"message": "태그 중 오류가 발생했습니다."}, status=500)
 
@@ -151,3 +165,23 @@ def equipment_status(request):
 
 # 기구의 사용이 끝난 경우 inuse 테이블에서 삭제되도록 하는 로직 필요
 # 예약 취소 기능 필요
+
+
+# from __future__ import absolute_import, unicode_literals
+# import os
+# from celery import Celery
+
+# # Django 설정 파일 참조
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+
+# app = Celery('myproject')
+
+# # Django 설정에서 Celery 관련 설정 로드
+# app.config_from_object('django.conf:settings', namespace='CELERY')
+
+# # Django 앱의 tasks.py 모듈 자동 탐색
+# app.autodiscover_tasks()
+
+# @app.task(bind=True)
+# def debug_task(self):
+#     print(f'Request: {self.request!r}')
