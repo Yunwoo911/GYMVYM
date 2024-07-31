@@ -94,8 +94,10 @@
                         </a>
                     </li>
                     <li>
-                        <img src="{% static 'person.png' %}" width="45" height="45">
-                        <p><b>헬스장 채팅</b></p>
+                        <a href="{% url 'member_search:search_member' %}" style="background:none; border:none; padding:0;">
+                            <img src="{% static 'search.png' %}" width="45" height="45">
+                            <p><b>회원검색</b></p>
+                        </a>
                     </li>
                     <li>
                         <img src="{% static 'door.png' %}" width="45" height="45">
