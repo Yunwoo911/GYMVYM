@@ -159,3 +159,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 브라우저를 닫으면 세션 만�
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = '/'
+
+CSRF_TRUSTED_ORIGINS = ['https://gymvym-k5rybjn2ca-du.a.run.app']
