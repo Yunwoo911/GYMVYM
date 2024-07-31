@@ -99,8 +99,10 @@
                         <p><b>헬스장 채팅</b></p>
                     </li>
                     <li>
-                        <img src="{% static 'door.png' %}" width="45" height="45">
-                        <p><b>입장</b></p>
+                        <a href="{% url 'equipment:show_equipments' %}">
+                            <img src="{% static 'door.png' %}" width="45" height="45">
+                            <p><b>기구예약</b></p>
+                        </a>
                     </li>
                     <li>
                     <a href="{% url 'equipment:show_reserve' %}">

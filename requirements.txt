@@ -33,3 +33,4 @@ urllib3==2.2.2
 gunicorn
 django-cors-headers==4.4.0
 pytz==2024.1
+apscheduler==3.10.4

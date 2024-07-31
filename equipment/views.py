@@ -197,7 +197,10 @@ def tag_equipment(request):
 # 운동기구 type별로 3분할로 보여주기
 def equipment_status(request):
     equipments = Equipment.objects.all()
-    equipmentinuse_ids = EquipmentInUse.objects.values_list('equipment_id', flat=True)
+    equipmentinuse_ids = EquipmentInUse.objects.filter(
+        start_time__lte=timezone.now(), 
+        end_time__gte=timezone.now()
+    ).values_list('equipment_id', flat=True)
     return render(request, "equipment/equipment_status.html", {"equipments": equipments, "equipmentinuse_ids": equipmentinuse_ids})
 
 # 기구의 사용이 끝난 경우 inuse 테이블에서 삭제되도록 하는 로직 필요
