@@ -6,6 +6,7 @@ import json
 from django.http import JsonResponse
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 class SearchUserName(APIView):
     def get(self, request, username):
@@ -13,6 +14,7 @@ class SearchUserName(APIView):
         user_data = [{'username': user.username, 'email': user.email, 'nfc_uid': user.nfc_uid} for user in users]
         return JsonResponse(user_data, safe=False, status=status.HTTP_200_OK)
 
+@login_required
 def search_member_view(request):
     return render(request, "search/search_member.html")
 
