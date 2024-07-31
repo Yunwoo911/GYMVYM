@@ -46,3 +46,7 @@ class TrainerRequestForm(forms.ModelForm):
         widgets = {
             'request_message': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
         }
+        labels = {
+            'requested_gym': '헬스장 선택',
+            'request_message': '소개',
+        }

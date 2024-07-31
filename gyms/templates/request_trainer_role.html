@@ -1,14 +1,42 @@
 {% extends 'base.html' %}
 
+{% block extra_style %}
+<style>
+form .request-button {
+    width: 100%;
+    background-color: transparent;
+    color: black;
+    border: 2px solid #58C3FF;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+form .request-button:hover {
+    background-color: #58C3FF;
+    color: white;
+}
+</style>
+{% endblock %}
+
 {% block title %}
 Request Trainer Role
 {% endblock %}
 
 {% block content %}
-<h1>Request Trainer Role</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Request</button>
-</form>
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; flex-direction: column;">
+    <h1 style="text-align: center;">트레이너 신청</h1>
+    <form method="post" style="width: 300px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="request-button">신  청</button>
+    </form>
+</div>
 {% endblock %}

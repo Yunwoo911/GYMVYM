@@ -1,11 +1,39 @@
 {% extends 'base.html' %}
 
+{% block extra_style %}
+<style>
+a.request-link {
+    width: 100%;
+    background-color: transparent;
+    color: black;
+    border: 2px solid #58C3FF;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+a.request-link:hover {
+    background-color: #58C3FF;
+    color: white;
+}
+</style>
+{% endblock %}
+
 {% block title %}
 Request Submitted
 {% endblock %}
 
 {% block content %}
-<h1>Request Submitted Successfully</h1>
-<p>Your request to become a trainer has been submitted successfully. Please wait for approval.</p>
-<a href="/">Go back to Home</a>
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; flex-direction: column; text-align: center;">
+    <h1>신청이 완료되었습니다.</h1>
+    <p>신청이 완료되었습니다. 승인을 기다려 주시기 바랍니다.</p>
+    <a href="/" class="request-link">홈 화면으로 가기</a>
+</div>
 {% endblock %}

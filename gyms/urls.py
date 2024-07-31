@@ -14,7 +14,8 @@ urlpatterns = [
     # path('trainer/portflio/', TrainerPortfolioView.as_view(), name='trainer_portflio_page'),
     # path('trainer/PT_membership_management/profile/search/', search, name='member_profile_search_page'),
     path('trainer/request-trainer-role/', views.request_trainer_role, name='request_trainer_role'),
-    path('trainer/approve-trainer-request/<int:request_id>/', views.approve_trainer_request, name='approve_trainer_request'),
+    path('trainer/approve-trainer-request/<int:trainer_request_id>/', views.approve_trainer_request, name='approve_trainer_request'),
     path('trainer/request-success/', views.TrainerRequestSuccessView.as_view(), name='trainer_request_success'),
-    path('reject_trainer_request/<int:trainer_request_id>/', views.reject_trainer_request, name='reject_trainer_request'),
+    path('trainer/reject_trainer_request/<int:trainer_request_id>/', views.reject_trainer_request, name='reject_trainer_request'),
+    # path('trainer-requests/', TrainerRequestListView.as_view(), name='trainer_requests_list'),
 ]

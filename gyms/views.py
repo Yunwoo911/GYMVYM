@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import GymMember, PersonalInfo, Trainer,CustomUser
+from .models import GymMember, PersonalInfo, Trainer,CustomUser, TrainerRequest, Owner
 from gyms.forms import PersonalInfoForm
 from account.models import CustomUser
 import random
@@ -121,22 +121,26 @@ def request_trainer_role(request):
     return render(request, 'request_trainer_role.html', {'form': form})
 
 # 기존의 approve_trainer_request 뷰
-@staff_member_required
-def approve_trainer_request(request, request_id):
-    trainer_request = get_object_or_404(TrainerRequest, trainer_request_id=request_id)
+# @staff_member_required
+@login_required
+def approve_trainer_request(request, trainer_request_id):
+    trainer_request = get_object_or_404(TrainerRequest, trainer_request_id=trainer_request_id)
     if request.method == 'POST':
         trainer_request.user.usertype = 1  # 트레이너 역할로 변경
         trainer_request.user.save()
         trainer_request.approved = True
         trainer_request.approved_date = timezone.now()
-        trainer_request.approved_by = request.user
+        # trainer_request.approved_by = request.user.user
+        trainer_request.approved_by = Owner.objects.get(owner_id=1)  # 수정된 코드
         trainer_request.save()
         # 사용자에게 승인 알림 보내기 (선택사항)
-        return redirect('trainer_requests_list')  # 요청 리스트 페이지로 리디렉션
+        # return redirect('trainer_requests_list')  # 요청 리스트 페이지로 리디렉션 trainer_request_success
+        return redirect('home')  # 요청 리스트 페이지로 리디렉션 
     return render(request, 'approve_trainer_request.html', {'trainer_request': trainer_request})
 
 class TrainerRequestSuccessView(TemplateView):
     template_name = 'trainer_request_success.html'
+    pass
 
 
 def reject_trainer_request(request, trainer_request_id):
@@ -149,3 +153,15 @@ def reject_trainer_request(request, trainer_request_id):
         trainer_request.save()
         return redirect('some_view_name')  # 거절 후 리디렉션할 뷰 이름
     return render(request, 'reject_trainer_request.html', {'trainer_request': trainer_request})
+
+
+def request_trainer(request):
+    if request.method == 'POST':
+        form = TrainerRequestForm(request.POST)
+        if form.is_valid():
+            # 폼 처리 로직
+            pass
+    else:
+        form = TrainerRequestForm()
+    
+    return render(request, 'request_trainer.html', {'form': form})

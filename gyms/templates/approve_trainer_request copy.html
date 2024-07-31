@@ -1,29 +1,5 @@
 {% extends "base.html" %}
 
-{% block extra_style %}
-<style>
-form .request-button, a.button {
-    width: 100%;
-    background-color: transparent;
-    color: black;
-    border: 2px solid #58C3FF;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-    transition: background-color 0.3s, color 0.3s;
-}
-
-form .request-button:hover, a.button:hover {
-    background-color: #58C3FF;
-    color: white;
-}
-</style>
 {% endblock %}
 
 {% block title %}Approve Trainer Request{% endblock %}
@@ -37,7 +13,7 @@ form .request-button:hover, a.button:hover {
     <form method="post" style="width: 300px;">
         {% csrf_token %}
         <button type="submit" name="action" value="approve" class="request-button">승인</button>
-        <a href="" class="button request-button">거절</a>
+        <a href="{% url 'reject_trainer_request' trainer_request.id %}" class="button request-button">거절</a>
     </form>
 </div>
 {% endblock %}

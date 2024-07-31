@@ -2,7 +2,7 @@
 
 {% block extra_style %}
 <style>
-form .request-button {
+form .request-button, a.button {
     width: 100%;
     background-color: transparent;
     color: black;
@@ -19,28 +19,25 @@ form .request-button {
     transition: background-color 0.3s, color 0.3s;
 }
 
-form .request-button:hover {
+form .request-button:hover, a.button:hover {
     background-color: #58C3FF;
     color: white;
 }
 </style>
 {% endblock %}
 
-{% block title %}Reject Trainer Request{% endblock %}
+{% block title %}Approve Trainer Request{% endblock %}
 
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center; height: 80vh; flex-direction: column; text-align: center;">
-    <h1>트레이너 요청을 거절 하시겠습니까?</h1>
+    <h1>트레이너를 승인 하시겠습니까?</h1>
     <p><strong>이름 : </strong> {{ trainer_request.user.username }}</p>
     <p><strong>신청 헬스장 : </strong> {{ trainer_request.requested_gym.name }}</p>
     <p><strong>소개 : </strong> {{ trainer_request.request_message }}</p>
     <form method="post" style="width: 300px;">
         {% csrf_token %}
-        <div>
-            <label for="reject_reason">거절 사유:</label>
-            <textarea id="reject_reason" name="reject_reason" rows="4" cols="50" required></textarea>
-        </div>
-        <button type="submit" class="request-button">거절</button>
+        <button type="submit" name="action" value="approve" class="request-button">승인</button>
+        <a href="{% url 'reject_trainer_request' trainer_request.id %}" class="button request-button">거절</a>
     </form>
 </div>
 {% endblock %}
