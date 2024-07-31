@@ -7,7 +7,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('signup/', RegisterView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
-    path('home/', home_view, name='home'),
+    path('home/', home_view, name='home2'),
     path('profile/', profile_view, name='profile'),
     path('profile/update/', profile_update_view, name='profile_update'),
     path('profile/api/update/', ProfileUpdateView.as_view(), name='profile_update_api'),

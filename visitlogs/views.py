@@ -6,6 +6,7 @@ from gyms.models import GymMember
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 import datetime
+import pytz
 import json
 from django.db.models import F
 from account.models import CustomUser
@@ -57,8 +58,6 @@ def web_exit(request):
         
 # 입실인지 퇴실인지 확인하는 뷰
 
-
-
 @csrf_exempt
 def identify_nfc(request):
     if request.method == 'POST':
@@ -92,9 +91,10 @@ def identify_nfc(request):
         # 생각해보니 아예 첫방문, 오늘 첫방문은 합쳐도 될듯?!?!?!?
         today = timezone.now().date()
         a = VisitLog.objects.filter(nfc_uid = taged_nfc_uid, member_id = which_member.member_id, enter_time__date = today).last()
-
+        usa_tz = pytz.timezone('UTC')
+        now_in_usa = timezone.now().astimezone(usa_tz)
         # 이 코드에 대해 말해보자면 마지막 입장시간이 지금으로부터 2시간보다 더 전이면 입장 url로 리다이렉트
-        if a is None or a.enter_time > timezone.now() - datetime.timedelta(hours=2):
+        if a is None or a.enter_time < now_in_usa - datetime.timedelta(hours=2):
             return nfc_entrance(request, data)
         else:
             return nfc_exit(request, data)

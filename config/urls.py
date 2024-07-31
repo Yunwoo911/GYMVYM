@@ -28,7 +28,7 @@ urlpatterns = [
     path('scheduler/', include('scheduler.urls')), 
     path('search/', include('member_search.urls')),
     path('visitlogs/', include('visitlogs.urls',namespace='visitlogs')),
-    path('equip/', include('equipment.urls')), #equipment로 추후 수정 예정
+    path('equip/', include('equipment.urls', namespace='equipment')), #equipment로 추후 수정 예정
 ]
 
 if settings.DEBUG:

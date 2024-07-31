@@ -1,60 +1,82 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - My Website{% endblock %}
-{% load static %}
+{% block title %}회원 검색{% endblock %}
+{% block head %}
+<style>
+    body {
+    overflow: auto; /* 스크롤 가능하게 설정 */
+    width: 600px;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        width : 100%;
+        max-height: 80vh; /* 화면 높이의 80%까지 허용 */
+        overflow-y: auto;
+    }
+    .title {
+        margin-bottom: 20px;
+    }
+    .search {
+        display: flex;
+        flex-direction: column;
+    }
+    .search form {
+        display: flex;
+        width: 100%;
+    }
+    .search input {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+    }
+    .search button {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-left: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        border-radius: 0 4px 4px 0;
+    }
+    #results {
+        margin-top: 20px;
+        width: 100%;
+    }
+    .result-item {
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .nfc-form {
+        margin-top: 10px;
+    }
+    .nfc-form input,
+    .nfc-form button {
+        margin-right: 5px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <div class="title">
-        <h1>회원 검색</h1>
+    <div class="container">
+        <div class="title">
+            <h1>회원 검색</h1>
+        </div>
+        <div class="search">
+            <form id="search-form" onsubmit="event.preventDefault(); searchUser();">
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
+                <button type="submit">찾기</button>
+            </form>
+            <div id="results"></div>
+        </div>
     </div>
-    <div class="search">
-        <form id="search-form" onsubmit="event.preventDefault(); searchUser();">
-            <input type="text" id="username" name="username" placeholder="Enter username" required>
-            <button type="submit">찾기</button>
-        </form>
-        <div id="results"></div>
-    </div>
-
-    <style>
-        .title {
-            display: block;
-            margin-bottom: 20px;
-        }
-        .search {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .form-group {
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-        .form-group input,
-        .form-group button {
-            width: 100%;
-            box-sizing: border-box;
-        }
-        #results {
-            margin-top: 20px;
-            width: 100%;
-        }
-        .result-item {
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .nfc-form {
-            margin-top: 10px;
-        }
-        .nfc-form input,
-        .nfc-form button {
-            margin-right: 5px;
-        }
-    </style>
 
     <script>
         function searchUser() {
@@ -69,7 +91,7 @@
                 .then(data => {
                     const resultsDiv = document.getElementById('results');
                     resultsDiv.innerHTML = '';
-    
+
                     if (data.length > 0) {
                         data.forEach(user => {
                             const userDiv = document.createElement('div');
@@ -81,12 +103,10 @@
                                 <div class="form-group nfc-form">
                                     <form method="post" action="{% url 'member_search:register_nfc' %}" class="form-inline">
                                         {% csrf_token %}
-                                        <input type="hidden" name="email" value="{{ user.email }}">
-                                        <label for="nfc_uid_{{ user.email }}" class="mr-2">NFC :</label><br>
-                                        <input type="text" name="nfc_uid" id="nfc_uid_{{ user.email }}" class="form-control mr-2" autocomplete="nfc_uid">
-                                        <div class="nfc_btn">
-                                            <button class="nfc_regi btn btn-primary" type="submit">등록하기</button>
-                                        </div>
+                                        <input type="hidden" name="email" value="${user.email}">
+                                        <label for="nfc_uid_${user.email}" class="mr-2">NFC 등록 :</label>
+                                        <input type="text" name="nfc_uid" id="nfc_uid_${user.email}" class="form-control mr-2" autocomplete="nfc_uid">
+                                        <button class="nfc_regi btn btn-primary" type="submit">등록하기</button>
                                     </form>
                                 </div>
                             `;
