@@ -1,15 +1,32 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>트레이너 포트폴리오</title>
+    {% block head %}
+    <title>{% block title %}트레이너 포트폴리오{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/trainer_portflio_page.css' %}">
+    <style>
+        body {
+            overflow: auto;
+            width: 600px;
+        }
+
+        .container {
+            width: 100%;
+            max-height: 80vh;
+            /* 화면 높이의 80%까지 허용 */
+            overflow-y: auto;
+            margin: auto;
+        }
+    </style>
+    {% endblock %}
 </head>
 
 <body>
+    {% block content %}
     <div class="container">
         <h1>트레이너 포트폴리오</h1>
         <form method="post" action="{% url 'gyms:trainer_portflio_page' %}" enctype="multipart/form-data">
@@ -40,6 +57,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% endblock %}
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser, Owner, Gym
-from gyms.forms import PersonalInfoForm
+from gyms.forms import PersonalInfoForm, TrainerForm
 from account.models import CustomUser
 import random
 import json
@@ -10,6 +10,7 @@ from .forms import TrainerRequestForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 # from gyms.search.search_gym_member import Search    
 def profile_page(request):
@@ -66,23 +67,22 @@ class TrainerPortfolioView(TemplateView):
         return context
     
     def post(self, request, *args, **kwargs):
-        trainer_name = request.POST.get('trainer_name')
-        gym_id = request.POST.get('gym')
-        certificate = request.POST.get('certificate')
-        trainer_image = request.FILES.get('trainer_image')
-
-        gym = Gym.objects.get(pk=gym_id)
-        user = request.user
-
-        Trainer.objects.create(
-            gym=gym,
-            user=user,
-            trainer_name=trainer_name,
-            certificate=certificate,
-            trainer_image=trainer_image
-        )
-        return redirect('home')
-           
+        form = TrainerForm(request.POST, request.FILES)        
+        if form.is_valid():
+            if not Trainer.objects.filter(user=request.user).exists():
+                trainer = form.save(commit=False)
+                trainer.user = request.user
+                trainer.save()
+                return redirect('home')
+            else:
+                messages.warning(request, '이미 트레이너로 등록되어 있습니다.')
+                print("dd")
+                return redirect('gyms:trainer_portflio_page')  # 이미 트레이너가 존재하는 경우 포트폴리오 페이지로 리디렉션
+        else:
+            # 폼 에러를 템플릿에 전달
+            context = self.get_context_data()
+            context['form'] = form
+            return self.render_to_response(context)                       
 
 
 def search(request):

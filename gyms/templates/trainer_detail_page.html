@@ -1,15 +1,18 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
+    {% block head %}
+    <title>{% block title %}GYMVYM{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/trainer_detail_page.css' %}">
+    {% endblock %}
 </head>
 
 <body>
+    {% block content %}
     <div class="container">
         {% if not personal_info %}
         <div class="header">
@@ -58,6 +61,7 @@
             window.location.href = "{% url 'gyms:profile_add_page' gym_member_id %}";
         }
     </script>
+    {% endblock %}
 </body>
 
 </html>

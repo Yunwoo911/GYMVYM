@@ -1,6 +1,6 @@
 from django import forms
 from .models import PersonalInfo
-from .models import TrainerRequest, Gym
+from .models import TrainerRequest, Gym, Trainer
 
 
 class PersonalInfoForm(forms.ModelForm):
@@ -36,6 +36,19 @@ class PersonalInfoForm(forms.ModelForm):
             'long_term_goals': forms.TextInput(attrs={'class': 'form-control'}),
             'preferred_exercise_types': forms.TextInput(attrs={'class': 'form-control'}),
             'available_times': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class TrainerForm(forms.ModelForm):
+    class Meta:
+        model = Trainer
+        fields = ['gym', 'trainer_name', 'certificate', 'trainer_image']
+        widgets = {
+            'gym': forms.Select(attrs={'class': 'form-control'}),
+            # 'user': forms.Select(attrs={'class': 'form-control'}),
+            'trainer_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'certificate': forms.TextInput(attrs={'class': 'form-control'}),
+            'trainer_image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
 
 

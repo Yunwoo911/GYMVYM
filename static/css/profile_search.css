@@ -15,12 +15,12 @@ nav a {
 
 form {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 
 form input {
-    width: 300px;
+    width: 250px;
     margin-right: 10px;
 }
 

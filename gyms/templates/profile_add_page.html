@@ -1,15 +1,33 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
+    {% block head %}
+    <title>{% block title %}GYMVYM{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/profile_add_page.css' %}">
+    <style>
+        body {
+            overflow: auto;
+            width: 600px;
+        }
+
+        .container {
+            width: 100%;
+            max-height: 80vh;
+            /* 화면 높이의 80%까지 허용 */
+            overflow-y: auto;
+            margin: auto;
+        }
+    </style>
+    {% endblock %}
+
 </head>
 
 <body>
+    {% block content %}
     <div class="container">
         <h1 class="text-center">회원 정보 입력</h1>
         <form method="post" action="{% url 'gyms:user_profile_save' gym_member_id %}">
@@ -21,6 +39,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% endblock %}
 </body>
 
 </html>

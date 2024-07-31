@@ -1,30 +1,48 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
+    {% block head %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원 프로필 검색</title>
+    <title>{% block title %}회원 프로필 검색{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/profile_page.css' %}">
+    <style>
+        body {
+            overflow: auto;
+            width: 600px;
+        }
+
+        .container {
+            width: 100%;
+            max-height: 80vh;
+            /* 화면 높이의 80%까지 허용 */
+            overflow-y: auto;
+            margin: auto;
+        }
+    </style>
+    {% endblock %}
 </head>
 
 <body>
-
-    <main class="container">
+    {% block content %}
+    <main class="container text-center">
+        <h2>회원 검색</h2>
         <nav>
             <a href="/">Home</a>
         </nav>
-        <form method="post" action="{% url 'gyms:member_profile_search_page' %}">
+        <form method="post" action="{% url 'gyms:member_profile_search_page' %}" class="d-flex justify-content-center">
             {% csrf_token %}
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="회원 검색" required>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="회원 검색" required
+                style="width: 250px;">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-left: 10px;">검색</button>
         </form>
         <section id="results">
-            <ul>
+            <ul class="list-unstyled">
                 {% for result in page_obj.object_list %}
-                <li>
+                <li style="margin-top: 20px;">
                     <a href="{% url 'gyms:trainer_detail_page' result.member_id %}">
                         <strong>{{ result.user.username }}</strong> - {{ result.membership_type }}<br>
                         가입일 : {{ result.join_date }}
@@ -34,8 +52,9 @@
                 <li>검색 결과가 없습니다.</li>
                 {% endfor %}
             </ul>
-            <div class="pagination">
-                <span class="step-links">
+
+            <nav aria-label="Page navigation">
+                <div class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                     <a class="page-link" href="?page=1">&laquo; 처음</a>
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a>
@@ -49,8 +68,8 @@
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
                     <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">마지막 &raquo;</a>
                     {% endif %}
-                </span>
-            </div>
+                </div>
+            </nav>
         </section>
     </main>
     <footer>
@@ -59,6 +78,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% endblock %}
 </body>
 
 </html>
