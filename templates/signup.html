@@ -13,6 +13,7 @@
     <!-- Include custom CSS -->
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
     <style>
+
         .profile-container {
             position: relative;
             width: 200px;
@@ -55,6 +56,8 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: auto; /* 스크롤 가능하게 설정 */
+            width: 600px;
         }
 
         .card {
@@ -127,6 +130,22 @@
         .input-field:focus+.input-label+.input-highlight {
             width: 100%;
         }
+
+        .input-group-append .btn-primary {
+            position: relative;
+            z-index: 1; /* 탭바보다 아래에 위치하게 설정 */
+        }
+
+        .input-group-append .btn-primary:hover {
+            z-index: 2; /* 마우스 오버 시에도 탭바보다 아래에 위치하게 설정 */
+        }
+
+        .container {
+        width : 100%;
+        max-height: 90vh; /* 화면 높이의 80%까지 허용 */
+        overflow-y: auto;
+        margin : auto;
+    }
     </style>
 {% endblock %}
 

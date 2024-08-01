@@ -1,0 +1,38 @@
+steps:
+  # Step 1: Git 리포지토리를 클론합니다 (dev2 브랜치).
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', '-b', 'dev2', 'https://github.com/Yunwoo911/GYMVYM.git', '/workspace/GYMVYM']
+
+  # Step 2: Docker 이미지를 빌드합니다.
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/gymvym-112233/gymvym:latest'
+      - '-f'
+      - '/workspace/GYMVYM/Dockerfile'
+      - '/workspace/GYMVYM'
+
+  # Step 3: Docker 이미지를 GCP Container Registry에 푸시합니다.
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/gymvym-112233/gymvym:latest'
+
+ # Step 4: Cloud Run에 배포합니다.
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run deploy gymvym \
+          --image gcr.io/gymvym-112233/gymvym:latest \
+          --platform managed \
+          --region asia-northeast3 \
+          --allow-unauthenticated \
+
+
+images:
+  - 'gcr.io/gymvym-112233/gymvym:latest'
+
+logsBucket: gs://gymvym-log-bucket

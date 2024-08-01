@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import json
 from .forms import ProfileUpdateForm
+from django.views.decorators.csrf import csrf_exempt
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -94,19 +95,7 @@ def check_email_duplicate(request):
         return JsonResponse({'is_duplicate': True})
     else:
         return JsonResponse({'is_duplicate': False})
-
-@login_required
-def update_nfc_view(request):
-    if request.method == 'POST':
-        form = NFCForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')  # 프로필 URL 네임
-    else:
-        form = NFCForm(instance=request.user)
     
-    return render(request, 'update_nfc.html', {'form': form})
-
 def send_verification_code(request):
     if request.method == 'POST':
         data = json.loads(request.body)

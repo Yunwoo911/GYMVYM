@@ -18,7 +18,7 @@ class Gym(models.Model):
     gym_name = models.CharField(max_length=100)
     gym_address = models.CharField(max_length=255)
 
-
+# 7/23 수정
 class Trainer(models.Model):
     trainer_id = models.AutoField(primary_key=True)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
@@ -108,7 +108,6 @@ class PersonalInfo(models.Model):
 
     def __str__(self) -> str:
         return self.gym_member_if.user.username
-
 
 class PT(models.Model):
     pt_id = models.AutoField(primary_key=True)

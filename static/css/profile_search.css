@@ -1,0 +1,54 @@
+body {
+    background-color: #f8f9fa;
+    padding-top: 50px;
+}
+
+header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+nav a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+form input {
+    width: 250px;
+    margin-right: 10px;
+}
+
+#results ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#results li {
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+
+#results a {
+    text-decoration: none;
+    color: #343a40;
+}
+
+#results a:hover {
+    color: #007bff;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}

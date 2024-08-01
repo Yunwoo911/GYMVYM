@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import GymMember, PersonalInfo, Trainer,CustomUser, TrainerRequest, Owner
-from gyms.forms import PersonalInfoForm
+from .models import GymMember, PersonalInfo, Trainer, TrainerRequest, CustomUser, Owner, Gym
+from gyms.forms import PersonalInfoForm, TrainerForm
 from account.models import CustomUser
 import random
 import json
@@ -9,21 +9,18 @@ from django.contrib.auth.decorators import login_required
 from .forms import TrainerRequestForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
+from django.core.paginator import Paginator
+from django.contrib import messages
 
-# from gyms.search.search_gym_member import Search
+# from gyms.search.search_gym_member import Search    
+def profile_page(request):
+    gymmember_list = GymMember.objects.order_by('-join_date')
+    paginator = Paginator(gymmember_list, 10)  # 페이지당 10개 항목
 
-# Create your views here.
-class PtMembershipManagementPageView(TemplateView):
-    template_name = 'pt_membership_page.html'
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-
-class ProfilePageView(TemplateView):
-    template_name = 'profile_page.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['gym_members'] = GymMember.objects.all()
-        return context
+    return render(request, 'profile_page.html', {'page_obj': page_obj})
     
 
 class TrainerDetailPageView(TemplateView):
@@ -36,7 +33,7 @@ class TrainerDetailPageView(TemplateView):
         context['personal_info'] = PersonalInfo.objects.filter(gym_member_if__member_id=gym_member_id)
         return context
     
-
+# 
 class ProfileAddPageView(TemplateView):
     template_name = 'profile_add_page.html'
 
@@ -63,28 +60,40 @@ class TrainerPortfolioView(TemplateView):
     template_name = 'trainer_portfolio_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)        
-        # user = self.kwargs.get('id')
-        user = 15
-        context['trainer'] = CustomUser.objects.filter(user = user)
-        # context['trainer'] = Trainer.objects.filter(user = user)
-        # 트레이너 테이블에서 로그인한 트레이너의 유저 아이디를 찾아서 반환
-        # 포트폴리오 입력 폼 작성하고, 작성한 거 받아서 데이터베이스에 저장.
+        context = super().get_context_data(**kwargs)
+        # user = self.request.user
+        context['gyms'] = Gym.objects.all()        
+              
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form = TrainerForm(request.POST, request.FILES)        
+        if form.is_valid():
+            if not Trainer.objects.filter(user=request.user).exists():
+                trainer = form.save(commit=False)
+                trainer.user = request.user
+                trainer.save()
+                return redirect('home')
+            else:
+                messages.warning(request, '이미 트레이너로 등록되어 있습니다.')
+                print("dd")
+                return redirect('gyms:trainer_portflio_page')  # 이미 트레이너가 존재하는 경우 포트폴리오 페이지로 리디렉션
+        else:
+            # 폼 에러를 템플릿에 전달
+            context = self.get_context_data()
+            context['form'] = form
+            return self.render_to_response(context)                       
 
 
 def search(request):
-    results = []
-    client = Search()
+    query = request.POST.get('query', '')
+    results = GymMember.objects.filter(user__username__icontains=query)
+    paginator = Paginator(results, 10)  # 페이지당 10개 항목
 
-    # 검색어를 받아오기
-    if 'query' in request.GET:
-        query = request.GET['query']
-        # 검색결과를 가져와야 하지 않나?        
-        usernames = client.making_query(query)
-        results = GymMember.objects.filter(user__username=usernames)
-    
-    return render(request, 'member_profile_search.html', {'results': results})
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'member_profile_search.html', {'page_obj': page_obj})
 
 
 def export_gym_member_usernames_to_json(file_path):
@@ -115,7 +124,7 @@ def request_trainer_role(request):
             trainer_request.request_date = timezone.now()
             trainer_request.save()
             # 관리자에게 이메일 알림 보내기 (선택사항)
-            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션
+            return redirect('trainer_request_success')  # 요청 성공 페이지로 리디렉션1
     else:
         form = TrainerRequestForm()
     return render(request, 'request_trainer_role.html', {'form': form})
@@ -141,6 +150,16 @@ def approve_trainer_request(request, trainer_request_id):
 class TrainerRequestSuccessView(TemplateView):
     template_name = 'trainer_request_success.html'
     pass
+
+# 7/21 시작
+class OwnerPageView(TemplateView):
+    template_name = 'owner_page.html'
+
+
+# 7/21 시작
+class OwnerPageView(TemplateView):
+    template_name = 'owner_page.html'
+
 
 
 def reject_trainer_request(request, trainer_request_id):

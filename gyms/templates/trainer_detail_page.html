@@ -1,56 +1,67 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/gyms.css' %}">
+    {% block head %}
+    <title>{% block title %}GYMVYM{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/trainer_detail_page.css' %}">
+    {% endblock %}
 </head>
 
 <body>
-    {% if not personal_info %}
-    <h1>회원 정보가 없습니다. 회원 정보를 입력해주세요.</h1>
-    <button onclick="redirectToPage()">회원 정보 입력</button>
-    {% endif %}
+    {% block content %}
+    <div class="container">
+        {% if not personal_info %}
+        <div class="header">
+            <h1>회원 정보가 없습니다. 회원 정보를 입력해주세요.</h1>
+            <button class="btn btn-primary" onclick="redirectToPage()">회원 정보 입력</button>
+        </div>
+        {% endif %}
 
-    <ul>
-        {% for info in personal_info %}
-        <li>
-            <h2>{{ info.gym_member_if.user.username }}님의 트레이닝 정보</h2><br>
+        <div class="content">
+            <ul class="list-unstyled">
+                {% for info in personal_info %}
+                <li class="member-info">
+                    <h2>{{ info.gym_member_if.user.username }}님의 트레이닝 정보</h2>
+                    <p><strong>키:</strong> {{ info.height }} cm</p>
+                    <p><strong>몸무게:</strong> {{ info.weight }} kg</p>
+                    <p><strong>운동 빈도:</strong> 주 {{ info.frequency }}회</p>
+                    <p><strong>운동 종류:</strong> {{ info.types }}</p>
+                    <p><strong>운동 강도:</strong> {{ info.intensity }}</p>
+                    <p><strong>목표:</strong> {{ info.goals }}</p>
+                    <p><strong>식습관:</strong> {{ info.diet_habits }}</p>
+                    <p><strong>수면 패턴:</strong> {{ info.sleep_pattern }}</p>
+                    <p><strong>스트레스 수준:</strong> {{ info.stress_level }}</p>
+                    <p><strong>흡연 여부:</strong> {{ info.smoking }}</p>
+                    <p><strong>흡연량:</strong> {{ info.smoking_amount }}</p>
+                    <p><strong>음주 여부:</strong> {{ info.drinking }}</p>
+                    <p><strong>음주량:</strong> {{ info.drinking_amount }}</p>
+                    <p><strong>체지방률:</strong> {{ info.body_fat_percentage }}%</p>
+                    <p><strong>근육량:</strong> {{ info.muscle_mass }} kg</p>
+                    <p><strong>기초대사량:</strong> {{ info.basal_metabolic_rate }} kcal</p>
+                    <p><strong>BMI:</strong> {{ info.bmi }}</p>
+                    <p><strong>단기 목표:</strong> {{ info.short_term_goals }}</p>
+                    <p><strong>장기 목표:</strong> {{ info.long_term_goals }}</p>
+                    <p><strong>선호 운동 종류:</strong> {{ info.preferred_exercise_types }}</p>
+                    <p><strong>운동 가능 시간:</strong> {{ info.available_times }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-
-
-            키: {{ info.height }} cm<br>
-            몸무게: {{ info.weight }} kg<br>
-            운동 빈도: 주 {{ info.frequency }}회<br>
-            운동 종류: {{ info.types }}<br>
-            운동 강도: {{ info.intensity }}<br>
-            목표: {{ info.goals }}<br>
-            식습관: {{ info.diet_habits }}<br>
-            수면 패턴: {{ info.sleep_pattern }}<br>
-            스트레스 수준: {{ info.stress_level }}<br>
-            흡연 여부: {{ info.smoking }}<br>
-            흡연량: {{ info.smoking_amount }}<br>
-            음주 여부: {{ info.drinking }}<br>
-            음주량: {{ info.drinking_amount }}<br>
-            체지방률: {{ info.body_fat_percentage }}%<br>
-            근육량: {{ info.muscle_mass }} kg<br>
-            기초대사량: {{ info.basal_metabolic_rate }} kcal<br>
-            BMI: {{ info.bmi }}<br>
-            단기 목표: {{ info.short_term_goals }}<br>
-            장기 목표: {{ info.long_term_goals }}<br>
-            선호 운동 종류: {{ info.preferred_exercise_types }}<br>
-            운동 가능 시간: {{ info.available_times }}<br>
-        </li>
-        {% endfor %}
-    </ul>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function redirectToPage() {
+            window.location.href = "{% url 'gyms:profile_add_page' gym_member_id %}";
+        }
+    </script>
+    {% endblock %}
 </body>
-
-<script>
-    function redirectToPage() {
-        window.location.href = "{% url 'gyms:profile_add_page' gym_member_id %}";
-    }
-</script>
 
 </html>
