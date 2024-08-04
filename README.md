@@ -5,7 +5,7 @@
 ***
 
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
+![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=yellow)
 ![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=white)
 ![DRF](https://img.shields.io/badge/DRF-3.15.2-red)
 
@@ -21,9 +21,10 @@ NFC
 
 deployment
 
-![GCP](https://img.shields.io/badge/Google%20Cloud-GCP-blue)
+![GCP](https://img.shields.io/badge/Google%20Cloud%20Platform-Cloud%20Run-blue)
+![GCP](https://img.shields.io/badge/Google%20Cloud%20Platform-Cloud%20Build-red)
 ![gunicorn](https://img.shields.io/badge/gunicorn-22.0.0-green?logo=gunicorn&logoColor=white)
-![PyYAML](https://img.shields.io/badge/PyYAML-6.0.1-blue)
+![PyYAML](https://img.shields.io/badge/PyYAML-6.0.1-green)
 
 ***
 
