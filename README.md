@@ -1,6 +1,7 @@
-![짐빔](gymvymlogo.png)
 ![멋사](likelion.png)
 ![대상](grandprize.png)
+![짐빔](gymvymlogo.png)
+
 헬스장 인원 파악 제휴 서비스
 
 유저 dummy데이터 만드는 코드
