@@ -2,14 +2,25 @@
 ![대상](grandprize.png)
 ![짐빔](gymvymlogo.png)
 
----
+___
 
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=white)
-![djangorestframework](https://img.shields.io/badge/djangorestframework-3.15.2-red)
+![DRF](https://img.shields.io/badge/djangorestframework-3.15.2-red)
 
----
+___
+
+NFC
+![pillow](https://img.shields.io/badge/pillow-10.4.0-blue?logo=python&logoColor=white)
+
+___
+
+deployment
+![gunicorn](https://img.shields.io/badge/gunicorn-22.0.0-green?logo=gunicorn&logoColor=white)
+![PyYAML](https://img.shields.io/badge/PyYAML-6.0.1-blue)
+
+___
 
 ![APScheduler](https://img.shields.io/badge/APScheduler-3.10.4-blue)
 ![asgiref](https://img.shields.io/badge/asgiref-3.8.1-lightgrey)
@@ -18,12 +29,9 @@
 ![colorama](https://img.shields.io/badge/colorama-0.4.6-red)
 ![django-cors-headers](https://img.shields.io/badge/django--cors--headers-4.4.0-orange)
 ![django-widget-tweaks](https://img.shields.io/badge/django--widget--tweaks-1.5.0-blue)
-
-![djangorestframework-simplejwt](https://img.shields.io/badge/djangorestframework--simplejwt-5.3.1-blue)
 ![Faker](https://img.shields.io/badge/Faker-26.0.0-lightgreen)
 ![filelock](https://img.shields.io/badge/filelock-3.15.4-yellowgreen)
 ![fsspec](https://img.shields.io/badge/fsspec-2024.6.1-lightblue)
-![gunicorn](https://img.shields.io/badge/gunicorn-22.0.0-green?logo=gunicorn&logoColor=white)
 ![idna](https://img.shields.io/badge/idna-3.7-purple)
 ![intel-openmp](https://img.shields.io/badge/intel--openmp-2021.4.0-blue)
 ![Jinja2](https://img.shields.io/badge/Jinja2-3.1.4-red)
@@ -33,14 +41,12 @@
 ![mpmath](https://img.shields.io/badge/mpmath-1.3.0-yellow)
 ![networkx](https://img.shields.io/badge/networkx-3.3-orange)
 ![packaging](https://img.shields.io/badge/packaging-24.1-lightblue)
-![pillow](https://img.shields.io/badge/pillow-10.4.0-blue?logo=python&logoColor=white)
 ![psycopg2-binary](https://img.shields.io/badge/psycopg2--binary-2.9.9-green)
 ![PyJWT](https://img.shields.io/badge/PyJWT-2.8.0-blue)
 ![python-dateutil](https://img.shields.io/badge/python--dateutil-2.9.0.post0-lightgrey)
 ![python-decouple](https://img.shields.io/badge/python--decouple-3.8-yellow)
 ![python-dotenv](https://img.shields.io/badge/python--dotenv-1.0.1-green)
 ![pytz](https://img.shields.io/badge/pytz-2024.1-red)
-![PyYAML](https://img.shields.io/badge/PyYAML-6.0.1-blue)
 ![regex](https://img.shields.io/badge/regex-2024.5.15-lightgreen)
 ![requests](https://img.shields.io/badge/requests-2.32.3-orange)
 ![safetensors](https://img.shields.io/badge/safetensors-0.4.3-yellow)
