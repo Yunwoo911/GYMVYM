@@ -7,16 +7,18 @@ ___
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=white)
-![DRF](https://img.shields.io/badge/djangorestframework-3.15.2-red)
+![DRF](https://img.shields.io/badge/DRF-3.15.2-red)
 
 ___
 
 NFC
+
 ![pillow](https://img.shields.io/badge/pillow-10.4.0-blue?logo=python&logoColor=white)
 
 ___
 
 deployment
+
 ![gunicorn](https://img.shields.io/badge/gunicorn-22.0.0-green?logo=gunicorn&logoColor=white)
 ![PyYAML](https://img.shields.io/badge/PyYAML-6.0.1-blue)
 
