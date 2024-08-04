@@ -5,8 +5,8 @@
 ***
 
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=yellow)
-![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=white)
+![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=blue)
+![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=green)
 ![DRF](https://img.shields.io/badge/DRF-3.15.2-red)
 
 ***
