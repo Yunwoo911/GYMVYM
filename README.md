@@ -21,7 +21,7 @@ NFC
 
 deployment
 
-![GCP](https://img.shields.io/badge/Google-GCP-blue)
+![GCP](https://img.shields.io/badge/Google%20Cloud-GCP-blue)
 ![gunicorn](https://img.shields.io/badge/gunicorn-22.0.0-green?logo=gunicorn&logoColor=white)
 ![PyYAML](https://img.shields.io/badge/PyYAML-6.0.1-blue)
 
