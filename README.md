@@ -13,6 +13,9 @@
 
 NFC
 
+![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-4B-red)
+![RPi.GPIO](https://img.shields.io/badge/RPi.GPIO-0.7.0-yellow)
+![MFRC522](https://img.shields.io/badge/mfrc522-1.6.0-blue)
 ![pillow](https://img.shields.io/badge/pillow-10.4.0-blue?logo=python&logoColor=white)
 
 ***
@@ -65,6 +68,10 @@ deployment
 ![tzdata](https://img.shields.io/badge/tzdata-2024.1-orange)
 ![tzlocal](https://img.shields.io/badge/tzlocal-5.2-lightgrey)
 ![urllib3](https://img.shields.io/badge/urllib3-2.2.2-blue)
+
+- **Raspberry Pi**: 저렴하고 강력한 싱글 보드 컴퓨터
+- **RPi.GPIO**: Raspberry Pi의 GPIO 핀을 쉽게 제어할 수 있게 해주는 라이브러리
+- **MFRC522**: RFID/NFC 리더 모듈을 다루기 위한 라이브러리로, 카드 인식 및 데이터 전송 기능을 제공
 
 유저 dummy데이터 만드는 코드
 ```
