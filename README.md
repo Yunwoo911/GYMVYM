@@ -2,15 +2,23 @@
 ![대상](grandprize.png)
 ![짐빔](gymvymlogo.png)
 
+---
+
+![Apache 2.0 License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![Python 3.10](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=white)
+![djangorestframework](https://img.shields.io/badge/djangorestframework-3.15.2-red)
+
+---
+
 ![APScheduler](https://img.shields.io/badge/APScheduler-3.10.4-blue)
 ![asgiref](https://img.shields.io/badge/asgiref-3.8.1-lightgrey)
 ![certifi](https://img.shields.io/badge/certifi-2024.7.4-green)
 ![charset-normalizer](https://img.shields.io/badge/charset--normalizer-3.3.2-yellow)
 ![colorama](https://img.shields.io/badge/colorama-0.4.6-red)
-![Django](https://img.shields.io/badge/Django-5.0.6-green?logo=django&logoColor=white)
 ![django-cors-headers](https://img.shields.io/badge/django--cors--headers-4.4.0-orange)
 ![django-widget-tweaks](https://img.shields.io/badge/django--widget--tweaks-1.5.0-blue)
-![djangorestframework](https://img.shields.io/badge/djangorestframework-3.15.2-red)
+
 ![djangorestframework-simplejwt](https://img.shields.io/badge/djangorestframework--simplejwt-5.3.1-blue)
 ![Faker](https://img.shields.io/badge/Faker-26.0.0-lightgreen)
 ![filelock](https://img.shields.io/badge/filelock-3.15.4-yellowgreen)
